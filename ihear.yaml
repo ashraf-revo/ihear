@@ -1,0 +1,65 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: reader
+rules:
+  - apiGroups: [""]
+    resources: ["routes","pods","pods/log","pods/status","services","services/proxy","configmaps","endpoints","secrets","serviceaccounts","namespaces","namespaces/status","resourcequotas/status","events","bindings","replicationcontrollers","persistentvolumeclaims"]
+    verbs: ["get", "watch", "list"]
+  - apiGroups: ["extensions"]
+    resources: ["ingresses"]
+    verbs: ["get", "watch", "list"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "watch", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: reader
+roleRef:
+  kind: Role
+  name: reader
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+  - kind: ServiceAccount
+    name: default
+    apiGroup: ""
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: default
+data:
+  default.yaml: |-
+    node: 192.168.99.162:30001
+    spring:
+      profiles:
+        active: kubernetes
+    ---
+    spring:
+      profiles: kubernetes
+      rabbitmq:
+        host: rabbitmq.default.svc.cluster.local
+      data:
+        mongodb:
+          host: mongodb.default.svc.cluster.local
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ui
+data:
+  ui.yaml: |-
+    spring:
+      cloud:
+        gateway:
+          discovery:
+            locator:
+              enabled: true
+              filters:
+              - PreserveHostHeader
+              - SaveSession
+              include-expression: (!serviceId.equals("ui")&&!serviceId.equals("kubernetes"))
+              url-expression: "'http://ingress-nginx.ingress-nginx/'+serviceId"

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Access Confirmation</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/util.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
+</head>
+<body>
+
+<div class="limiter">
+
+    <div class="container-login100">
+        <div class="wrap-login100 p-t-85 p-b-20">
+            <form th:action="@{/oauth/authorize}" name="accept" class="login100-form validate-form" method="post">
+                <span class="p-b-70">
+                    <span>hi </span>
+                    <span sec:authentication="principal.username"></span>
+                    <strong th:text="${client.getClientId()}"></strong>
+                    <span>want to access you using this scopes</span>
+                </span>
+                <div th:each="u:${client.getScope()}" style="margin: 0 auto;display: table">
+                    <div class="checkbox">
+                        <label>
+                            <input th:id="${u}" type="checkbox" th:name="|scope.${u}|" value="true"/>
+                            <span th:text="${u}"></span>
+                        </label>
+                    </div>
+                </div>
+                <input type="hidden" name="user_oauth_approval" value="true"/>
+                <div class="form-group" style="margin: 0 auto;display: grid;padding: 2px">
+                    <button type="submit" class="btn btn-sm  btn-primary">Accept</button>
+                </div>
+            </form>
+            <form th:action="@{/oauth/authorize}" name="refuse" class="login100-form validate-form" method="post">
+                <input type="hidden" name="user_oauth_approval" value="false"/>
+                <div class="form-group" style="margin: 0 auto;display: grid;padding: 2px">
+                    <button type="submit" class="btn btn-danger">Refuse</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+spec:
+  selector:
+    matchLabels:
+      run: mongodb
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: mongodb
+    spec:
+      containers:
+        - name: mongo
+          image: mongo:4.0.4
+          ports:
+            - containerPort: 27017
+              name: client-access
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb
+  labels:
+    run: mongodb
+spec:
+  ports:
+    - name: client-access
+      port: 27017
+      protocol: TCP
+      targetPort: 27017
+  type: ClusterIP
+  selector:
+    run: mongodb

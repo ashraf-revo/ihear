@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: ui
+  cloud:
+    kubernetes:
+      config:
+        sources:
+          - name: ${spring.application.name}
+          - name: default
+    gateway:
+      routes:
+        - id: auth
+          uri: http://localhost:9999/auth
+          predicates:
+            - Path=/auth/**
+        - id: pi
+          uri: http://localhost:8082/
+          filters:
+            - StripPrefix=1
+          predicates:
+            - Path=/pi/**
+  security:
+    oauth2:
+      client:
+        registration:
+          login-client:
+            provider: auth
+            client-id: revo
+            client-secret: revo
+            authorization-grant-type: authorization_code
+            redirect-uri-template: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope: read,write
+        provider:
+          auth:
+            authorization-uri: http://${node:localhost:9999}/auth/oauth/authorize
+            token-uri: http://${node:localhost:9999}/auth/oauth/token
+            user-info-uri: http://${node:localhost:9999}/auth/user
+            user-name-attribute: sub
+            jwk-set-uri: http://${node:localhost:9999}/auth/.well-known/jwks.json
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ["*"]
+  endpoint:
+    health:
+      show-details: always
+server:
+  port: 8080
+logging:
+  level:
+    org.springframework: debug

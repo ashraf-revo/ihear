@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: auth
+  cloud:
+    kubernetes:
+      config:
+        sources:
+          - name: ${spring.application.name}
+          - name: default
+  data:
+    mongodb:
+      database: auth
+server:
+  port: 9999
+  servlet:
+    context-path: /auth
+org:
+  revo:
+    base:
+      env:
+        users:
+          - id: 5bfd3df1ad8ce6617f9bf635
+            username: revo
+            password: "{bcrypt}$2a$10$rPUJCZ6TmrrmDmHuIJptm.UIxsUcGm/WegmuwNfXE4eibF/kOEwWu"
+            roles: "ROLE_USER,ROLE_ADMIN"
+            enabled: true
+        clientDetails:
+          - id: 5bfd3df1ad8ce6617f9bf636
+            clientId: revo
+            clientSecret: "{bcrypt}$2a$10$rPUJCZ6TmrrmDmHuIJptm.UIxsUcGm/WegmuwNfXE4eibF/kOEwWu"
+            refreshTokenValiditySeconds: 500
+            accessTokenValiditySeconds: 500
+            authorizedGrantTypes: "authorization_code"
+            registeredRedirectUri:
+              - "http://${node:localhost:8080}/login/oauth2/code/login-client"
+            scope:
+              - "read"
+              - "write"
+            autoApproveScopes: "read"
+            authorities:
+            resourceIds:
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ["*"]
+  endpoint:
+    health:
+      show-details: always
+logging:
+  level:
+    org.springframework: debug
