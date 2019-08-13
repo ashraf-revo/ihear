@@ -143,5 +143,6 @@
         <module>auth</module>
         <module>ui</module>
         <module>pi</module>
+        <module>pipeline</module>
     </modules>
 </project>

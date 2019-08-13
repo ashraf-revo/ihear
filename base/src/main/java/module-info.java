@@ -17,5 +17,6 @@ module ihear.base {
     requires spring.data.commons;
     requires spring.context;
     requires spring.beans;
+    requires spring.boot.autoconfigure;
 
 }
