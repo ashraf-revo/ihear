@@ -20,34 +20,27 @@ import java.util.concurrent.ConcurrentHashMap;
 @EnableDiscoveryClient
 @EnableBinding(Processor.class)
 public class PipelineApplication {
+    @Autowired
+    private Processor processor;
     private Map<Integer, UnicastReceivingChannelAdapter> channelAdapterMap = new ConcurrentHashMap<>();
 
     public static void main(String[] args) {
         SpringApplication.run(PipelineApplication.class, args);
     }
 
-    @Autowired
-    private Processor processor;
 
     @StreamListener(Sink.INPUT)
     public void handle(Message<Action> action) {
-        if (action.getPayload().getStatus() == Status.OPEN) {
-            if (!channelAdapterMap.containsKey(action.getPayload().getPort())) {
-                UnicastReceivingChannelAdapter unicastReceivingChannelAdapter = new UnicastReceivingChannelAdapter(action.getPayload().getPort());
-                unicastReceivingChannelAdapter.setOutputChannel(processor.output());
-                unicastReceivingChannelAdapter.start();
-                channelAdapterMap.put(action.getPayload().getPort(), unicastReceivingChannelAdapter);
-            }
+        if (action.getPayload().getStatus() == Status.CREATE && !channelAdapterMap.containsKey(action.getPayload().getPort())) {
+            UnicastReceivingChannelAdapter unicastReceivingChannelAdapter = new UnicastReceivingChannelAdapter(action.getPayload().getPort());
+            unicastReceivingChannelAdapter.setOutputChannel(processor.output());
+            channelAdapterMap.put(action.getPayload().getPort(), unicastReceivingChannelAdapter);
         }
-        if (action.getPayload().getStatus() == Status.CLOSE) {
-            if (channelAdapterMap.containsKey(action.getPayload().getPort())) {
-                channelAdapterMap.get(action.getPayload().getPort()).stop();
-                channelAdapterMap.remove(action.getPayload().getPort());
-            }
-        }
-//        {"status":"OPEN","port":7000}
+        if (action.getPayload().getStatus() == Status.START && channelAdapterMap.containsKey(action.getPayload().getPort()))
+            channelAdapterMap.get(action.getPayload().getPort()).start();
+        if (action.getPayload().getStatus() == Status.STOP && channelAdapterMap.containsKey(action.getPayload().getPort()))
+            channelAdapterMap.get(action.getPayload().getPort()).stop();
     }
-
 
 }
 
