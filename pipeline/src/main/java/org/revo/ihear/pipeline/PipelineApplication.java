@@ -6,19 +6,21 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.messaging.Processor;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
-import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"org.revo.base", "org.revo.ihear.pipeline"})
-@EnableMongoRepositories(basePackages = {"org.revo.base", "org.revo.ihear.pipeline"})
 @EnableDiscoveryClient
-@EnableWebFluxSecurity
 @EnableBinding(Processor.class)
+@EnableScheduling
 public class PipelineApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(PipelineApplication.class, args);
     }
 
+    @Scheduled(fixedDelay = 1000)
+    public void scheduleFixedDelayTask() {
+        System.out.println("ssssssssss");
+    }
 }

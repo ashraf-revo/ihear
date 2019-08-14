@@ -13,7 +13,7 @@
     <description>Demo project for Spring Boot</description>
     <properties>
         <spring.skip>false</spring.skip>
-        <project.port>9999</project.port>
+        <project.port>9999/tcp</project.port>
     </properties>
     <packaging>jar</packaging>
     <dependencies>

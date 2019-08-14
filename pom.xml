@@ -18,7 +18,7 @@
         <spring-cloud.version>Greenwich.SR2</spring-cloud.version>
         <docker.name>ashraf1abdelrasool</docker.name>
         <spring.skip>true</spring.skip>
-        <project.port>8080</project.port>
+        <project.port>8080/tcp</project.port>
     </properties>
     <packaging>pom</packaging>
     <dependencies>
@@ -92,21 +92,10 @@
                         <image>
                             <name>${docker.name}/${project.artifactId}:${project.version}</name>
                             <build>
-                                <from>openjdk:12</from>
+                                <dockerFile>${project.basedir}/Dockerfile</dockerFile >
                                 <assembly>
                                     <descriptorRef>artifact</descriptorRef>
                                 </assembly>
-                                <ports>
-                                    <port>${project.port}</port>
-                                </ports>
-                                <maintainer>${project.groupId}</maintainer>
-                                <entryPoint>
-                                    <exec>
-                                        <arg>java</arg>
-                                        <arg>-jar</arg>
-                                        <arg>/maven/${project.artifactId}-${project.version}.jar</arg>
-                                    </exec>
-                                </entryPoint>
                             </build>
                         </image>
                     </images>
