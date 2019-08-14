@@ -63,7 +63,7 @@ public class PiApplication {
     }
 
     @StreamListener(Sink.INPUT)
-    public void ss(Message<byte[]> message) {
-        System.out.println(new String(message.getPayload()));
+    public void handle(Message<byte[]> message) {
+        System.out.println(message.getPayload().length);
     }
 }

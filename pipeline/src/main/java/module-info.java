@@ -3,7 +3,6 @@ module ihear.pi {
 
     requires org.reactivestreams;
 
-    requires spring.webflux;
     requires spring.context;
     requires spring.beans;
     requires reactor.core;
@@ -11,18 +10,12 @@ module ihear.pi {
     requires spring.boot.autoconfigure;
     requires spring.boot;
 
-    requires spring.data.mongodb;
-    requires spring.data.commons;
-    requires spring.security.config;
-    requires spring.security.web;
-    requires spring.security.oauth2.jose;
-    requires spring.security.oauth2.resource.server;
-    requires spring.security.core;
 
-requires spring.messaging;
+    requires spring.messaging;
     requires spring.amqp;
     requires spring.rabbit;
     requires spring.cloud.stream;
-
+    requires spring.integration.ip;
+    requires spring.integration.core;
 
 }

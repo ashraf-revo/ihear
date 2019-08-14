@@ -10,12 +10,23 @@ spring:
     stream:
       bindings:
         input:
+          destination: asrevo.ihear.pkt
           contentType: application/octet-stream
-          destination: queue
-          group: s1
+          group: ${random.uuid}
         output:
-          contentType: application/octet-stream
-          destination: queue
+          destination: asrevo.ihear.action
+          contentType: application/json
+      rabbit:
+        bindings:
+          input:
+            consumer:
+              exchangeType: fanout
+              durableSubscription: false
+              acknowledgeMode: NONE
+          output:
+            producer:
+              exchangeType: fanout
+              durableSubscription: false
   security:
     oauth2:
       resourceserver:
