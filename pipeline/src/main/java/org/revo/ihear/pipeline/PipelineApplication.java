@@ -3,6 +3,7 @@ package org.revo.ihear.pipeline;
 import org.revo.base.domain.Action;
 import org.revo.base.domain.Status;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -10,8 +11,10 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.cloud.stream.messaging.Processor;
 import org.springframework.cloud.stream.messaging.Sink;
+import org.springframework.context.annotation.Bean;
 import org.springframework.integration.ip.udp.UnicastReceivingChannelAdapter;
 import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -42,5 +45,13 @@ public class PipelineApplication {
             channelAdapterMap.get(action.getPayload().getPort()).stop();
     }
 
+    @Bean
+    public CommandLineRunner runner() {
+        return args -> {
+            handle(MessageBuilder.withPayload(new Action(Status.CREATE, 3000)).build());
+            handle(MessageBuilder.withPayload(new Action(Status.START, 3000)).build());
+
+        };
+    }
 }
 
