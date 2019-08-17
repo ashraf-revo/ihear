@@ -45,7 +45,8 @@ public class PiApplication {
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         return http
                 .authorizeExchange()
-                .anyExchange().permitAll()
+                .matchers(EndpointRequest.toAnyEndpoint()).permitAll()
+                .anyExchange().authenticated()
                 .and()
                 .oauth2ResourceServer()
                 .jwt()
