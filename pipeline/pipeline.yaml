@@ -28,9 +28,9 @@ metadata:
 spec:
   ports:
     - name: http
-      protocol: TCP
+      protocol: UDP
       port: 8083
-      targetPort: 8083
+      targetPort: 7000-8000
   type: NodePort
   selector:
     run: pipeline

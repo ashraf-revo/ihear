@@ -21,6 +21,7 @@ import org.springframework.security.oauth2.server.resource.authentication.Reacti
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,6 +45,7 @@ public class PiApplication {
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         return http
                 .authorizeExchange()
+                .matchers(EndpointRequest.toAnyEndpoint()).permitAll()
                 .anyExchange().authenticated()
                 .and()
                 .oauth2ResourceServer()
