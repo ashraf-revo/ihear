@@ -6,6 +6,7 @@ module ihear.streamer {
     requires spring.webflux;
     requires spring.context;
     requires spring.beans;
+    requires spring.core;
     requires reactor.core;
     requires spring.cloud.commons;
     requires spring.boot.autoconfigure;
