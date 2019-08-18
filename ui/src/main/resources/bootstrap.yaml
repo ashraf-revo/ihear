@@ -19,6 +19,12 @@ spring:
             - StripPrefix=1
           predicates:
             - Path=/pi/**
+        - id: streamer
+          uri: http://localhost:8083/
+          filters:
+            - StripPrefix=1
+          predicates:
+            - Path=/streamer/**
   security:
     oauth2:
       client:

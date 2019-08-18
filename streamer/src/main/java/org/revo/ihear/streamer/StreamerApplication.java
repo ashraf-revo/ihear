@@ -1,4 +1,4 @@
-package org.revo.ihear.pi;
+package org.revo.ihear.streamer;
 
 import org.revo.base.service.UserService;
 import org.springframework.boot.SpringApplication;
@@ -6,10 +6,11 @@ import org.springframework.boot.actuate.autoconfigure.security.reactive.Endpoint
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.stream.annotation.EnableBinding;
-import org.springframework.cloud.stream.messaging.Source;
+import org.springframework.cloud.stream.annotation.StreamListener;
+import org.springframework.cloud.stream.messaging.Sink;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.messaging.Message;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,15 +28,14 @@ import static org.springframework.security.core.authority.AuthorityUtils.createA
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"org.revo.base", "org.revo.ihear.pi"})
-@EnableMongoRepositories(basePackages = {"org.revo.base", "org.revo.ihear.pi"})
+@ComponentScan(basePackages = {"org.revo.base", "org.revo.ihear.streamer"})
 @EnableDiscoveryClient
 @EnableWebFluxSecurity
-@EnableBinding(Source.class)
-public class PiApplication {
+@EnableBinding(Sink.class)
+public class StreamerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(PiApplication.class, args);
+        SpringApplication.run(StreamerApplication.class, args);
     }
 
     @Bean
@@ -60,4 +60,10 @@ public class PiApplication {
     public RouterFunction<ServerResponse> routes(UserService userService) {
         return route().GET("/", serverRequest -> ServerResponse.ok().body(userService.current(), String.class)).build();
     }
+
+    @StreamListener(Sink.INPUT)
+    public void handle(Message<byte[]> message) {
+        System.out.println(message.getPayload().length);
+    }
+
 }

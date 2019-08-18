@@ -129,5 +129,6 @@
         <module>ui</module>
         <module>pi</module>
         <module>pipeline</module>
+        <module>streamer</module>
     </modules>
 </project>

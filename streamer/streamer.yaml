@@ -2,35 +2,35 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: pi
+  name: streamer
 spec:
   selector:
     matchLabels:
-      run: pi
+      run: streamer
   replicas: 1
   template:
     metadata:
       labels:
-        run: pi
+        run: streamer
     spec:
       containers:
-        - name: pi
-          image: ashraf1abdelrasool/pi:0.0.1-SNAPSHOT
+        - name: streamer
+          image: ashraf1abdelrasool/streamer:0.0.1-SNAPSHOT
           ports:
-            - containerPort: 8082
+            - containerPort: 8083
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: pi
+  name: streamer
   labels:
-    run: pi
+    run: streamer
 spec:
   ports:
     - name: http
       protocol: TCP
-      port: 8082
-      targetPort: 8082
+      port: 8083
+      targetPort: 8083
   type: NodePort
   selector:
-    run: pi
+    run: streamer
