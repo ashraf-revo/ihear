@@ -33,6 +33,6 @@ spec:
       port: 27017
       protocol: TCP
       targetPort: 27017
-  type: ClusterIP
+  type: NodePort
   selector:
     run: mongodb

@@ -33,7 +33,7 @@ metadata:
   name: default
 data:
   default.yaml: |-
-    node: 192.168.99.162:30001
+    node: 35.225.160.54
     spring:
       profiles:
         active: kubernetes
@@ -62,4 +62,4 @@ data:
               - PreserveHostHeader
               - SaveSession
               include-expression: (!serviceId.equals("ui")&&!serviceId.equals("kubernetes"))
-              url-expression: "'http://ingress-nginx.ingress-nginx/'+serviceId"
+              url-expression: "'http://ingress-nginx.ingress-nginx.svc.cluster.local/'+serviceId"

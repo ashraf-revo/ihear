@@ -10,6 +10,8 @@ metadata:
     nginx.ingress.kubernetes.io/x-forwarded-prefix: "true"
     nginx.ingress.kubernetes.io/affinity: "cookie"
     nginx.ingress.kubernetes.io/session-cookie-name: "SESSION"
+    nginx.ingress.kubernetes.io/load-balance: "round_robin"
+
 spec:
   rules:
     - http:
@@ -18,6 +20,15 @@ spec:
             backend:
               serviceName: pi
               servicePort: 8082
+          - path: /streamer/?(.*)
+            backend:
+              serviceName: streamer
+              servicePort: 8083
+          - path: /?(.*)
+            backend:
+              serviceName: ui
+              servicePort: 80
+
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -28,6 +39,7 @@ metadata:
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/affinity: "cookie"
     nginx.ingress.kubernetes.io/session-cookie-name: "JSESSIONID"
+    nginx.ingress.kubernetes.io/load-balance: "round_robin"
 spec:
   rules:
     - http:
