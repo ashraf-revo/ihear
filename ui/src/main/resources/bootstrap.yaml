@@ -29,20 +29,26 @@ spring:
     oauth2:
       client:
         registration:
-          login-client:
+          web:
             provider: auth
             client-id: revo
             client-secret: revo
             authorization-grant-type: authorization_code
             redirect-uri-template: "{baseUrl}/login/oauth2/code/{registrationId}"
             scope: read,write
+          mobile:
+            provider: auth
+            client-id: revo
+            authorization-grant-type: implicit
+            redirect-uri-template: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope: read
         provider:
           auth:
-            authorization-uri: http://${node:localhost:9999}/auth/oauth/authorize
-            token-uri: http://${node:localhost:9999}/auth/oauth/token
-            user-info-uri: http://${node:localhost:9999}/auth/user
+            authorization-uri: http://${node:localhost:8080}/auth/oauth/authorize
+            token-uri: http://${node:localhost:8080}/auth/oauth/token
+            user-info-uri: http://${node:localhost:8080}/auth/user
             user-name-attribute: sub
-            jwk-set-uri: http://${node:localhost:9999}/auth/.well-known/jwks.json
+            jwk-set-uri: http://${node:localhost:8080}/auth/.well-known/jwks.json
 management:
   endpoints:
     web:
