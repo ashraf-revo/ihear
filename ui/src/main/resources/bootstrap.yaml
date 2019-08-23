@@ -40,7 +40,7 @@ spring:
             provider: auth
             client-id: revo
             authorization-grant-type: implicit
-            redirect-uri-template: "{baseUrl}/login/oauth2/code/{registrationId}"
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             scope: read
         provider:
           auth:

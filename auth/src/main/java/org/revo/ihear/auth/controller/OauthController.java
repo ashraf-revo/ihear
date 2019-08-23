@@ -19,7 +19,7 @@ public class OauthController {
 
     @GetMapping("/oauth/confirm_access")
     public ModelAndView getAccessConfirmation(@ModelAttribute AuthorizationRequest clientAuth, Principal user) {
-        return new ModelAndView("access_confirmation").addObject("auth_request", clientAuth)
+        return new ModelAndView("confirmation").addObject("auth_request", clientAuth)
                 .addObject("client", clientDetailsService.findByClientId(clientAuth.getClientId()).get());
     }
 

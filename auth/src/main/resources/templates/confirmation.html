@@ -25,7 +25,6 @@
                 <div th:each="u:${client.getScope()}" style="margin: 0 auto;display: table">
                     <div class="checkbox">
                         <label>
-                            <input th:id="${u}" type="checkbox" th:name="|scope.${u}|" value="true"/>
                             <span th:text="${u}"></span>
                         </label>
                     </div>
