@@ -3,7 +3,6 @@ package org.revo.ihear.pi.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.web.reactive.HandlerMapping;
@@ -13,7 +12,6 @@ import org.springframework.web.reactive.socket.WebSocketSession;
 import org.springframework.web.reactive.socket.server.support.HandshakeWebSocketService;
 import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAdapter;
 import org.springframework.web.reactive.socket.server.upgrade.ReactorNettyRequestUpgradeStrategy;
-import org.springframework.web.server.WebFilter;
 import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
@@ -55,21 +53,4 @@ public class WebSocketConfig {
     public WebSocketHandlerAdapter handlerAdapter() {
         return new WebSocketHandlerAdapter(new HandshakeWebSocketService(new ReactorNettyRequestUpgradeStrategy()));
     }
-
-    @Bean
-    public WebFilter loggingFilter() {
-        return (exchange, chain) -> {
-
-            ServerHttpRequest serverHttpRequest = exchange.getRequest().mutate().headers(httpHeaders -> httpHeaders.remove("SESSION")).build();
-
-
-            System.out.println("++++++++++++++++++++++++++++++++++");
-            for (Map.Entry<String, List<String>> stringListEntry : serverHttpRequest.getHeaders().entrySet()) {
-                System.out.println(stringListEntry.getKey() + " " + stringListEntry.getValue());
-            }
-
-            return chain.filter(exchange.mutate().request(serverHttpRequest).build());
-        };
-    }
-
 }
