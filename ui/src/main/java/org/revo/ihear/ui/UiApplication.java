@@ -5,9 +5,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.cloud.gateway.filter.factory.RemoveResponseHeaderGatewayFilterFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -20,6 +23,7 @@ import org.springframework.web.reactive.function.server.RequestPredicate;
 import org.springframework.web.reactive.function.server.RequestPredicates;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.util.pattern.PathPatternParser;
 import reactor.core.publisher.Mono;
 
@@ -33,7 +37,7 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 @SpringBootApplication
 @EnableDiscoveryClient
 public class UiApplication {
-    private static final List<String> services = List.of("/auth/**", "/pi/**", "/streamer/**", "/login");
+    private static final List<String> services = List.of("/auth/**", "/pi/**", "/streamer/**", "/ws/**", "/login");
     private final RequestPredicate requestPredicate = serverRequest -> services.stream().map(it -> new PathPatternParser().parse(it)).noneMatch(it -> it.matches(serverRequest.exchange().getRequest().getPath().pathWithinApplication())) && !serverRequest.path().contains(".");
 
     public static void main(String[] args) {
@@ -71,23 +75,4 @@ public class UiApplication {
                 .and().build();
     }
 
-
-    @Bean
-    public GlobalFilter filter(ServerOAuth2AuthorizedClientRepository authorizedClientRepository) {
-        return (exchange, chain) -> exchange.getPrincipal()
-                .cast(OAuth2AuthenticationToken.class)
-                .flatMap(authentication -> authorizedClientRepository.loadAuthorizedClient(authentication.getAuthorizedClientRegistrationId(), authentication, exchange).cast(OAuth2AuthorizedClient.class))
-                .map(OAuth2AuthorizedClient::getAccessToken)
-                .map(token -> exchange.mutate().request(r -> r.headers(headers -> headers.setBearerAuth(token.getTokenValue()))).build())
-                .defaultIfEmpty(exchange)
-                .flatMap(chain::filter)
-                .then(Mono.fromRunnable(() -> {
-                    String name = "Set-Cookie";
-                    String value = exchange.getResponse().getHeaders().getFirst(name);
-                    if (!new PathPatternParser().parse("/auth/**").matches(exchange.getRequest().getPath().pathWithinApplication()) && value != null) {
-                        exchange.getResponse().getHeaders().set(name, value.replaceAll("JSESSIONID=[0-9a-zA-Z]+; ", ""));
-                        if (value.contains("SESSION=;")) exchange.getResponse().getHeaders().remove(name);
-                    }
-                }));
-    }
 }

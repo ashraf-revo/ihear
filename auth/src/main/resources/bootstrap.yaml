@@ -33,7 +33,9 @@ org:
             authorizedGrantTypes: "authorization_code , implicit , refresh token"
             registeredRedirectUri:
               - "http://${node:localhost:8080}/login/oauth2/code/web"
-              - "http://localhost:8080/login/oauth2/code/mobile"
+              - "http://${node:localhost:8080}/login/oauth2/code/mobile"
+              - "http://${node:127.0.0.1:8080}/login/oauth2/code/web"
+              - "http://${node:127.0.0.1:8080}/login/oauth2/code/mobile"
             scope:
               - "read"
               - "write"

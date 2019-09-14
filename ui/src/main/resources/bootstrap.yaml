@@ -11,18 +11,31 @@ spring:
       routes:
         - id: auth
           uri: http://localhost:9999/auth
+          filters:
+            - AddAuthorizationHeaderRequest
           predicates:
             - Path=/auth/**
         - id: pi
           uri: http://localhost:8082/
           filters:
             - StripPrefix=1
+            - AddAuthorizationHeaderRequest
+            - RemoveSessionHeaderResponse
           predicates:
             - Path=/pi/**
+        - id: ws
+          uri: ws://localhost:8082/ws/
+          filters:
+            - AddAuthorizationHeaderRequest
+            - RemoveSessionHeaderRequest
+          predicates:
+            - Path=/ws/**
         - id: streamer
           uri: http://localhost:8083/
           filters:
             - StripPrefix=1
+            - AddAuthorizationHeaderRequest
+            - RemoveSessionHeaderResponse
           predicates:
             - Path=/streamer/**
   security:
