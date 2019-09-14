@@ -30,8 +30,9 @@ public class WebSocketConfig {
         List<String> authorization = session.getHandshakeInfo().getHeaders().get("Authorization");
         if (authorization == null) return Mono.empty();
         if (authorization.size() == 0) return Mono.empty();
-        if (!authorization.get(0).startsWith("Bearer ")) return Mono.empty();
-        return reactiveJwtDecoder.decode(authorization.get(0).substring(7));
+        String bearer = authorization.get(0);
+        if (bearer != null && !bearer.isEmpty() && !bearer.startsWith("Bearer ")) return Mono.empty();
+        return reactiveJwtDecoder.decode(bearer.substring(7));
     }
 
     @Bean
