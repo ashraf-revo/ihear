@@ -28,6 +28,7 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"org.revo.base", "org.revo.ihear.pi"})
+@EnableMongoRepositories(basePackages = {"org.revo.base", "org.revo.ihear.pi"})
 @EnableDiscoveryClient
 @EnableWebFluxSecurity
 @EnableBinding(Source.class)

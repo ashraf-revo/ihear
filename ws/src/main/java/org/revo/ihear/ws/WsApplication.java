@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,6 +26,7 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"org.revo.base", "org.revo.ihear.ws"})
+@EnableMongoRepositories(basePackages = {"org.revo.base", "org.revo.ihear.ws"})
 @EnableDiscoveryClient
 @EnableWebFluxSecurity
 public class WsApplication {

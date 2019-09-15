@@ -13,6 +13,8 @@ module ihear.ws {
     requires spring.boot;
     requires spring.boot.actuator.autoconfigure;
 
+    requires spring.data.mongodb;
+    requires spring.data.commons;
     requires spring.security.config;
     requires spring.security.web;
     requires spring.security.oauth2.jose;
