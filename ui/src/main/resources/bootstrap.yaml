@@ -24,7 +24,7 @@ spring:
           predicates:
             - Path=/pi/**
         - id: ws
-          uri: ws://localhost:8082/ws/
+          uri: ws://localhost:8084/ws/
           filters:
             - AddAuthorizationHeaderRequest
             - RemoveSessionHeaderRequest

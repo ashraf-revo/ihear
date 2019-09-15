@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: ws
+  cloud:
+    kubernetes:
+      config:
+        sources:
+          - name: ${spring.application.name}
+          - name: default
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://${node:localhost:9999}/auth/.well-known/jwks.json
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ["*"]
+  endpoint:
+    health:
+      show-details: always
+server:
+  port: 8084
+logging:
+  level:
+    org.springframework: debug

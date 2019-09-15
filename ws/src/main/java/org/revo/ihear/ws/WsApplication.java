@@ -1,15 +1,12 @@
-package org.revo.ihear.pi;
+package org.revo.ihear.ws;
 
 import org.revo.base.service.UserService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.stream.annotation.EnableBinding;
-import org.springframework.cloud.stream.messaging.Source;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,14 +24,13 @@ import static org.springframework.security.core.authority.AuthorityUtils.createA
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"org.revo.base", "org.revo.ihear.pi"})
+@ComponentScan(basePackages = {"org.revo.base", "org.revo.ihear.ws"})
 @EnableDiscoveryClient
 @EnableWebFluxSecurity
-@EnableBinding(Source.class)
-public class PiApplication {
+public class WsApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(PiApplication.class, args);
+        SpringApplication.run(WsApplication.class, args);
     }
 
     @Bean
@@ -59,4 +55,5 @@ public class PiApplication {
     public RouterFunction<ServerResponse> routes(UserService userService) {
         return route().GET("/", serverRequest -> ServerResponse.ok().body(userService.current(), String.class)).build();
     }
+
 }

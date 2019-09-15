@@ -1,6 +1,10 @@
-package org.revo.ihear.pi.config;
+package org.revo.ihear.ws.config;
 
+import org.revo.ihear.ws.event.base.MessageReceivedEvent;
+import org.revo.ihear.ws.event.base.SessionConnectEvent;
+import org.revo.ihear.ws.event.base.SessionDisconnectEvent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -22,6 +26,8 @@ import java.util.Map;
 public class WebSocketConfig {
     @Autowired
     private ReactiveJwtDecoder reactiveJwtDecoder;
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
 
 
     private Mono<Jwt> getJwt(WebSocketSession session) {
@@ -36,11 +42,17 @@ public class WebSocketConfig {
     @Bean
     public HandlerMapping handlerMapping() {
         Map<String, WebSocketHandler> map = new HashMap<>();
-        map.put("/ws", session ->
-                session.send(session.receive()
-                        .filterWhen(it -> getJwt(session).map(itv -> true).defaultIfEmpty(false))
-                        .map(value -> session.textMessage(value.getPayloadAsText())))
-
+        map.put("/ws", session -> {
+                    applicationEventPublisher.publishEvent(new SessionConnectEvent(this, session));
+                    return session.send(session.receive()
+                            .filterWhen(it -> getJwt(session).map(itv -> true).defaultIfEmpty(false))
+                            .map(value -> session.textMessage(value.getPayloadAsText()))
+                            .doOnComplete(() -> applicationEventPublisher.publishEvent(new SessionDisconnectEvent(this, session)))
+                            .doOnEach(webSocketMessageSignal -> {
+                                if (webSocketMessageSignal.get() != null)
+                                    applicationEventPublisher.publishEvent(new MessageReceivedEvent(this, session, webSocketMessageSignal.get()));
+                            }));
+                }
         );
 
         SimpleUrlHandlerMapping mapping = new SimpleUrlHandlerMapping();
@@ -52,5 +64,10 @@ public class WebSocketConfig {
     @Bean
     public WebSocketHandlerAdapter handlerAdapter() {
         return new WebSocketHandlerAdapter(new HandshakeWebSocketService(new ReactorNettyRequestUpgradeStrategy()));
+    }
+
+    @Bean
+    public WebSocketSessionRegistry webSocketSessionRegistry() {
+        return new WebSocketSessionRegistry();
     }
 }
