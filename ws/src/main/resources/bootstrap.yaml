@@ -7,6 +7,27 @@ spring:
         sources:
           - name: ${spring.application.name}
           - name: default
+    stream:
+      bindings:
+        input:
+          destination: asrevo.ihear.ws
+          contentType: application/json
+          group: ${random.uuid}
+        output:
+          destination: asrevo.ihear.ws
+          contentType: application/json
+      rabbit:
+        bindings:
+          input:
+            consumer:
+              exchangeType: fanout
+              durableSubscription: false
+              acknowledgeMode: NONE
+          output:
+            producer:
+              exchangeType: fanout
+              durableSubscription: false
+              acknowledgeMode: NONE
   security:
     oauth2:
       resourceserver:

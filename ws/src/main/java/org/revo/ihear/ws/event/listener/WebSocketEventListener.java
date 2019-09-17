@@ -1,17 +1,21 @@
 package org.revo.ihear.ws.event.listener;
 
 import org.revo.ihear.ws.config.WebSocketSessionRegistry;
+import org.revo.ihear.ws.config.WebSocketTemplate;
+import org.revo.ihear.ws.config.domain.WSMessage;
 import org.revo.ihear.ws.event.base.MessageReceivedEvent;
 import org.revo.ihear.ws.event.base.SessionConnectEvent;
 import org.revo.ihear.ws.event.base.SessionDisconnectEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
+import org.springframework.messaging.Message;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.socket.WebSocketSession;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.UnicastProcessor;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +27,8 @@ public class WebSocketEventListener {
     private WebSocketSessionRegistry webSocketSessionRegistry;
     @Autowired
     private ReactiveJwtDecoder reactiveJwtDecoder;
+    @Autowired
+    private WebSocketTemplate webSocketTemplate;
 
     @EventListener
     public void sessionDisconnectEvent(SessionDisconnectEvent sessionDisconnectEvent) {
@@ -39,7 +45,8 @@ public class WebSocketEventListener {
 
     @EventListener
     public void messageReceivedEvent(MessageReceivedEvent messageReceivedEvent) {
-        System.out.println("in MessageReceivedEvent " + messageReceivedEvent.getWebSocketMessage().getType() + "         " + messageReceivedEvent.getWebSocketMessage().getPayloadAsText());
+        System.out.println("in MessageReceivedEvent " + messageReceivedEvent.getWsMessage().getPayload());
+        webSocketTemplate.send(messageReceivedEvent.getWsMessage());
     }
 
     private Mono<String> getUserId(WebSocketSession session) {

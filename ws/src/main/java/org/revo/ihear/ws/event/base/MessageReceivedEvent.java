@@ -1,23 +1,22 @@
 package org.revo.ihear.ws.event.base;
 
-import org.springframework.web.reactive.socket.WebSocketMessage;
-import org.springframework.web.reactive.socket.WebSocketSession;
+import org.revo.ihear.ws.config.domain.WSMessage;
+import org.springframework.messaging.Message;
 
 public class MessageReceivedEvent extends BaseEvent {
-    private WebSocketMessage webSocketMessage;
+    private Message<WSMessage> wsMessage;
 
-    public MessageReceivedEvent(Object source, WebSocketSession session, WebSocketMessage webSocketMessage) {
+    public MessageReceivedEvent(Object source, Message<WSMessage> wsMessage) {
         super(source);
-        setSession(session);
-        this.webSocketMessage = webSocketMessage;
+        this.wsMessage = wsMessage;
     }
 
-    public WebSocketMessage getWebSocketMessage() {
-        return webSocketMessage;
+    public Message<WSMessage> getWsMessage() {
+        return wsMessage;
     }
 
-    public MessageReceivedEvent setWebSocketMessage(WebSocketMessage webSocketMessage) {
-        this.webSocketMessage = webSocketMessage;
+    public MessageReceivedEvent setWsMessage(Message<WSMessage> wsMessage) {
+        this.wsMessage = wsMessage;
         return this;
     }
 }

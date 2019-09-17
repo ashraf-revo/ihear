@@ -13,6 +13,9 @@ module ihear.ws {
     requires spring.boot;
     requires spring.boot.actuator.autoconfigure;
 
+    requires spring.messaging;
+    requires spring.cloud.stream;
+
     requires spring.data.mongodb;
     requires spring.data.commons;
     requires spring.security.config;
