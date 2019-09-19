@@ -35,20 +35,24 @@ public class WsSocketHandler implements WebSocketHandler {
     @Override
     public Mono<Void> handle(WebSocketSession session) {
         applicationEventPublisher.publishEvent(new SessionConnectEvent(this, session));
-        return session.send(messageFlux
+        Flux<Message<WSMessage>> in = session.receive()
+                .flatMap(itm -> getUserId(session).map(it -> new WSMessage().setPayload(itm.getPayloadAsText()).setFrom(it)))
+                .log("received")
+                .flatMap(its -> getUserId(session).map(its::setFrom))
+                .map(it -> withPayload(it).build())
+                .doOnEach(it -> applicationEventPublisher.publishEvent(new MessageReceivedEvent(this, it.get())))
+                .doOnComplete(() -> applicationEventPublisher.publishEvent(new SessionDisconnectEvent(this, session)))
+//                .doOnCancel(() -> applicationEventPublisher.publishEvent(new SessionDisconnectEvent(this, session)))
+                ;
+        Flux<WebSocketMessage> out = messageFlux
+                .flatMap(itm -> getJwt(session).map(it -> itm))
                 .log("send")
                 .map(Message::getPayload)
                 .filterWhen(it -> getUserId(session).filter(itw -> itw.equals(it.getTo())).map(itv -> true).defaultIfEmpty(it.getTo() == null))
-                .map(WSMessage::getPayload).map(session::textMessage))
-                .and(session.receive()
-                        .filterWhen(it -> getJwt(session).map(itv -> true).defaultIfEmpty(false))
-                        .log("received")
-                        .map(WebSocketMessage::getPayloadAsText)
-                        .map(it -> new WSMessage().setPayload(it))
-                        .flatMap(its -> getUserId(session)/*.defaultIfEmpty(null)*/.map(its::setFrom))
-                        .map(it -> withPayload(it).build())
-                        .doOnEach(it -> applicationEventPublisher.publishEvent(new MessageReceivedEvent(this, it.get())))
-                        .doOnComplete(() -> applicationEventPublisher.publishEvent(new SessionDisconnectEvent(this, session))));
+                .map(WSMessage::getPayload).map(session::textMessage)
+//                .doOnCancel(() -> applicationEventPublisher.publishEvent(new SessionDisconnectEvent(this, session)))
+                ;
+        return session.send(out).and(in);
     }
 
     private Mono<Jwt> getJwt(WebSocketSession session) {
