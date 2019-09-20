@@ -40,18 +40,16 @@ public class WsSocketHandler implements WebSocketHandler {
                 .log("received")
                 .flatMap(its -> getUserId(session).map(its::setFrom))
                 .map(it -> withPayload(it).build())
-                .doOnEach(it -> applicationEventPublisher.publishEvent(new MessageReceivedEvent(this, it.get())))
-                .doOnComplete(() -> applicationEventPublisher.publishEvent(new SessionDisconnectEvent(this, session)))
-//                .doOnCancel(() -> applicationEventPublisher.publishEvent(new SessionDisconnectEvent(this, session)))
-                ;
+                .doOnEach(it -> applicationEventPublisher.publishEvent(new MessageReceivedEvent(WsSocketHandler.this, it.get())))
+                .doOnComplete(() -> applicationEventPublisher.publishEvent(new SessionDisconnectEvent(WsSocketHandler.this, session)))
+                .doOnCancel(() -> applicationEventPublisher.publishEvent(new SessionDisconnectEvent(WsSocketHandler.this, session)));
         Flux<WebSocketMessage> out = messageFlux
                 .flatMap(itm -> getJwt(session).map(it -> itm))
                 .log("send")
                 .map(Message::getPayload)
                 .filterWhen(it -> getUserId(session).filter(itw -> itw.equals(it.getTo())).map(itv -> true).defaultIfEmpty(it.getTo() == null))
                 .map(WSMessage::getPayload).map(session::textMessage)
-//                .doOnCancel(() -> applicationEventPublisher.publishEvent(new SessionDisconnectEvent(this, session)))
-                ;
+                .doOnCancel(() -> applicationEventPublisher.publishEvent(new SessionDisconnectEvent(WsSocketHandler.this, session)));
         return session.send(out).and(in);
     }
 

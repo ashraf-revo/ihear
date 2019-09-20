@@ -1,28 +1,35 @@
 package org.revo.ihear.ws.config;
 
-import org.springframework.web.reactive.socket.WebSocketSession;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class WebSocketSessionRegistry {
-    private Map<String, List<WebSocketSession>> sessionByUserId = new ConcurrentHashMap<>();
+    private Map<String, List<String>> sessionByUserId = new ConcurrentHashMap<>();
+    private Map<String, String> userIdBySessionId = new ConcurrentHashMap<>();
 
-    public void add(String key, WebSocketSession session) {
-        sessionByUserId.computeIfPresent(key, (key1, sessions) -> {
-            sessions.add(session);
+    public void add(String userId, String sessionId) {
+        sessionByUserId.computeIfPresent(userId, (key1, sessions) -> {
+            sessions.add(sessionId);
             return sessions;
         });
-        sessionByUserId.computeIfAbsent(key, s -> new ArrayList<>(Collections.singleton(session)));
+        sessionByUserId.computeIfAbsent(userId, s -> new ArrayList<>(Collections.singleton(sessionId)));
+        userIdBySessionId.computeIfAbsent(sessionId, s -> userId);
     }
 
-    public void remove(String key, WebSocketSession session) {
-        List<WebSocketSession> result = sessionByUserId.computeIfPresent(key, (key1, sessions) -> sessions.stream().filter(it -> !it.getId().equals(session.getId())).collect(Collectors.toList()));
-        if (result == null || result.size() == 0) sessionByUserId.remove(key);
+    private void remove(String userId, String session) {
+        List<String> result = sessionByUserId.computeIfPresent(userId, (key1, sessions) -> sessions.stream().filter(it -> !it.equals(session)).collect(Collectors.toList()));
+        if (result == null || result.size() == 0) sessionByUserId.remove(userId);
+        userIdBySessionId.remove(session);
     }
 
-    public List<WebSocketSession> sessions(String userId) {
+    public void remove(String sessionId) {
+        if (userIdBySessionId.containsKey(sessionId)) remove(userIdBySessionId.get(sessionId), sessionId);
+    }
+
+    public List<String> sessions(String userId) {
+        if (!sessionByUserId.containsKey(userId))
+            return Collections.emptyList();
         return sessionByUserId.get(userId);
     }
 
