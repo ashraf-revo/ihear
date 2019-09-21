@@ -4,6 +4,7 @@ module ihear.pi {
     requires org.reactivestreams;
 
     requires spring.webflux;
+    requires spring.web;
     requires spring.context;
     requires spring.beans;
     requires reactor.core;

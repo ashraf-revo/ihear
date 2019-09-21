@@ -28,9 +28,9 @@ org:
           - id: 5bfd3df1ad8ce6617f9bf636
             clientId: revo
             clientSecret: "{bcrypt}$2a$10$rPUJCZ6TmrrmDmHuIJptm.UIxsUcGm/WegmuwNfXE4eibF/kOEwWu"
-            refreshTokenValiditySeconds: 60
-            accessTokenValiditySeconds: 60
-            authorizedGrantTypes: "authorization_code , implicit , refresh token"
+            refreshTokenValiditySeconds: 43200
+            accessTokenValiditySeconds: 43200
+            authorizedGrantTypes: "authorization_code , implicit , refresh_token"
             registeredRedirectUri:
               - "http://${node:localhost:8080}/login/oauth2/code/web"
               - "http://${node:localhost:8080}/login/oauth2/code/mobile"

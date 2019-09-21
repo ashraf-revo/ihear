@@ -46,7 +46,7 @@ public class WsApplication {
         return http
                 .authorizeExchange()
                 .matchers(EndpointRequest.toAnyEndpoint()).permitAll()
-                .pathMatchers("/ws").permitAll()
+                .pathMatchers("/echo").authenticated()
                 .anyExchange().authenticated()
                 .and()
                 .oauth2ResourceServer()
@@ -62,6 +62,6 @@ public class WsApplication {
 
     @Bean
     public RouterFunction<ServerResponse> routes(UserService userService) {
-        return route().GET("/", serverRequest -> ServerResponse.ok().body(userService.current(), String.class)).build();
+        return route().GET("/", serverRequest -> ServerResponse.ok().body(userService.current().map(it -> "user " + it + "  from " + serverRequest.exchange().getRequest().getRemoteAddress()), String.class)).build();
     }
 }

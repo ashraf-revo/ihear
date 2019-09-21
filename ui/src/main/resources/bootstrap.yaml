@@ -23,13 +23,6 @@ spring:
             - RemoveSessionHeaderResponse
           predicates:
             - Path=/pi/**
-        - id: ws
-          uri: ws://localhost:8084/ws/
-          filters:
-            - AddAuthorizationHeaderRequest
-            - RemoveSessionHeaderRequest
-          predicates:
-            - Path=/ws/**
         - id: streamer
           uri: http://localhost:8083/
           filters:
@@ -38,6 +31,21 @@ spring:
             - RemoveSessionHeaderResponse
           predicates:
             - Path=/streamer/**
+        - id: ws
+          uri: http://localhost:8084/
+          filters:
+            - StripPrefix=1
+            - AddAuthorizationHeaderRequest
+            - RemoveSessionHeaderResponse
+          predicates:
+            - Path=/ws/**
+        - id: echo
+          uri: ws://localhost:8084/echo/
+          filters:
+            - AddAuthorizationHeaderRequest
+            - RemoveSessionHeaderRequest
+          predicates:
+            - Path=/echo/**
   security:
     oauth2:
       client:

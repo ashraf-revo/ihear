@@ -4,6 +4,7 @@ module ihear.streamer {
     requires org.reactivestreams;
 
     requires spring.webflux;
+    requires spring.web;
     requires spring.context;
     requires spring.beans;
     requires spring.core;
@@ -13,6 +14,8 @@ module ihear.streamer {
     requires spring.boot;
     requires spring.boot.actuator.autoconfigure;
 
+    requires spring.data.mongodb;
+    requires spring.data.commons;
     requires spring.security.config;
     requires spring.security.web;
     requires spring.security.oauth2.jose;

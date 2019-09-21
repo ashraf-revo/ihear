@@ -63,11 +63,18 @@ data:
     spring:
       cloud:
         gateway:
+          routes:
+            - id: auth
+              uri: "http://ingress-nginx.ingress-nginx.svc.cluster.local/auth"
+              filters:
+                - AddAuthorizationHeaderRequest
+              predicates:
+                - Path=/auth/**
           discovery:
             locator:
               enabled: true
               filters:
-              - PreserveHostHeader
-              - SaveSession
-              include-expression: (!serviceId.equals("ui")&&!serviceId.equals("kubernetes"))
+              - AddAuthorizationHeaderRequest
+              - RemoveSessionHeaderResponse
+              include-expression: (!serviceId.equals("ui")&&!serviceId.equals("kubernetes")&&!serviceId.equals("auth"))
               url-expression: "'http://ingress-nginx.ingress-nginx.svc.cluster.local/'+serviceId"

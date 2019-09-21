@@ -58,6 +58,6 @@ public class PiApplication {
 
     @Bean
     public RouterFunction<ServerResponse> routes(UserService userService) {
-        return route().GET("/", serverRequest -> ServerResponse.ok().body(userService.current(), String.class)).build();
+        return route().GET("/", serverRequest -> ServerResponse.ok().body(userService.current().map(it -> "user " + it + "  from " + serverRequest.exchange().getRequest().getRemoteAddress()), String.class)).build();
     }
 }

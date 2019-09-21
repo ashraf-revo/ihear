@@ -28,7 +28,7 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 @SpringBootApplication
 @EnableDiscoveryClient
 public class UiApplication {
-    private static final List<String> services = List.of("/auth/**", "/pi/**", "/streamer/**", "/ws/**", "/login");
+    private static final List<String> services = List.of("/auth/**", "/pi/**", "/streamer/**", "/ws/**", "/echo/**", "/login");
     private final RequestPredicate requestPredicate = serverRequest -> services.stream().map(it -> new PathPatternParser().parse(it)).noneMatch(it -> it.matches(serverRequest.exchange().getRequest().getPath().pathWithinApplication())) && !serverRequest.path().contains(".");
 
     public static void main(String[] args) {

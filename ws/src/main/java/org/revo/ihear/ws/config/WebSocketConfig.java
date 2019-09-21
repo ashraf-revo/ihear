@@ -22,7 +22,7 @@ public class WebSocketConfig {
     @Bean
     public HandlerMapping handlerMapping(ReactiveJwtDecoder reactiveJwtDecoder, ApplicationEventPublisher applicationEventPublisher, UnicastProcessor<Message<WSMessage>> wsMessages) {
         Map<String, WebSocketHandler> map = new HashMap<>();
-        map.put("/ws", new WsSocketHandler(reactiveJwtDecoder, applicationEventPublisher, wsMessages));
+        map.put("/echo", new WsSocketHandler(reactiveJwtDecoder, applicationEventPublisher, wsMessages));
         SimpleUrlHandlerMapping mapping = new SimpleUrlHandlerMapping();
         mapping.setUrlMap(map);
         mapping.setOrder(-1);

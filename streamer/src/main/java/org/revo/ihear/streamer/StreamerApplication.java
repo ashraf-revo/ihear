@@ -1,5 +1,6 @@
 package org.revo.ihear.streamer;
 
+import org.revo.base.service.UserService;
 import org.revo.ihear.streamer.codec.base.NALU;
 import org.revo.ihear.streamer.codec.base.Raw;
 import org.revo.ihear.streamer.codec.base.RtpPkt;
@@ -14,8 +15,10 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.cloud.stream.messaging.Sink;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DefaultDataBufferFactory;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.messaging.Message;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -38,6 +41,8 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
 @SpringBootApplication
+@ComponentScan(basePackages = {"org.revo.base", "org.revo.ihear.streamer"})
+@EnableMongoRepositories(basePackages = {"org.revo.base", "org.revo.ihear.streamer"})
 @EnableDiscoveryClient
 @EnableWebFluxSecurity
 @EnableBinding(Sink.class)
@@ -77,7 +82,7 @@ public class StreamerApplication {
     }
 
     @Bean
-    public RouterFunction<ServerResponse> function(Flux<RtpPkt> stream) {
+    public RouterFunction<ServerResponse> function(UserService userService, Flux<RtpPkt> stream) {
         DefaultDataBufferFactory ddbf = new DefaultDataBufferFactory();
         return route(GET("/h264"), serverRequest -> ok()
                 .header("Content-Type", "video/h264")
@@ -86,7 +91,7 @@ public class StreamerApplication {
                         .flatMap(Flux::fromIterable)
                         .map(Raw::getRaw)
                         .filter(it -> it.length > 0)
-                        .map(ddbf::wrap), DataBuffer.class));
+                        .map(ddbf::wrap), DataBuffer.class)).andRoute(GET("/"), serverRequest -> ok().body(userService.current().map(it -> "user " + it + "  from " + serverRequest.exchange().getRequest().getRemoteAddress()), String.class));
     }
 
 }
