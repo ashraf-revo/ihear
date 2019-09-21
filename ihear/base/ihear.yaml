@@ -41,7 +41,7 @@ metadata:
   name: default
 data:
   default.yaml: |-
-    node: 35.225.160.54
+    node: 35.222.108.11
     spring:
       profiles:
         active: kubernetes
@@ -68,6 +68,7 @@ data:
               uri: "http://ingress-nginx.ingress-nginx.svc.cluster.local/auth"
               filters:
                 - AddAuthorizationHeaderRequest
+                - PreserveHostHeader
               predicates:
                 - Path=/auth/**
           discovery:
@@ -76,5 +77,6 @@ data:
               filters:
               - AddAuthorizationHeaderRequest
               - RemoveSessionHeaderResponse
+              - PreserveHostHeader
               include-expression: (!serviceId.equals("ui")&&!serviceId.equals("kubernetes")&&!serviceId.equals("auth"))
               url-expression: "'http://ingress-nginx.ingress-nginx.svc.cluster.local/'+serviceId"
