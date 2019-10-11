@@ -1,7 +1,6 @@
 package org.revo.ihear.ws;
 
-import org.revo.base.service.UserService;
-import org.revo.ihear.ws.config.domain.WSMessage;
+import org.revo.base.service.auth.AuthService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,7 +10,6 @@ import org.springframework.cloud.stream.messaging.Processor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
-import org.springframework.messaging.Message;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,7 +19,6 @@ import org.springframework.security.oauth2.server.resource.authentication.Reacti
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import reactor.core.publisher.UnicastProcessor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,10 +27,10 @@ import static org.springframework.security.core.authority.AuthorityUtils.createA
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"org.revo.base", "org.revo.ihear.ws"})
-@EnableMongoRepositories(basePackages = {"org.revo.base", "org.revo.ihear.ws"})
 @EnableDiscoveryClient
 @EnableWebFluxSecurity
+@ComponentScan(basePackages = {"org.revo.base.config", "org.revo.base.service.auth", "org.revo.ihear.ws"})
+@EnableMongoRepositories(basePackages = {"org.revo.ihear.ws"})
 @EnableBinding(Processor.class)
 public class WsApplication {
 
@@ -61,7 +58,7 @@ public class WsApplication {
 
 
     @Bean
-    public RouterFunction<ServerResponse> routes(UserService userService) {
-        return route().GET("/", serverRequest -> ServerResponse.ok().body(userService.current().map(it -> "user " + it + "  from " + serverRequest.exchange().getRequest().getRemoteAddress()), String.class)).build();
+    public RouterFunction<ServerResponse> routes(AuthService authService) {
+        return route().GET("/", serverRequest -> ServerResponse.ok().body(authService.currentJwtUser().map(it -> "user " + it + "  from " + serverRequest.exchange().getRequest().getRemoteAddress()), String.class)).build();
     }
 }

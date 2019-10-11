@@ -18,6 +18,9 @@ spring:
             producer:
               exchangeType: fanout
               durableSubscription: false
+  data:
+    mongodb:
+      database: ihear
   security:
     oauth2:
       resourceserver:

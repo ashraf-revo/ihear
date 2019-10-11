@@ -1,14 +1,17 @@
 package org.revo.ihear.ui;
 
+import org.revo.base.service.auth.AuthService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.csrf.CookieServerCsrfTokenRepository;
@@ -27,6 +30,8 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 
 @SpringBootApplication
 @EnableDiscoveryClient
+@EnableWebFluxSecurity
+@ComponentScan(basePackages = {"org.revo.base.service.auth", "org.revo.ihear.ui"})
 public class UiApplication {
     private static final List<String> services = List.of("/auth/**", "/pi/**", "/streamer/**", "/ws/**", "/echo/**", "/login");
     private final RequestPredicate requestPredicate = serverRequest -> services.stream().map(it -> new PathPatternParser().parse(it)).noneMatch(it -> it.matches(serverRequest.exchange().getRequest().getPath().pathWithinApplication())) && !serverRequest.path().contains(".");
@@ -37,9 +42,9 @@ public class UiApplication {
 
 
     @Bean
-    public RouterFunction<ServerResponse> routes(@Value("classpath:/static/index.html") Resource index, UserService userService, OAuth2ClientProperties oAuth2ClientProperties) {
+    public RouterFunction<ServerResponse> routes(@Value("classpath:/static/index.html") Resource index, AuthService authService, OAuth2ClientProperties oAuth2ClientProperties) {
         return route(requestPredicate, serverRequest -> ServerResponse.ok().contentType(MediaType.TEXT_HTML).syncBody(index))
-                .andRoute(RequestPredicates.GET("/login"), serverRequest -> userService.current().defaultIfEmpty("").flatMap(it -> {
+                .andRoute(RequestPredicates.GET("/login"), serverRequest -> authService.currentOAuth2User().defaultIfEmpty("").flatMap(it -> {
                     String red = "/";
                     if (it.isEmpty())
                         red = "/oauth2/authorization/" + serverRequest.queryParam("app").orElseGet(() -> oAuth2ClientProperties.getRegistration().entrySet().stream().findAny().map(Map.Entry::getKey).get());

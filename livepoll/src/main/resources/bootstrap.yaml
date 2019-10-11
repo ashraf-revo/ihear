@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: livepoll
+  cloud:
+    kubernetes:
+      config:
+        sources:
+          - name: ${spring.application.name}
+          - name: default
+    stream:
+      bindings:
+        output:
+          destination: asrevo.ihear.pkt
+          contentType: application/octet-stream
+      rabbit:
+        bindings:
+          input:
+            consumer:
+              exchangeType: fanout
+              durableSubscription: false
+          output:
+            producer:
+              exchangeType: fanout
+              durableSubscription: false
+              acknowledgeMode: NONE
+  data:
+    mongodb:
+      database: ihear
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://${node:localhost:9999}/auth/.well-known/jwks.json
+  main:
+    web-application-type: none
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ["*"]
+  endpoint:
+    health:
+      show-details: always
+server:
+  port: 8085
+logging:
+  level:
+    org.springframework: debug

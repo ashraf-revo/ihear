@@ -20,6 +20,9 @@ spring:
               exchangeType: fanout
               durableSubscription: false
               acknowledgeMode: NONE
+  data:
+    mongodb:
+      database: ihear
   security:
     oauth2:
       resourceserver:

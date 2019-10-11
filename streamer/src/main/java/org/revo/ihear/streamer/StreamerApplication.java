@@ -1,11 +1,9 @@
 package org.revo.ihear.streamer;
 
-import org.revo.base.service.UserService;
-import org.revo.ihear.streamer.codec.base.NALU;
-import org.revo.ihear.streamer.codec.base.Raw;
-import org.revo.ihear.streamer.codec.base.RtpPkt;
-import org.revo.ihear.streamer.codec.rtp.Encoder;
-import org.revo.ihear.streamer.codec.rtp.RtpNaluEncoder;
+import org.revo.base.service.auth.AuthService;
+import org.revo.base.service.stream.StreamService;
+import org.revo.ihear.livepoll.rtsp.rtp.base.NALU;
+import org.revo.ihear.livepoll.rtsp.rtp.base.RtpPkt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest;
@@ -34,20 +32,23 @@ import reactor.core.publisher.FluxProcessor;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
+import static java.util.Arrays.asList;
+import static org.revo.ihear.livepoll.rtsp.rtp.base.NALU.getRaw;
 import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
 import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
+import static reactor.core.publisher.Flux.fromIterable;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"org.revo.base", "org.revo.ihear.streamer"})
-@EnableMongoRepositories(basePackages = {"org.revo.base", "org.revo.ihear.streamer"})
 @EnableDiscoveryClient
 @EnableWebFluxSecurity
+@ComponentScan(basePackages = {"org.revo.base.config", "org.revo.base.service.auth", "org.revo.base.service.stream", "org.revo.base.repository.stream", "org.revo.ihear.streamer"})
+@EnableMongoRepositories(basePackages = {"org.revo.base.repository.stream", "org.revo.ihear.streamer"})
 @EnableBinding(Sink.class)
 public class StreamerApplication {
-    private Encoder<RtpPkt, NALU> rtpPktToNalu = new RtpNaluEncoder();
     @Autowired
     private FluxProcessor<RtpPkt, RtpPkt> processor;
 
@@ -75,23 +76,21 @@ public class StreamerApplication {
 
     @StreamListener(Sink.INPUT)
     public void handle(Message<byte[]> message) {
-        System.out.println(message.getPayload().length);
         synchronized (processor) {
-            processor.onNext(new RtpPkt(message.getPayload()));
+            processor.onNext(new RtpPkt(0, message.getPayload()));
         }
     }
 
     @Bean
-    public RouterFunction<ServerResponse> function(UserService userService, Flux<RtpPkt> stream) {
+    public RouterFunction<ServerResponse> function(AuthService authService, StreamService streamService, Flux<NALU> stream) {
         DefaultDataBufferFactory ddbf = new DefaultDataBufferFactory();
-        return route(GET("/h264"), serverRequest -> ok()
+        return route(GET("/h264/{id}"), serverRequest -> ok()
                 .header("Content-Type", "video/h264")
-                .body(stream.
-                        map(it -> rtpPktToNalu.encode(it))
-                        .flatMap(Flux::fromIterable)
-                        .map(Raw::getRaw)
-                        .filter(it -> it.length > 0)
-                        .map(ddbf::wrap), DataBuffer.class)).andRoute(GET("/"), serverRequest -> ok().body(userService.current().map(it -> "user " + it + "  from " + serverRequest.exchange().getRequest().getRemoteAddress()), String.class));
+                .body(fromIterable(streamService.findOneById(serverRequest.pathVariable("id"))
+                        .map(it -> asList(getRaw(it.getSps()), getRaw(it.getSps()))).orElse(Collections.emptyList()))
+                        .mergeWith(stream.map(NALU::getRaw)).filter(it -> it.length > 0).map(ddbf::wrap), DataBuffer.class))
+                .andRoute(GET("/"), serverRequest -> ok().body(authService.currentJwtUser().map(it -> "user " + it + "  from " + serverRequest.exchange().getRequest().getRemoteAddress()), String.class));
     }
+
 
 }

@@ -1,6 +1,7 @@
 package org.revo.ihear.pi;
 
-import org.revo.base.service.UserService;
+import org.revo.base.service.auth.AuthService;
+import org.revo.base.service.stream.StreamService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,6 +10,7 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.messaging.Source;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -27,10 +29,11 @@ import static org.springframework.security.core.authority.AuthorityUtils.createA
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"org.revo.base", "org.revo.ihear.pi"})
-@EnableMongoRepositories(basePackages = {"org.revo.base", "org.revo.ihear.pi"})
 @EnableDiscoveryClient
 @EnableWebFluxSecurity
+@ComponentScan(basePackages = {"org.revo.base.config", "org.revo.base.service.auth", "org.revo.base.service.stream", "org.revo.base.repository.stream", "org.revo.ihear.pi"})
+@EnableMongoRepositories(basePackages = {"org.revo.base.repository.stream", "org.revo.ihear.pi"})
+@EnableMongoAuditing
 @EnableBinding(Source.class)
 public class PiApplication {
 
@@ -57,7 +60,7 @@ public class PiApplication {
 
 
     @Bean
-    public RouterFunction<ServerResponse> routes(UserService userService) {
-        return route().GET("/", serverRequest -> ServerResponse.ok().body(userService.current().map(it -> "user " + it + "  from " + serverRequest.exchange().getRequest().getRemoteAddress()), String.class)).build();
+    public RouterFunction<ServerResponse> routes(AuthService authService, StreamService streamService) {
+        return route().GET("/", serverRequest -> ServerResponse.ok().body(authService.currentJwtUser().map(it -> "user " + it + "  from " + serverRequest.exchange().getRequest().getRemoteAddress()), String.class)).build();
     }
 }

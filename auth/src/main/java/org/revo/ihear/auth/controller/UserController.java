@@ -1,7 +1,7 @@
 package org.revo.ihear.auth.controller;
 
 import org.revo.base.domain.User;
-import org.revo.base.service.UserService;
+import org.revo.base.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;

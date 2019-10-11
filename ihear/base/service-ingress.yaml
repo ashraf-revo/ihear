@@ -1,5 +1,5 @@
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: services-ingress
@@ -28,6 +28,10 @@ spec:
             backend:
               serviceName: ws
               servicePort: 8084
+          - path: /livepoll/?(.*)
+            backend:
+              serviceName: livepoll
+              servicePort: 8085
           - path: /?(.*)
             backend:
               serviceName: ui

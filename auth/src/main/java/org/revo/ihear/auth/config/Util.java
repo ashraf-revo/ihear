@@ -1,7 +1,7 @@
 package org.revo.ihear.auth.config;
 
 import org.revo.base.config.Env;
-import org.revo.base.service.UserService;
+import org.revo.base.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;

@@ -9,7 +9,7 @@ spring:
           - name: default
   data:
     mongodb:
-      database: auth
+      database: ihear
 server:
   port: 9999
   servlet:
