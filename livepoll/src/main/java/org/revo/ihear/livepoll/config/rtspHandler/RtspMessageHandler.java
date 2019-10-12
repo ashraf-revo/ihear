@@ -13,20 +13,24 @@ import org.revo.ihear.livepoll.rtsp.rtp.RtpNaluEncoder;
 import org.revo.ihear.livepoll.rtsp.rtp.base.NALU;
 import org.revo.ihear.livepoll.rtsp.rtp.base.RtpPkt;
 import org.revo.ihear.livepoll.rtsp.utils.URLObject;
-import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.messaging.Message;
 
 import javax.sdp.MediaDescription;
 import javax.sdp.SdpException;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.util.Base64.getDecoder;
+import static org.springframework.messaging.support.MessageBuilder.withPayload;
 
 
 public class RtspMessageHandler extends ChannelInboundHandlerAdapter {
     private HolderImpl holderImpl;
     private RtspSession session;
     private String id;
+    private AtomicInteger atomicInteger = new AtomicInteger(0);
+
     private final Encoder<RtpPkt, NALU> rtpPktToNalu = new RtpNaluEncoder();
 
     public RtspMessageHandler(HolderImpl holderImpl) {
@@ -93,7 +97,15 @@ public class RtspMessageHandler extends ChannelInboundHandlerAdapter {
                             if (it.getNaluHeader().getTYPE() == 8) {
                                 holderImpl.getStreamService().setPps(id, it.getPayload());
                             }
-                            holderImpl.getSource().output().send(MessageBuilder.withPayload(it.getPayload()).setHeader("streamId", id).build());
+                            Message<byte[]> nalu = withPayload(it.getPayload())
+                                    .setHeader("streamId", id)
+                                    .setHeader("rtpTimeStamp", rtpPkt.getTimeStamp())
+                                    .setHeader("rtpPayloadType", rtpPkt.getPayloadType())
+                                    .setHeader("rtpSeqNumber", rtpPkt.getSeqNumber())
+                                    .setHeader("rtpSsrc", rtpPkt.getSsrc())
+                                    .setHeader("naluSeq", atomicInteger.incrementAndGet())
+                                    .build();
+                            holderImpl.getSource().output().send(nalu);
                         });
                     }
                 }

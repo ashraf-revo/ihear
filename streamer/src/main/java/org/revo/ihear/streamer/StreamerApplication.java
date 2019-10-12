@@ -92,7 +92,7 @@ public class StreamerApplication {
                         .mergeWith(stream
                                 .filter(it -> Objects.equals(it.getHeaders().get("streamId"), serverRequest.pathVariable("id")))
                                 .filter(it -> it.getPayload().length > 0).map(Message::getPayload).map(NALU::getRaw))
-//                        .buffer(Duration.ofMillis(350))
+//                        .buffer(Duration.ofMillis(150))
 //                        .flatMap(it -> Flux.fromIterable(it.stream().sorted().collect(Collectors.toList())))
                         .map(ddbf::wrap), DataBuffer.class))
                 .andRoute(GET("/user"), serverRequest -> ok().body(authService.currentJwtUserId().map(it -> "user " + it + "  from " + serverRequest.exchange().getRequest().getRemoteAddress()), String.class));
