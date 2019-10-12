@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Random;
 
-//import org.revo.aslive.rtsp.RtspSession;
 
 /**
  * RTP over tcp
@@ -21,10 +20,10 @@ public class InterLeavedRTPSession {
     private int rtpChannel;
     private int rtcpChannel;
 
-    protected String cname = null;
+    private String cname = null;
 
-    protected long ssrc;
-    protected Random random = null;
+    private long ssrc;
+    private Random random = null;
 
 
     private PlayState state = PlayState.WAITING;
@@ -71,7 +70,7 @@ public class InterLeavedRTPSession {
         return mediaStream;
     }
 
-    protected void generateSsrc() {
+    private void generateSsrc() {
         if (this.random == null)
             createRandom();
 
@@ -87,7 +86,7 @@ public class InterLeavedRTPSession {
                 - Thread.currentThread().hashCode() + this.cname.hashCode());
     }
 
-    protected void generateCNAME() {
+    private void generateCNAME() {
         cname = System.getProperty("user.name") + "@" + System.getenv("HOSTNAME");
     }
 

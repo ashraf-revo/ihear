@@ -8,10 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-
-
-
-import static com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
 public abstract class BaseUser implements UserDetails {

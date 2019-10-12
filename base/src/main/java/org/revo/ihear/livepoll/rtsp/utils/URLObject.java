@@ -26,8 +26,7 @@ public class URLObject {
 
     private static Matcher match(String url) {
         Pattern pattern = Pattern.compile("^([^:]+)://(([^:]+):([^@]*)@)?([^:/]+)(:([0-9]+))?([^\\?]*)");
-        Matcher m = pattern.matcher(url);
-        return m;
+        return pattern.matcher(url);
     }
 
 
@@ -77,12 +76,16 @@ public class URLObject {
         host = m.group(5);
 
         int defaultPort = 80;
-        if (scheme.equals("rtsp")) {
-            defaultPort = 554;
-        } else if (scheme.equals("rtmp")) {
-            defaultPort = 1935;
-        } else if (scheme.equals("https")) {
-            defaultPort = 443;
+        switch (scheme) {
+            case "rtsp":
+                defaultPort = 554;
+                break;
+            case "rtmp":
+                defaultPort = 1935;
+                break;
+            case "https":
+                defaultPort = 443;
+                break;
         }
 
         String portString = m.group(7);

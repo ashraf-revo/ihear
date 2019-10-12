@@ -29,12 +29,10 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxProcessor;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.revo.ihear.livepoll.rtsp.rtp.base.NALU.getRaw;
@@ -97,6 +95,6 @@ public class StreamerApplication {
 //                        .buffer(Duration.ofMillis(350))
 //                        .flatMap(it -> Flux.fromIterable(it.stream().sorted().collect(Collectors.toList())))
                         .map(ddbf::wrap), DataBuffer.class))
-                .andRoute(GET("/user"), serverRequest -> ok().body(authService.currentJwtUser().map(it -> "user " + it + "  from " + serverRequest.exchange().getRequest().getRemoteAddress()), String.class));
+                .andRoute(GET("/user"), serverRequest -> ok().body(authService.currentJwtUserId().map(it -> "user " + it + "  from " + serverRequest.exchange().getRequest().getRemoteAddress()), String.class));
     }
 }

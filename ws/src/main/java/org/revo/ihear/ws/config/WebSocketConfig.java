@@ -1,5 +1,6 @@
 package org.revo.ihear.ws.config;
 
+import org.revo.base.service.auth.AuthService;
 import org.revo.ihear.ws.config.domain.WSMessage;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
@@ -20,9 +21,9 @@ import java.util.Map;
 @Configuration
 public class WebSocketConfig {
     @Bean
-    public HandlerMapping handlerMapping(ReactiveJwtDecoder reactiveJwtDecoder, ApplicationEventPublisher applicationEventPublisher, UnicastProcessor<Message<WSMessage>> wsMessages) {
+    public HandlerMapping handlerMapping(AuthService authService, ApplicationEventPublisher applicationEventPublisher, UnicastProcessor<Message<WSMessage>> wsMessages) {
         Map<String, WebSocketHandler> map = new HashMap<>();
-        map.put("/echo", new WsSocketHandler(reactiveJwtDecoder, applicationEventPublisher, wsMessages));
+        map.put("/echo", new WsSocketHandler(authService, applicationEventPublisher, wsMessages));
         SimpleUrlHandlerMapping mapping = new SimpleUrlHandlerMapping();
         mapping.setUrlMap(map);
         mapping.setOrder(-1);

@@ -19,11 +19,6 @@ public class RtpNaluEncoder implements Encoder<RtpPkt, NALU> {
         return rtpToNalu.apply(rtpPkt);
     }
 
-    @Override
-    public List<RtpPkt> decode(List<NALU> nalus) {
-        return null;
-    }
-
     private class RtpToNalu implements Function<RtpPkt, List<NALU>> {
         private NALU fuNalU = null;
 

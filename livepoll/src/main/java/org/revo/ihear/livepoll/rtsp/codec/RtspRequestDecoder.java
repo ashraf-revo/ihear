@@ -15,7 +15,6 @@ import java.util.List;
 
 public class RtspRequestDecoder extends ByteToMessageDecoder {
 
-    public static final String NAME = "RTSP-DECODER";
     private static org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(RtspRequestDecoder.class);
 
     enum STATE {
@@ -42,7 +41,7 @@ public class RtspRequestDecoder extends ByteToMessageDecoder {
     private final int maxInitialLineLength;
     private final int maxHeaderSize;
     private final int maxChunkSize;
-    protected final boolean validateHeaders;
+    private final boolean validateHeaders;
     private final AppendableCharSequence seq = new AppendableCharSequence(128);
 
     private HttpMessage message;
@@ -55,7 +54,7 @@ public class RtspRequestDecoder extends ByteToMessageDecoder {
     /**
      * Creates a new instance with the specified parameters.
      */
-    protected RtspRequestDecoder(
+    private RtspRequestDecoder(
             int maxInitialLineLength, int maxHeaderSize, int maxChunkSize,
             boolean validateHeaders) {
         if (maxInitialLineLength <= 0) {
@@ -222,7 +221,7 @@ public class RtspRequestDecoder extends ByteToMessageDecoder {
 
     }
 
-    private HttpMessage createMessage(String[] initialLine) throws Exception {
+    private HttpMessage createMessage(String[] initialLine) {
         return new DefaultHttpRequest(RtspVersions.valueOf(initialLine[2]),
                 RtspMethods.valueOf(initialLine[0]), initialLine[1], validateHeaders);
     }
@@ -233,7 +232,7 @@ public class RtspRequestDecoder extends ByteToMessageDecoder {
     }
 
     private long contentLength() {
-        contentLength = HttpHeaders.getContentLength(message, -1);
+        contentLength = HttpUtil.getContentLength(message, -1);
         return contentLength;
     }
 

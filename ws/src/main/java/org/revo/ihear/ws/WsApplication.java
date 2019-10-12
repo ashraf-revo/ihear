@@ -59,6 +59,6 @@ public class WsApplication {
 
     @Bean
     public RouterFunction<ServerResponse> routes(AuthService authService) {
-        return route().GET("/user", serverRequest -> ServerResponse.ok().body(authService.currentJwtUser().map(it -> "user " + it + "  from " + serverRequest.exchange().getRequest().getRemoteAddress()), String.class)).build();
+        return route().GET("/user", serverRequest -> ServerResponse.ok().body(authService.currentJwtUserId().map(it -> "user " + it + "  from " + serverRequest.exchange().getRequest().getRemoteAddress()), String.class)).build();
     }
 }

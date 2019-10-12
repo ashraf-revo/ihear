@@ -12,14 +12,14 @@ import java.util.Map;
  * @date 2016年4月15日
  */
 public class Transport {
-    public static final String RTP_AVP_TCP = "RTP/AVP/TCP";
-    public static final String UNICAST = "unicast";
-    public static final String INTERLEAVED = "interleaved";
+    static final String RTP_AVP_TCP = "RTP/AVP/TCP";
+    static final String UNICAST = "unicast";
+    private static final String INTERLEAVED = "interleaved";
 
     private String tranport = RTP_AVP_TCP;
     private String unicast = UNICAST;
 
-    private Map<String, String> parameters = new HashMap<String, String>();
+    private Map<String, String> parameters = new HashMap<>();
 
     public void setUnicast(String castMode) {
         this.unicast = castMode;
@@ -83,9 +83,9 @@ public class Transport {
         String[] splits = StringUtils.split(transport, ';');
         t.tranport = splits[0];
         t.unicast = splits[1];
-        for (int i = 0; i < splits.length; i++) {
-            if (splits[i].contains("=")) {
-                String[] keyValue = StringUtils.split(splits[i], '=');
+        for (String split : splits) {
+            if (split.contains("=")) {
+                String[] keyValue = StringUtils.split(split, '=');
                 t.parameters.put(keyValue[0], keyValue[1]);
             }
         }

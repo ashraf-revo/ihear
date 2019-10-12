@@ -58,7 +58,7 @@ public class RtspServerConfig implements ApplicationListener<ApplicationStartedE
                 .childOption(ChannelOption.TCP_NODELAY, true);
         serverBootstrap.channel(NioServerSocketChannel.class);
         serverBootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
-            protected void initChannel(SocketChannel socketChannel) throws FileNotFoundException {
+            protected void initChannel(SocketChannel socketChannel) {
                 socketChannel.pipeline().addLast(new RtspEncoder()).addLast(new RtspRequestDecoder()).addLast(new RtspMessageHandler(holderImpl));
             }
         });

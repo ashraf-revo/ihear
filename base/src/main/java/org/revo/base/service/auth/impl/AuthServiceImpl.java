@@ -21,7 +21,7 @@ public class AuthServiceImpl implements AuthService {
     private ReactiveJwtDecoder reactiveJwtDecoder;
 
     @Override
-    public Mono<String> currentJwtUser() {
+    public Mono<String> currentJwtUserId() {
         return ReactiveSecurityContextHolder.getContext().map(SecurityContext::getAuthentication).map(Authentication::getPrincipal)
                 .cast(Jwt.class).map(Jwt::getClaims)
                 .map(it -> it.get("user"))
@@ -33,8 +33,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public Mono<String> currentJwtUser(String token) {
-        return reactiveJwtDecoder.decode(token)
+    public Mono<String> currentJwtUserId(String token) {
+        return currentJwt(token)
                 .map(Jwt::getClaims)
                 .map(it -> it.get("user"))
                 .map(it -> (HashMap<String, String>) it)
@@ -42,6 +42,11 @@ public class AuthServiceImpl implements AuthService {
                 .filter(it -> it.getKey().equals("id"))
                 .map(Map.Entry::getValue)
                 .next();
+    }
+
+    @Override
+    public Mono<Jwt> currentJwt(String token) {
+        return reactiveJwtDecoder.decode(token);
     }
 
     @Override

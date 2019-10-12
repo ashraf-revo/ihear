@@ -21,7 +21,7 @@ public class NALU extends Packet {
         this.payload[0] = this.naluHeader.getRaw();
     }
 
-    public void appendPayload(byte data[], int offset) {
+    public void appendPayload(byte[] data, int offset) {
         byte[] ndata = new byte[data.length - offset];
         System.arraycopy(data, offset, ndata, 0, ndata.length);
         this.payload = copyOfAndAppend(this.payload, ndata);

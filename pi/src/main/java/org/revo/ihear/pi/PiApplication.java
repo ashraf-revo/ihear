@@ -66,8 +66,8 @@ public class PiApplication {
 
     @Bean
     public RouterFunction<ServerResponse> routes(AuthService authService, StreamService streamService) {
-        return route(POST("/"), serverRequest -> ok().body(serverRequest.bodyToMono(Stream.class).flatMap(it -> authService.currentJwtUser().map(it::setCreateBy)), Stream.class))
+        return route(POST("/"), serverRequest -> ok().body(serverRequest.bodyToMono(Stream.class).flatMap(it -> authService.currentJwtUserId().map(it::setCreateBy)), Stream.class))
                 .andRoute(GET("/"), serverRequest -> ok().body(Flux.fromIterable(streamService.findAll()), Stream.class))
-                .andRoute(GET("/user"), serverRequest -> ok().body(authService.currentJwtUser().map(it -> "user " + it + "  from " + serverRequest.exchange().getRequest().getRemoteAddress()), String.class));
+                .andRoute(GET("/user"), serverRequest -> ok().body(authService.currentJwtUserId().map(it -> "user " + it + "  from " + serverRequest.exchange().getRequest().getRemoteAddress()), String.class));
     }
 }

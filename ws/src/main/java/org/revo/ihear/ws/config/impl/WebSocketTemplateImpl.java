@@ -1,4 +1,4 @@
-package org.revo.ihear.ws.config.Impl;
+package org.revo.ihear.ws.config.impl;
 
 import org.revo.ihear.ws.config.WebSocketTemplate;
 import org.revo.ihear.ws.config.domain.WSMessage;
