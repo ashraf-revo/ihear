@@ -30,7 +30,6 @@ public class RtpNaluEncoder implements Encoder<RtpPkt, NALU> {
         @Override
         public List<NALU> apply(RtpPkt rtpPkt) {
             NALU.NaluHeader naluHeader = NALU.NaluHeader.read(rtpPkt.getPayload()[0]);
-            System.out.println(naluHeader.getTYPE());
             if (naluHeader.getTYPE() > 0 && naluHeader.getTYPE() <= 23) {
                 return Collections.singletonList(new NALU(rtpPkt, rtpPkt.getPayload(), 0, rtpPkt.getPayload().length));
             } else if (naluHeader.getTYPE() == 24) {

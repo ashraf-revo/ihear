@@ -38,7 +38,3 @@ management:
       show-details: always
 server:
   port: 8083
-logging:
-  level:
-    org.springframework: debug
-

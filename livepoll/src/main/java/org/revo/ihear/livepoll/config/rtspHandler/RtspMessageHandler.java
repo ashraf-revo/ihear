@@ -8,6 +8,9 @@ import org.revo.ihear.livepoll.rtsp.RtspSession;
 import org.revo.ihear.livepoll.rtsp.action.*;
 import org.revo.ihear.livepoll.rtsp.d.InterLeavedRTPSession;
 import org.revo.ihear.livepoll.rtsp.d.MediaType;
+import org.revo.ihear.livepoll.rtsp.rtp.Encoder;
+import org.revo.ihear.livepoll.rtsp.rtp.RtpNaluEncoder;
+import org.revo.ihear.livepoll.rtsp.rtp.base.NALU;
 import org.revo.ihear.livepoll.rtsp.rtp.base.RtpPkt;
 import org.revo.ihear.livepoll.rtsp.utils.URLObject;
 import org.springframework.messaging.support.MessageBuilder;
@@ -24,6 +27,7 @@ public class RtspMessageHandler extends ChannelInboundHandlerAdapter {
     private HolderImpl holderImpl;
     private RtspSession session;
     private String id;
+    private final Encoder<RtpPkt, NALU> rtpPktToNalu = new RtpNaluEncoder();
 
     public RtspMessageHandler(HolderImpl holderImpl) {
         this.holderImpl = holderImpl;
@@ -52,7 +56,8 @@ public class RtspMessageHandler extends ChannelInboundHandlerAdapter {
                     ctx.close().sync();
                 }
                 this.id = URLObject.getId(request.uri());
-                if (sprop.length == 2 && this.holderImpl.getStreamService().setSpsPps(id, sessionId, getDecoder().decode(sprop[0]), getDecoder().decode(sprop[1])) > 0) {
+                if (sprop.length == 2) {
+                    this.holderImpl.getStreamService().setSpsPps(this.id, getDecoder().decode(sprop[0]), getDecoder().decode(sprop[1]));
                     ctx.writeAndFlush(new AnnounceAction(request, this.session).call());
                 } else {
                     ctx.close().sync();
@@ -74,7 +79,23 @@ public class RtspMessageHandler extends ChannelInboundHandlerAdapter {
             InterLeavedRTPSession rtpSession = session.getRTPSessions()[session.getStreamIndex(rtpPkt.getRtpChannle())];
             if (rtpPkt.getRtpChannle() == rtpSession.rtpChannel()) {
                 if (rtpSession.getMediaStream().getMediaType() == MediaType.VIDEO) {
-                    holderImpl.getSource().output().send(MessageBuilder.withPayload(rtpPkt.getRaw()).build());
+                    synchronized (rtpPktToNalu) {
+                        rtpPktToNalu.encode(rtpPkt).forEach(it -> {
+                            if (it.getNaluHeader().getTYPE() == 5) {
+                                holderImpl.getStreamService().setIdr(id, it.getPayload());
+                            }
+                            if (it.getNaluHeader().getTYPE() == 6) {
+                                holderImpl.getStreamService().setSei(id, it.getPayload());
+                            }
+                            if (it.getNaluHeader().getTYPE() == 7) {
+                                holderImpl.getStreamService().setSps(id, it.getPayload());
+                            }
+                            if (it.getNaluHeader().getTYPE() == 8) {
+                                holderImpl.getStreamService().setPps(id, it.getPayload());
+                            }
+                            holderImpl.getSource().output().send(MessageBuilder.withPayload(it.getPayload()).setHeader("streamId", id).build());
+                        });
+                    }
                 }
             }
         }

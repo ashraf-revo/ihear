@@ -3,7 +3,6 @@ package org.revo.ihear.streamer;
 import org.revo.base.service.auth.AuthService;
 import org.revo.base.service.stream.StreamService;
 import org.revo.ihear.livepoll.rtsp.rtp.base.NALU;
-import org.revo.ihear.livepoll.rtsp.rtp.base.RtpPkt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest;
@@ -30,9 +29,12 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxProcessor;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.revo.ihear.livepoll.rtsp.rtp.base.NALU.getRaw;
@@ -50,7 +52,7 @@ import static reactor.core.publisher.Flux.fromIterable;
 @EnableBinding(Sink.class)
 public class StreamerApplication {
     @Autowired
-    private FluxProcessor<RtpPkt, RtpPkt> processor;
+    private FluxProcessor<Message<byte[]>, Message<byte[]>> processor;
 
     public static void main(String[] args) {
         SpringApplication.run(StreamerApplication.class, args);
@@ -61,7 +63,7 @@ public class StreamerApplication {
         return http
                 .authorizeExchange()
                 .matchers(EndpointRequest.toAnyEndpoint()).permitAll()
-                .pathMatchers("/h264").permitAll()
+                .pathMatchers("/h264/*").permitAll()
                 .anyExchange().authenticated()
                 .and()
                 .oauth2ResourceServer()
@@ -77,20 +79,24 @@ public class StreamerApplication {
     @StreamListener(Sink.INPUT)
     public void handle(Message<byte[]> message) {
         synchronized (processor) {
-            processor.onNext(new RtpPkt(0, message.getPayload()));
+            processor.onNext(message);
         }
     }
 
     @Bean
-    public RouterFunction<ServerResponse> function(AuthService authService, StreamService streamService, Flux<NALU> stream) {
+    public RouterFunction<ServerResponse> function(AuthService authService, StreamService streamService, Flux<Message<byte[]>> stream) {
         DefaultDataBufferFactory ddbf = new DefaultDataBufferFactory();
         return route(GET("/h264/{id}"), serverRequest -> ok()
                 .header("Content-Type", "video/h264")
                 .body(fromIterable(streamService.findOneById(serverRequest.pathVariable("id"))
-                        .map(it -> asList(getRaw(it.getSps()), getRaw(it.getSps()))).orElse(Collections.emptyList()))
-                        .mergeWith(stream.map(NALU::getRaw)).filter(it -> it.length > 0).map(ddbf::wrap), DataBuffer.class))
+                        .map(it -> asList(getRaw(it.getSps()), getRaw(it.getPps()), getRaw(it.getSei()), getRaw(it.getIdr()))).orElse(Collections.emptyList()))
+                        .filter(it -> it.length > 4)
+                        .mergeWith(stream
+                                .filter(it -> Objects.equals(it.getHeaders().get("streamId"), serverRequest.pathVariable("id")))
+                                .filter(it -> it.getPayload().length > 0).map(Message::getPayload).map(NALU::getRaw))
+//                        .buffer(Duration.ofMillis(350))
+//                        .flatMap(it -> Flux.fromIterable(it.stream().sorted().collect(Collectors.toList())))
+                        .map(ddbf::wrap), DataBuffer.class))
                 .andRoute(GET("/"), serverRequest -> ok().body(authService.currentJwtUser().map(it -> "user " + it + "  from " + serverRequest.exchange().getRequest().getRemoteAddress()), String.class));
     }
-
-
 }

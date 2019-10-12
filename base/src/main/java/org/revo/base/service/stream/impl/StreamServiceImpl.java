@@ -35,8 +35,8 @@ public class StreamServiceImpl implements StreamService {
     }
 
     @Override
-    public long setSpsPps(String id, String sessionId, byte[] sps, byte[] pps) {
-        return mongoOperations.updateFirst(new Query().addCriteria(where("id").is(id)), new Update().set("sessionId", sessionId).set("sps", sps).set("pps", pps), Stream.class).getModifiedCount();
+    public long setSpsPps(String id, byte[] sps, byte[] pps) {
+        return mongoOperations.updateFirst(new Query().addCriteria(where("id").is(id)), new Update().set("sps", sps).set("pps", pps), Stream.class).getModifiedCount();
     }
 
     @Override
@@ -46,6 +46,26 @@ public class StreamServiceImpl implements StreamService {
 
     @Override
     public long setActive(String id, boolean active) {
-        return mongoOperations.updateFirst(new Query().addCriteria(where("id").is(id)), new Update().set("active", active).set("lastModifiedDate",new Date()), Stream.class).getModifiedCount();
+        return mongoOperations.updateFirst(new Query().addCriteria(where("id").is(id)), new Update().set("active", active).set("lastModifiedDate", new Date()), Stream.class).getModifiedCount();
+    }
+
+    @Override
+    public long setIdr(String id, byte[] idr) {
+        return mongoOperations.updateFirst(new Query().addCriteria(where("id").is(id)), new Update().set("idr", idr), Stream.class).getModifiedCount();
+    }
+
+    @Override
+    public long setSei(String id, byte[] sei) {
+        return mongoOperations.updateFirst(new Query().addCriteria(where("id").is(id)), new Update().set("sei", sei), Stream.class).getModifiedCount();
+    }
+
+    @Override
+    public long setSps(String id, byte[] sps) {
+        return mongoOperations.updateFirst(new Query().addCriteria(where("id").is(id)), new Update().set("sps", sps), Stream.class).getModifiedCount();
+    }
+
+    @Override
+    public long setPps(String id, byte[] pps) {
+        return mongoOperations.updateFirst(new Query().addCriteria(where("id").is(id)), new Update().set("pps", pps), Stream.class).getModifiedCount();
     }
 }

@@ -11,13 +11,19 @@ import java.util.Date;
 public class Stream {
     @Id
     private String id;
-    private String sessionId;
     @CreatedDate
     private Date createdDate;
     @LastModifiedDate
     private Date lastModifiedDate;
     private String createBy;
+    private String meta;
+    // type=5
+    private byte[] idr;
+    // type=6
+    private byte[] sei;
+    // type=7
     private byte[] sps;
+    // type=8
     private byte[] pps;
     private boolean active;
 
@@ -30,15 +36,6 @@ public class Stream {
         return this;
     }
 
-    public String getSessionId() {
-        return sessionId;
-    }
-
-    public Stream setSessionId(String sessionId) {
-        this.sessionId = sessionId;
-        return this;
-    }
-
     public Date getCreatedDate() {
         return createdDate;
     }
@@ -48,12 +45,48 @@ public class Stream {
         return this;
     }
 
+    public Date getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public Stream setLastModifiedDate(Date lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+        return this;
+    }
+
     public String getCreateBy() {
         return createBy;
     }
 
     public Stream setCreateBy(String createBy) {
         this.createBy = createBy;
+        return this;
+    }
+
+    public String getMeta() {
+        return meta;
+    }
+
+    public Stream setMeta(String meta) {
+        this.meta = meta;
+        return this;
+    }
+
+    public byte[] getIdr() {
+        return idr;
+    }
+
+    public Stream setIdr(byte[] idr) {
+        this.idr = idr;
+        return this;
+    }
+
+    public byte[] getSei() {
+        return sei;
+    }
+
+    public Stream setSei(byte[] sei) {
+        this.sei = sei;
         return this;
     }
 

@@ -77,6 +77,3 @@ management:
       show-details: always
 server:
   port: 8080
-logging:
-  level:
-    org.springframework: debug
