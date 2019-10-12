@@ -6,11 +6,11 @@ import org.revo.ihear.livepoll.rtsp.RtspSession;
 
 import java.util.concurrent.Callable;
 
-public abstract class BaseAction<T extends DefaultFullHttpRequest> implements Callable<DefaultFullHttpResponse> {
-    protected T req;
-    protected RtspSession rtspSession;
+abstract class BaseAction<T extends DefaultFullHttpRequest> implements Callable<DefaultFullHttpResponse> {
+    T req;
+    RtspSession rtspSession;
 
-    public BaseAction(T req, RtspSession rtspSession) {
+    BaseAction(T req, RtspSession rtspSession) {
         this.req = req;
         this.rtspSession = rtspSession;
     }
