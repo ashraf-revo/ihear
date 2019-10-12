@@ -1,5 +1,6 @@
 package org.revo.ihear.pi;
 
+import org.revo.base.domain.Stream;
 import org.revo.base.service.auth.AuthService;
 import org.revo.base.service.stream.StreamService;
 import org.springframework.boot.SpringApplication;
@@ -21,12 +22,16 @@ import org.springframework.security.oauth2.server.resource.authentication.Reacti
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.Flux;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
+import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
+import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
+import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
 @SpringBootApplication
 @EnableDiscoveryClient
@@ -61,6 +66,8 @@ public class PiApplication {
 
     @Bean
     public RouterFunction<ServerResponse> routes(AuthService authService, StreamService streamService) {
-        return route().GET("/", serverRequest -> ServerResponse.ok().body(authService.currentJwtUser().map(it -> "user " + it + "  from " + serverRequest.exchange().getRequest().getRemoteAddress()), String.class)).build();
+        return route(POST("/"), serverRequest -> ok().body(serverRequest.bodyToMono(Stream.class).flatMap(it -> authService.currentJwtUser().map(it::setCreateBy)), Stream.class))
+                .andRoute(GET("/"), serverRequest -> ok().body(Flux.fromIterable(streamService.findAll()), Stream.class))
+                .andRoute(GET("/user"), serverRequest -> ok().body(authService.currentJwtUser().map(it -> "user " + it + "  from " + serverRequest.exchange().getRequest().getRemoteAddress()), String.class));
     }
 }

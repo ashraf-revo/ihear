@@ -16,6 +16,7 @@ public class Stream {
     @LastModifiedDate
     private Date lastModifiedDate;
     private String createBy;
+    private String title;
     private String meta;
     // type=5
     private byte[] idr;
@@ -60,6 +61,15 @@ public class Stream {
 
     public Stream setCreateBy(String createBy) {
         this.createBy = createBy;
+        return this;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public Stream setTitle(String title) {
+        this.title = title;
         return this;
     }
 

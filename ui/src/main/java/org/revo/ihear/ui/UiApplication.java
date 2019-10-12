@@ -22,6 +22,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import org.springframework.web.util.pattern.PathPatternParser;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +34,7 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 @EnableWebFluxSecurity
 @ComponentScan(basePackages = {"org.revo.base.service.auth", "org.revo.ihear.ui"})
 public class UiApplication {
-    private static final List<String> services = List.of("/auth/**", "/pi/**", "/streamer/**", "/ws/**", "/echo/**", "/login");
+    private static final List<String> services = Arrays.asList("/auth/**", "/pi/**", "/streamer/**", "/ws/**", "/echo/**", "/login");
     private final RequestPredicate requestPredicate = serverRequest -> services.stream().map(it -> new PathPatternParser().parse(it)).noneMatch(it -> it.matches(serverRequest.exchange().getRequest().getPath().pathWithinApplication())) && !serverRequest.path().contains(".");
 
     public static void main(String[] args) {

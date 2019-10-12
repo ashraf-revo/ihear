@@ -97,6 +97,6 @@ public class StreamerApplication {
 //                        .buffer(Duration.ofMillis(350))
 //                        .flatMap(it -> Flux.fromIterable(it.stream().sorted().collect(Collectors.toList())))
                         .map(ddbf::wrap), DataBuffer.class))
-                .andRoute(GET("/"), serverRequest -> ok().body(authService.currentJwtUser().map(it -> "user " + it + "  from " + serverRequest.exchange().getRequest().getRemoteAddress()), String.class));
+                .andRoute(GET("/user"), serverRequest -> ok().body(authService.currentJwtUser().map(it -> "user " + it + "  from " + serverRequest.exchange().getRequest().getRemoteAddress()), String.class));
     }
 }
