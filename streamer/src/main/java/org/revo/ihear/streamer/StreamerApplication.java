@@ -17,6 +17,7 @@ import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.GrantedAuthority;
@@ -35,7 +36,6 @@ import java.util.Collections;
 import java.util.Objects;
 
 import static java.util.Arrays.asList;
-import static org.revo.ihear.livepoll.rtsp.rtp.base.NALU.getRaw;
 import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
 import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
@@ -75,10 +75,8 @@ public class StreamerApplication {
     }
 
     @StreamListener(Sink.INPUT)
-    public void handle(Message<byte[]> message) {
-        synchronized (processor) {
-            processor.onNext(message);
-        }
+    public synchronized void handle(Message<byte[]> message) {
+        processor.onNext(message);
     }
 
     @Bean
@@ -87,14 +85,11 @@ public class StreamerApplication {
         return route(GET("/h264/{id}"), serverRequest -> ok()
                 .header("Content-Type", "video/h264")
                 .body(fromIterable(streamService.findOneById(serverRequest.pathVariable("id"))
-                        .map(it -> asList(getRaw(it.getSps()), getRaw(it.getPps()), getRaw(it.getSei()), getRaw(it.getIdr()))).orElse(Collections.emptyList()))
-                        .filter(it -> it.length > 4)
-                        .mergeWith(stream
-                                .filter(it -> Objects.equals(it.getHeaders().get("streamId"), serverRequest.pathVariable("id")))
-                                .filter(it -> it.getPayload().length > 0).map(Message::getPayload).map(NALU::getRaw))
-//                        .buffer(Duration.ofMillis(150))
-//                        .flatMap(it -> Flux.fromIterable(it.stream().sorted().collect(Collectors.toList())))
-                        .map(ddbf::wrap), DataBuffer.class))
+                        .map(it -> asList(it.getSps(), it.getPps(), it.getIdr(), it.getSei())).orElse(Collections.emptyList()))
+                        .map(it -> MessageBuilder.withPayload(it).setHeader("naluSeq", 0).build())
+                        .mergeWith(stream.filter(it -> Objects.equals(it.getHeaders().get("streamId"), serverRequest.pathVariable("id"))))
+                        .filter(it -> it.getPayload().length > 0)
+                        .map(Message::getPayload).map(NALU::getRaw).map(ddbf::wrap), DataBuffer.class))
                 .andRoute(GET("/user"), serverRequest -> ok().body(authService.currentJwtUserId().map(it -> "user " + it + "  from " + serverRequest.exchange().getRequest().getRemoteAddress()), String.class));
     }
 }

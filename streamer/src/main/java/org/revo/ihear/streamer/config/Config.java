@@ -7,12 +7,13 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxProcessor;
 import reactor.core.publisher.ReplayProcessor;
 
+import java.time.Duration;
+
 @Configuration
 public class Config {
     @Bean
     public FluxProcessor<Message<byte[]>, Message<byte[]>> processor() {
-        return ReplayProcessor.create(0);
-
+        return ReplayProcessor.createTimeout(Duration.ofMillis(500));
     }
 
 
