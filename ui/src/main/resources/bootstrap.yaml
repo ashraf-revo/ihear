@@ -67,6 +67,9 @@ spring:
             user-info-uri: http://${node:localhost:8080}/auth/user
             user-name-attribute: sub
             jwk-set-uri: http://${node:localhost:8080}/auth/.well-known/jwks.json
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://${node:localhost:9999}/auth/.well-known/jwks.json
 management:
   endpoints:
     web:
