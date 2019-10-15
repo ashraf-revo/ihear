@@ -2,6 +2,7 @@ package org.revo.ihear.streamer;
 
 import org.revo.base.service.auth.AuthService;
 import org.revo.base.service.stream.StreamService;
+import org.revo.ihear.livepoll.rtsp.rtp.base.AdtsFrame;
 import org.revo.ihear.livepoll.rtsp.rtp.base.NALU;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -62,6 +63,7 @@ public class StreamerApplication {
                 .authorizeExchange()
                 .matchers(EndpointRequest.toAnyEndpoint()).permitAll()
                 .pathMatchers("/h264/*").permitAll()
+                .pathMatchers("/aac/*").permitAll()
                 .anyExchange().authenticated()
                 .and()
                 .oauth2ResourceServer()
@@ -86,10 +88,16 @@ public class StreamerApplication {
                 .header("Content-Type", "video/h264")
                 .body(fromIterable(streamService.findOneById(serverRequest.pathVariable("id"))
                         .map(it -> asList(it.getSps(), it.getPps(), it.getIdr(), it.getSei())).orElse(Collections.emptyList()))
-                        .map(it -> MessageBuilder.withPayload(it).setHeader("naluSeq", 0).build())
-                        .mergeWith(stream.filter(it -> Objects.equals(it.getHeaders().get("streamId"), serverRequest.pathVariable("id"))))
+                        .map(it -> MessageBuilder.withPayload(it).setHeader("seq", 0).build())
+                        .mergeWith(stream.filter(it -> "Video".equals(it.getHeaders().get("type"))).filter(it -> Objects.equals(it.getHeaders().get("streamId"), serverRequest.pathVariable("id"))))
                         .filter(it -> it.getPayload().length > 0)
                         .map(Message::getPayload).map(NALU::getRaw).map(ddbf::wrap), DataBuffer.class))
+                .andRoute(GET("/aac/{id}"), serverRequest -> ok()
+                        .header("Content-Type", "audio/aac")
+                        .body(stream
+                                .filter(it -> "Audio".equals(it.getHeaders().get("type"))).filter(it -> Objects.equals(it.getHeaders().get("streamId"), serverRequest.pathVariable("id")))
+                                .filter(it -> it.getPayload().length > 0)
+                                .map(Message::getPayload).map(AdtsFrame::getRaw).map(ddbf::wrap), DataBuffer.class))
                 .andRoute(GET("/user"), serverRequest -> ok().body(authService.currentJwtUserId().map(it -> "user " + it + "  from " + serverRequest.exchange().getRequest().getRemoteAddress()), String.class));
     }
 }

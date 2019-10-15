@@ -24,7 +24,6 @@ public class RecordAction extends BaseAction<DefaultFullHttpRequest> {
         DefaultFullHttpResponse rep = new DefaultFullHttpResponse(RtspVersions.RTSP_1_0, HttpResponseStatus.OK);
         get(req, RtspHeaderNames.CSEQ).ifPresent(it -> append(rep, it));
         get(req, RtspHeaderNames.SESSION).ifPresent(it -> append(rep, it));
-//        rep.headers().set(RtspHeaders.Names.RTP_INFO, "url=rtsp://localhost:5454/live/mystream/streamid=0,url=rtsp://localhost:5454/live/mystream/streamid=1");
         return rep;
     }
 

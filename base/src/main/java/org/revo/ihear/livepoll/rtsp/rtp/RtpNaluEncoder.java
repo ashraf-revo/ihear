@@ -8,15 +8,22 @@ import org.revo.ihear.livepoll.rtsp.utils.StaticProcs;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 public class RtpNaluEncoder implements Encoder<RtpPkt, NALU> {
 
     private RtpToNalu rtpToNalu = new RtpToNalu();
+    private AtomicInteger atomicInteger = new AtomicInteger(0);
 
     @Override
     public List<NALU> encode(RtpPkt rtpPkt) {
         return rtpToNalu.apply(rtpPkt);
+    }
+
+    @Override
+    public int incAndGet() {
+        return atomicInteger.incrementAndGet();
     }
 
     private class RtpToNalu implements Function<RtpPkt, List<NALU>> {

@@ -4,7 +4,7 @@ target/
 !**/src/main/**
 !**/src/test/**
 *.h264
-*.text
+*.mp4
 
 ### STS ###
 .apt_generated
