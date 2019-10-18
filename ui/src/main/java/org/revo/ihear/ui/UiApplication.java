@@ -61,12 +61,10 @@ public class UiApplication {
                 .and().oauth2Login()
                 .and().formLogin().loginPage("/login")
                 .and().logout()
-                .logoutUrl("/signout").
-
-                        logoutSuccessHandler((webFilterExchange, authentication) -> {
-                            webFilterExchange.getExchange().getResponse().setStatusCode(HttpStatus.OK);
-                            return webFilterExchange.getChain().filter(webFilterExchange.getExchange());
-                        })
+                .logoutUrl("/signout").logoutSuccessHandler((webFilterExchange, authentication) -> {
+                    webFilterExchange.getExchange().getResponse().setStatusCode(HttpStatus.OK);
+                    return webFilterExchange.getChain().filter(webFilterExchange.getExchange());
+                })
                 .and().csrf().csrfTokenRepository(CookieServerCsrfTokenRepository.withHttpOnlyFalse())
                 .requireCsrfProtectionMatcher(pathMatchers("/auth"))
                 .and().build();

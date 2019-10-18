@@ -48,11 +48,7 @@ public class WsApplication {
                 .and()
                 .oauth2ResourceServer()
                 .jwt()
-                .jwtAuthenticationConverter(new ReactiveJwtAuthenticationConverterAdapter(new JwtAuthenticationConverter() {
-                    protected Collection<GrantedAuthority> extractAuthorities(Jwt jwt) {
-                        return createAuthorityList(((ArrayList<String>) jwt.getClaims().get("authorities")).stream().toArray(String[]::new));
-                    }
-                }))
+                .jwtAuthenticationConverter(new ReactiveJwtAuthenticationConverterAdapter(new JwtAuthenticationConverter()))
                 .and().and().build();
     }
 
