@@ -6,7 +6,7 @@ target/
 *.h264
 *.aac
 *.mp4
-
+*.text
 ### STS ###
 .apt_generated
 .classpath
@@ -32,3 +32,5 @@ build/
 
 ### VS Code ###
 .vscode/
+/livepoll/src/main/resources/req.text
+/livepoll/src/main/resources/req.text
