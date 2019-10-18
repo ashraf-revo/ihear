@@ -62,8 +62,8 @@ public class StreamerApplication {
         return http
                 .authorizeExchange()
                 .matchers(EndpointRequest.toAnyEndpoint()).permitAll()
-                .pathMatchers("/h264/*").permitAll()
-                .pathMatchers("/aac/*").permitAll()
+                .pathMatchers("/video/*").permitAll()
+                .pathMatchers("/audio/*").permitAll()
                 .pathMatchers("/streamer/audio/*").permitAll()
                 .pathMatchers("/streamer/video/*").permitAll()
                 .anyExchange().authenticated()
