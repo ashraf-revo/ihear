@@ -14,10 +14,6 @@ spring:
           contentType: application/octet-stream
       rabbit:
         bindings:
-          input:
-            consumer:
-              exchangeType: fanout
-              durableSubscription: false
           output:
             producer:
               exchangeType: fanout

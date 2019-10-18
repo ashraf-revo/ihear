@@ -6,16 +6,14 @@ public class NALU extends Packet {
     private NaluHeader naluHeader;
     private final static byte[] header = {0x00, 0x00, 0x00, 0x01};
 
-    public NALU(RtpPkt rtpPkt, byte[] payload, int offset, int length) {
-        super(Type.VIDEO, rtpPkt);
+    public NALU(byte[] payload, int offset, int length) {
         this.payload = new byte[length - offset];
         System.arraycopy(payload, offset, this.payload, 0, this.payload.length);
         this.naluHeader = NaluHeader.read(payload[offset]);
     }
 
 
-    public NALU(RtpPkt rtpPkt, int F, int NRI, int TYPE) {
-        super(Type.VIDEO, rtpPkt);
+    public NALU(int F, int NRI, int TYPE) {
         this.payload = new byte[1];
         this.naluHeader = NaluHeader.from(F, NRI, TYPE);
         this.payload[0] = this.naluHeader.getRaw();

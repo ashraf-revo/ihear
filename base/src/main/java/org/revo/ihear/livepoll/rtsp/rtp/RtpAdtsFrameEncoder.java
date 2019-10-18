@@ -32,7 +32,7 @@ public class RtpAdtsFrameEncoder implements Encoder<RtpPkt, AdtsFrame> {
             int offset = 2 + auHeaderLength;
             for (int i = 0; i < (auHeaderLength / 2); i++) {
                 int size = StaticProcs.bytesToUIntInt(rtpPkt.getPayload(), 2 + (i * 2)) >> 3;
-                adts.add(new AdtsFrame(rtpPkt, rtpPkt.getPayload(), offset, size));
+                adts.add(new AdtsFrame(rtpPkt.getPayload(), offset, size));
                 offset += size;
             }
             return adts;
