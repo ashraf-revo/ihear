@@ -9,13 +9,10 @@ import org.revo.ihear.livepoll.rtsp.action.*;
 import org.revo.ihear.livepoll.rtsp.d.InterLeavedRTPSession;
 import org.revo.ihear.livepoll.rtsp.d.MediaType;
 import org.revo.ihear.livepoll.rtsp.rtp.Encoder;
-import org.revo.ihear.livepoll.rtsp.rtp.RtpAdtsFrameEncoder;
 import org.revo.ihear.livepoll.rtsp.rtp.RtpNaluEncoder;
-import org.revo.ihear.livepoll.rtsp.rtp.base.AdtsFrame;
 import org.revo.ihear.livepoll.rtsp.rtp.base.NALU;
 import org.revo.ihear.livepoll.rtsp.rtp.base.RtpPkt;
 import org.revo.ihear.livepoll.rtsp.utils.URLObject;
-import org.springframework.messaging.Message;
 
 import javax.sdp.MediaDescription;
 import javax.sdp.SdpException;
@@ -30,7 +27,6 @@ public class RtspMessageHandler extends ChannelInboundHandlerAdapter {
     private HolderImpl holderImpl;
     private RtspSession session;
     private String id;
-    private final Encoder<RtpPkt, AdtsFrame> rtpAdtsFrameEncoder = new RtpAdtsFrameEncoder();
     private final Encoder<RtpPkt, NALU> rtpNaluEncoder = new RtpNaluEncoder();
 
     public RtspMessageHandler(HolderImpl holderImpl) {
@@ -90,45 +86,27 @@ public class RtspMessageHandler extends ChannelInboundHandlerAdapter {
             if (rtpPkt.getRtpChannle() == rtpSession.rtpChannel()) {
 
                 if (rtpSession.getMediaStream().getMediaType() == MediaType.VIDEO) {
-                    synchronized (rtpNaluEncoder) {
-                        rtpNaluEncoder.encode(rtpPkt).forEach(it -> {
-                            if (it.getNaluHeader().getTYPE() == 5) {
-                                holderImpl.getStreamService().setIdr(id, it.getPayload());
-                            }
-                            if (it.getNaluHeader().getTYPE() == 6) {
-                                holderImpl.getStreamService().setSei(id, it.getPayload());
-                            }
-                            if (it.getNaluHeader().getTYPE() == 7) {
-                                holderImpl.getStreamService().setSps(id, it.getPayload());
-                            }
-                            if (it.getNaluHeader().getTYPE() == 8) {
-                                holderImpl.getStreamService().setPps(id, it.getPayload());
-                            }
-                            holderImpl.getSource().output().send(withPayload(it.getPayload())
-                                    .setHeader("type", "Video")
-                                    .setHeader("streamId", id)
-                                    .setHeader("rtpTimeStamp", rtpPkt.getTimeStamp())
-                                    .setHeader("rtpPayloadType", rtpPkt.getPayloadType())
-                                    .setHeader("rtpSeqNumber", rtpPkt.getSeqNumber())
-                                    .setHeader("rtpSsrc", rtpPkt.getSsrc())
-                                    .setHeader("seq", rtpNaluEncoder.incAndGet())
-                                    .build());
-                        });
+                    rtpNaluEncoder.encode(rtpPkt).forEach(it -> {
+                        if (it.getNaluHeader().getTYPE() == 5) {
+                            holderImpl.getStreamService().setIdr(id, it.getPayload());
+                        }
+                        if (it.getNaluHeader().getTYPE() == 6) {
+                            holderImpl.getStreamService().setSei(id, it.getPayload());
+                        }
+                        if (it.getNaluHeader().getTYPE() == 7) {
+                            holderImpl.getStreamService().setSps(id, it.getPayload());
+                        }
+                        if (it.getNaluHeader().getTYPE() == 8) {
+                            holderImpl.getStreamService().setPps(id, it.getPayload());
+                        }
+                    });
+                    synchronized (holderImpl.getSource().output()) {
+                        holderImpl.getSource().output().send(withPayload(rtpPkt.getRaw()).setHeader("type", "Video").setHeader("streamId", id).build());
                     }
                 }
                 if (rtpSession.getMediaStream().getMediaType() == MediaType.AUDIO) {
-                    synchronized (rtpAdtsFrameEncoder) {
-                        rtpAdtsFrameEncoder.encode(rtpPkt).forEach(it -> {
-                            holderImpl.getSource().output().send(withPayload(it.getPayload())
-                                    .setHeader("type", "Audio")
-                                    .setHeader("streamId", id)
-                                    .setHeader("rtpTimeStamp", rtpPkt.getTimeStamp())
-                                    .setHeader("rtpPayloadType", rtpPkt.getPayloadType())
-                                    .setHeader("rtpSeqNumber", rtpPkt.getSeqNumber())
-                                    .setHeader("rtpSsrc", rtpPkt.getSsrc())
-                                    .setHeader("seq", rtpAdtsFrameEncoder.incAndGet())
-                                    .build());
-                        });
+                    synchronized (holderImpl.getSource().output()) {
+                        holderImpl.getSource().output().send(withPayload(rtpPkt.getRaw()).setHeader("type", "Audio").setHeader("streamId", id).build());
                     }
                 }
             }

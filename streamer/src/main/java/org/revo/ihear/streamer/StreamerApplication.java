@@ -2,8 +2,12 @@ package org.revo.ihear.streamer;
 
 import org.revo.base.service.auth.AuthService;
 import org.revo.base.service.stream.StreamService;
+import org.revo.ihear.livepoll.rtsp.rtp.Encoder;
+import org.revo.ihear.livepoll.rtsp.rtp.RtpAdtsFrameEncoder;
+import org.revo.ihear.livepoll.rtsp.rtp.RtpNaluEncoder;
 import org.revo.ihear.livepoll.rtsp.rtp.base.AdtsFrame;
 import org.revo.ihear.livepoll.rtsp.rtp.base.NALU;
+import org.revo.ihear.livepoll.rtsp.rtp.base.RtpPkt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest;
@@ -18,7 +22,6 @@ import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.messaging.Message;
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.GrantedAuthority;
@@ -35,8 +38,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static java.util.Arrays.asList;
 import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
 import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
@@ -84,20 +88,36 @@ public class StreamerApplication {
     @Bean
     public RouterFunction<ServerResponse> function(AuthService authService, StreamService streamService, Flux<Message<byte[]>> stream) {
         DefaultDataBufferFactory ddbf = new DefaultDataBufferFactory();
-        return route(GET("/h264/{id}"), serverRequest -> ok()
-                .header("Content-Type", "video/h264")
-                .body(fromIterable(streamService.findOneById(serverRequest.pathVariable("id"))
-                        .map(it -> asList(it.getSps(), it.getPps(), it.getIdr(), it.getSei())).orElse(Collections.emptyList()))
-                        .map(it -> MessageBuilder.withPayload(it).setHeader("seq", 0).build())
-                        .mergeWith(stream.filter(it -> "Video".equals(it.getHeaders().get("type"))).filter(it -> Objects.equals(it.getHeaders().get("streamId"), serverRequest.pathVariable("id"))))
-                        .filter(it -> it.getPayload().length > 0)
-                        .map(Message::getPayload).map(NALU::getRaw).map(ddbf::wrap), DataBuffer.class))
-                .andRoute(GET("/aac/{id}"), serverRequest -> ok()
-                        .header("Content-Type", "audio/aac")
-                        .body(stream
-                                .filter(it -> "Audio".equals(it.getHeaders().get("type"))).filter(it -> Objects.equals(it.getHeaders().get("streamId"), serverRequest.pathVariable("id")))
-                                .filter(it -> it.getPayload().length > 0)
-                                .map(Message::getPayload).map(AdtsFrame::getRaw).map(ddbf::wrap), DataBuffer.class))
+        return route(GET("/h264/{id}"), serverRequest -> {
+            final Encoder<RtpPkt, NALU> rtpNaluEncoder = new RtpNaluEncoder();
+            return ok()
+                    .header("Content-Type", "video/h264")
+                    .body(fromIterable(streamService.findOneById(serverRequest.pathVariable("id"))
+                                    .map(it -> Stream.of(it.getSps(), it.getPps(), it.getIdr(), it.getSei()).filter(itb -> itb != null && itb.length > 0).map(NALU::getRaw).collect(Collectors.toList())).orElse(Collections.emptyList()))
+                                    .mergeWith(stream.filter(it -> "Video".equals(it.getHeaders().get("type"))).filter(it -> Objects.equals(it.getHeaders().get("streamId"), serverRequest.pathVariable("id"))).filter(it -> it.getPayload().length > 0)
+                                            .map(Message::getPayload)
+                                            .map(it -> new RtpPkt(0, it))
+                                            .map(rtpNaluEncoder::encode)
+                                            .flatMap(Flux::fromIterable)
+                                            .map(NALU::getRaw)
+                                    )
+                                    .map(ddbf::wrap)
+                            , DataBuffer.class);
+        }).andRoute(GET("/aac/{id}"), serverRequest -> {
+            Encoder<RtpPkt, AdtsFrame> rtpAdtsFrameEncoder = new RtpAdtsFrameEncoder();
+            return ok()
+                    .header("Content-Type", "audio/aac")
+                    .body(stream
+                                    .filter(it -> "Audio".equals(it.getHeaders().get("type"))).filter(it -> Objects.equals(it.getHeaders().get("streamId"), serverRequest.pathVariable("id")))
+                                    .filter(it -> it.getPayload().length > 0)
+                                    .map(Message::getPayload)
+                                    .map(it -> new RtpPkt(0, it))
+                                    .map(rtpAdtsFrameEncoder::encode)
+                                    .flatMap(Flux::fromIterable)
+                                    .map(AdtsFrame::getRaw)
+                                    .map(ddbf::wrap)
+                            , DataBuffer.class);
+        })
                 .andRoute(GET("/user"), serverRequest -> ok().body(authService.currentJwtUserId().map(it -> "user " + it + "  from " + serverRequest.exchange().getRequest().getRemoteAddress()), String.class));
     }
 }

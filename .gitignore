@@ -4,6 +4,7 @@ target/
 !**/src/main/**
 !**/src/test/**
 *.h264
+*.aac
 *.mp4
 
 ### STS ###
