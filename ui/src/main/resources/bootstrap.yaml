@@ -49,7 +49,8 @@ spring:
             scope: read,write
         provider:
           auth:
-            authorization-uri: http://${node:10.0.2.2:8080}/auth/oauth/authorize
+            authorization-uri: http://${node:localhost:8080}/auth/oauth/authorize
+#            authorization-uri: http://${node:10.0.2.2:8080}/auth/oauth/authorize
             token-uri: http://${node:localhost:8080}/auth/oauth/token
             user-info-uri: http://${node:localhost:8080}/auth/user
             user-name-attribute: sub
