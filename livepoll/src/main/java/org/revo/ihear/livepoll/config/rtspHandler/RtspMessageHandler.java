@@ -4,6 +4,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.DefaultFullHttpRequest;
 import io.netty.handler.codec.rtsp.RtspMethods;
+import org.revo.base.domain.StreamType;
 import org.revo.ihear.livepoll.rtsp.RtspSession;
 import org.revo.ihear.livepoll.rtsp.action.*;
 import org.revo.ihear.livepoll.rtsp.d.InterLeavedRTPSession;
@@ -46,7 +47,11 @@ public class RtspMessageHandler extends ChannelInboundHandlerAdapter {
                 if (!this.holderImpl.getStreamService().findOneById(this.id).isPresent()) {
                     ctx.close().sync();
                 }
-                this.session = new RtspSession(request.uri()).setId(sessionId).withSdp(request.content().toString(StandardCharsets.UTF_8));
+                String sdp = request.content().toString(StandardCharsets.UTF_8);
+                this.session = new RtspSession(request.uri()).setId(sessionId).withSdp(sdp);
+                String[] sprop = new String[]{};
+                boolean haveAudio = false;
+                boolean haveVideo = false;
                 try {
                     for (Object mediaDescription : session.getSessionDescription().getMediaDescriptions(true)) {
                         MediaDescription description = (MediaDescription) mediaDescription;
@@ -54,18 +59,29 @@ public class RtspMessageHandler extends ChannelInboundHandlerAdapter {
                             if (description.getAttribute("rtpmap") == null || !description.getAttribute("rtpmap").contains("H264/90000")) {
                                 ctx.close().sync();
                             }
-                            String[] sprop = description.getAttribute("fmtp").split("; ")[1].replace("sprop-parameter-sets=", "").split(",");
-                            if (sprop.length == 2)
-                                this.holderImpl.getStreamService().setSpsPps(this.id, getDecoder().decode(sprop[0]), getDecoder().decode(sprop[1]));
+                            sprop = description.getAttribute("fmtp").split("; ")[1].replace("sprop-parameter-sets=", "").split(",");
+                            haveVideo = true;
                         }
                         if (description.getMedia().getMediaType().equals("audio")) {
                             if (description.getAttribute("rtpmap") == null || !description.getAttribute("rtpmap").contains("MPEG4-GENERIC")) {
                                 ctx.close().sync();
                             }
+                            haveAudio = true;
                         }
                     }
                 } catch (SdpException e) {
                     ctx.close().sync();
+                }
+                if (haveAudio && haveVideo) {
+                    this.holderImpl.getStreamService().setSdp(this.id, sdp, StreamType.BOOTH);
+                } else if (haveAudio) {
+                    this.holderImpl.getStreamService().setSdp(this.id, sdp, StreamType.AUDIO);
+                } else if (haveVideo) {
+                    this.holderImpl.getStreamService().setSdp(this.id, sdp, StreamType.VIDEO);
+                    if (sprop.length == 2)
+                        this.holderImpl.getStreamService().setSpsPps(this.id, getDecoder().decode(sprop[0]), getDecoder().decode(sprop[1]));
+                } else {
+                    this.holderImpl.getStreamService().setSdp(this.id, sdp, StreamType.UNKNOWN);
                 }
                 ctx.writeAndFlush(new AnnounceAction(request, this.session).call());
             }
@@ -73,11 +89,9 @@ public class RtspMessageHandler extends ChannelInboundHandlerAdapter {
                 ctx.writeAndFlush(new SetupAction(request, this.session).call());
             }
             if (request.method() == RtspMethods.RECORD) {
-                if (this.id != null) this.holderImpl.getStreamService().setActive(this.id, true);
                 ctx.writeAndFlush(new RecordAction(request, this.session).call());
             }
             if (request.method() == RtspMethods.TEARDOWN) {
-                if (this.id != null) this.holderImpl.getStreamService().setActive(this.id, false);
                 ctx.writeAndFlush(new TeardownAction(request, this.session).call());
             }
         } else if (msg instanceof RtpPkt) {
@@ -86,20 +100,22 @@ public class RtspMessageHandler extends ChannelInboundHandlerAdapter {
             if (rtpPkt.getRtpChannle() == rtpSession.rtpChannel()) {
 
                 if (rtpSession.getMediaStream().getMediaType() == MediaType.VIDEO) {
-                    rtpNaluEncoder.encode(rtpPkt).forEach(it -> {
-                        if (it.getNaluHeader().getTYPE() == 5) {
-                            holderImpl.getStreamService().setIdr(id, it.getPayload());
-                        }
-                        if (it.getNaluHeader().getTYPE() == 6) {
-                            holderImpl.getStreamService().setSei(id, it.getPayload());
-                        }
-                        if (it.getNaluHeader().getTYPE() == 7) {
-                            holderImpl.getStreamService().setSps(id, it.getPayload());
-                        }
-                        if (it.getNaluHeader().getTYPE() == 8) {
-                            holderImpl.getStreamService().setPps(id, it.getPayload());
-                        }
-                    });
+                    synchronized (rtpNaluEncoder) {
+                        rtpNaluEncoder.encode(rtpPkt).forEach(it -> {
+                            if (it.getNaluHeader().getTYPE() == 5) {
+                                holderImpl.getStreamService().setIdr(id, it.getPayload());
+                            }
+                            if (it.getNaluHeader().getTYPE() == 6) {
+                                holderImpl.getStreamService().setSei(id, it.getPayload());
+                            }
+                            if (it.getNaluHeader().getTYPE() == 7) {
+                                holderImpl.getStreamService().setSps(id, it.getPayload());
+                            }
+                            if (it.getNaluHeader().getTYPE() == 8) {
+                                holderImpl.getStreamService().setPps(id, it.getPayload());
+                            }
+                        });
+                    }
                     synchronized (holderImpl.getSource().output()) {
                         holderImpl.getSource().output().send(withPayload(rtpPkt.getRaw()).setHeader("type", "Video").setHeader("streamId", id).build());
                     }
@@ -115,6 +131,5 @@ public class RtspMessageHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) {
-        if (this.id != null) this.holderImpl.getStreamService().setActive(this.id, false);
     }
 }

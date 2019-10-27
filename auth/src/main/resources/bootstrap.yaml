@@ -30,12 +30,14 @@ org:
             clientSecret: "{bcrypt}$2a$10$rPUJCZ6TmrrmDmHuIJptm.UIxsUcGm/WegmuwNfXE4eibF/kOEwWu"
             refreshTokenValiditySeconds: 43200
             accessTokenValiditySeconds: 43200
-            authorizedGrantTypes: "authorization_code , implicit , refresh_token"
+            authorizedGrantTypes: "authorization_code , refresh_token"
             registeredRedirectUri:
               - "http://${node:localhost:8080}/login/oauth2/code/web"
               - "http://${node:localhost:8080}/login/oauth2/code/mobile"
               - "http://${node:127.0.0.1:8080}/login/oauth2/code/web"
               - "http://${node:127.0.0.1:8080}/login/oauth2/code/mobile"
+              - "http://${node:10.0.2.2:8080}/login/oauth2/code/web"
+              - "http://${node:10.0.2.2:8080}/login/oauth2/code/mobile"
             scope:
               - "read"
               - "write"

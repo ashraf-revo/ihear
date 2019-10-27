@@ -88,7 +88,7 @@
                         <image>
                             <name>${docker.name}/${project.artifactId}:${project.version}</name>
                             <build>
-                                <dockerFile>${project.basedir}/Dockerfile</dockerFile >
+                                <dockerFile>${project.basedir}/Dockerfile</dockerFile>
                                 <assembly>
                                     <descriptorRef>artifact</descriptorRef>
                                 </assembly>
@@ -118,10 +118,18 @@
                             <goal>push</goal>
                         </goals>
                     </execution>
-
                 </executions>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources/</directory>
+                <excludes>
+                    <exclude>ui-static/**</exclude>
+                    <exclude>static/*.map</exclude>
+                </excludes>
+            </resource>
+        </resources>
     </build>
     <modules>
         <module>base</module>
@@ -130,6 +138,5 @@
         <module>pi</module>
         <module>livepoll</module>
         <module>streamer</module>
-        <module>ws</module>
     </modules>
 </project>

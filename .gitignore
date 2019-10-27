@@ -7,6 +7,11 @@ target/
 *.aac
 *.mp4
 *.text
+ui/src/main/resources/ui-static/node
+ui/src/main/resources/ui-static/node_modules
+ui/src/main/resources/static/
+ui/src/main/resources/ui-static/dist
+package-lock.json
 ### STS ###
 .apt_generated
 .classpath

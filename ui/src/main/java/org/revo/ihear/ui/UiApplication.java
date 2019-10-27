@@ -34,7 +34,7 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 @EnableWebFluxSecurity
 @ComponentScan(basePackages = {"org.revo.base.service.auth", "org.revo.ihear.ui"})
 public class UiApplication {
-    private static final List<String> services = Arrays.asList("/auth/**", "/pi/**", "/streamer/**", "/ws/**", "/echo/**", "/login");
+    private static final List<String> services = Arrays.asList("/auth/**", "/pi/**", "/streamer/**", "/echo/**", "/login");
     private final RequestPredicate requestPredicate = serverRequest -> services.stream().map(it -> new PathPatternParser().parse(it)).noneMatch(it -> it.matches(serverRequest.exchange().getRequest().getPath().pathWithinApplication())) && !serverRequest.path().contains(".");
 
     public static void main(String[] args) {
@@ -57,6 +57,8 @@ public class UiApplication {
     SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         return http
                 .authorizeExchange()
+                .pathMatchers("/desktop.html").authenticated()
+                .pathMatchers("/android.html").authenticated()
                 .anyExchange().permitAll()
                 .and().oauth2Login()
                 .and().formLogin().loginPage("/login")

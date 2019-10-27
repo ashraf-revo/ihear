@@ -20,6 +20,12 @@ spring:
             - RemoveSessionHeaderResponse
           predicates:
             - Path=/pi/**
+        - id: echo
+          uri: ws://localhost:8082/echo/
+          filters:
+            - RemoveSessionHeaderRequest
+          predicates:
+            - Path=/echo/**
         - id: streamer
           uri: http://localhost:8083/
           filters:
@@ -27,19 +33,6 @@ spring:
             - RemoveSessionHeaderResponse
           predicates:
             - Path=/streamer/**
-        - id: ws
-          uri: http://localhost:8084/
-          filters:
-            - StripPrefix=1
-            - RemoveSessionHeaderResponse
-          predicates:
-            - Path=/ws/**
-        - id: echo
-          uri: ws://localhost:8084/echo/
-          filters:
-            - RemoveSessionHeaderRequest
-          predicates:
-            - Path=/echo/**
       default-filters:
         - PreserveHostHeader
         - AddAuthorizationHeaderRequest
@@ -54,15 +47,9 @@ spring:
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             scope: read,write
-          mobile:
-            provider: auth
-            client-id: revo
-            authorization-grant-type: implicit
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-            scope: read
         provider:
           auth:
-            authorization-uri: http://${node:localhost:8080}/auth/oauth/authorize
+            authorization-uri: http://${node:10.0.2.2:8080}/auth/oauth/authorize
             token-uri: http://${node:localhost:8080}/auth/oauth/token
             user-info-uri: http://${node:localhost:8080}/auth/user
             user-name-attribute: sub

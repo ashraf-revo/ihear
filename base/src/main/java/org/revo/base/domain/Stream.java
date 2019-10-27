@@ -18,15 +18,10 @@ public class Stream {
     private String createBy;
     private String title;
     private String meta;
-    // type=5
-    private byte[] idr;
-    // type=6
-    private byte[] sei;
-    // type=7
-    private byte[] sps;
-    // type=8
-    private byte[] pps;
-    private boolean active;
+    private AudioContent audioContent;
+    private VideoContent videoContent;
+    private String sdp;
+    private StreamType streamType;
 
     public String getId() {
         return id;
@@ -82,48 +77,35 @@ public class Stream {
         return this;
     }
 
-    public byte[] getIdr() {
-        return idr;
+    public AudioContent getAudioContent() {
+        return audioContent;
     }
 
-    public Stream setIdr(byte[] idr) {
-        this.idr = idr;
-        return this;
+    public void setAudioContent(AudioContent audioContent) {
+        this.audioContent = audioContent;
     }
 
-    public byte[] getSei() {
-        return sei;
+    public VideoContent getVideoContent() {
+        return videoContent;
     }
 
-    public Stream setSei(byte[] sei) {
-        this.sei = sei;
-        return this;
+    public void setVideoContent(VideoContent videoContent) {
+        this.videoContent = videoContent;
     }
 
-    public byte[] getSps() {
-        return sps;
+    public String getSdp() {
+        return sdp;
     }
 
-    public Stream setSps(byte[] sps) {
-        this.sps = sps;
-        return this;
+    public void setSdp(String sdp) {
+        this.sdp = sdp;
     }
 
-    public byte[] getPps() {
-        return pps;
+    public StreamType getStreamType() {
+        return streamType;
     }
 
-    public Stream setPps(byte[] pps) {
-        this.pps = pps;
-        return this;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public Stream setActive(boolean active) {
-        this.active = active;
-        return this;
+    public void setStreamType(StreamType streamType) {
+        this.streamType = streamType;
     }
 }

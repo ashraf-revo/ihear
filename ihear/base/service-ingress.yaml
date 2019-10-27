@@ -24,10 +24,6 @@ spec:
             backend:
               serviceName: streamer
               servicePort: 8083
-          - path: /ws/?(.*)
-            backend:
-              serviceName: ws
-              servicePort: 8084
           - path: /?(.*)
             backend:
               serviceName: ui

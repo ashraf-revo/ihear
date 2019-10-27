@@ -9,15 +9,25 @@ spring:
           - name: default
     stream:
       bindings:
+        input:
+          destination: asrevo.ihear.pi.ws
+          contentType: application/json
+          group: ${random.uuid}
         output:
-          destination: asrevo.ihear.action
+          destination: asrevo.ihear.pi.ws
           contentType: application/json
       rabbit:
         bindings:
+          input:
+            consumer:
+              exchangeType: fanout
+              durableSubscription: false
+              acknowledgeMode: NONE
           output:
             producer:
               exchangeType: fanout
               durableSubscription: false
+              acknowledgeMode: NONE
   data:
     mongodb:
       database: ihear

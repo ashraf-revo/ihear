@@ -1,6 +1,7 @@
 package org.revo.base.service.stream;
 
 import org.revo.base.domain.Stream;
+import org.revo.base.domain.StreamType;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,9 +13,10 @@ public interface StreamService {
 
     long setSpsPps(String id, byte[] sps, byte[] pps);
 
-    List<Stream> findAll();
+    List<Stream> findAll(String id);
 
-    long setActive(String id, boolean b);
+
+    long setSdp(String id, String sdp, StreamType streamType);
 
     long setIdr(String id, byte[] idr);
 

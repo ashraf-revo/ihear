@@ -7,12 +7,19 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxProcessor;
 import reactor.core.publisher.ReplayProcessor;
 
+import java.time.Duration;
+
 @Configuration
 public class Config {
     @Bean
     public FluxProcessor<Message<byte[]>, Message<byte[]>> processor() {
-        return ReplayProcessor.create();
-//        return ReplayProcessor.createTimeout(Duration.ofMillis(500));
+//        return UnicastProcessor.create();
+//        return ReplayProcessor.create();
+//        return ReplayProcessor.create(0);
+//        return DirectProcessor.create();
+//        return TopicProcessor.create();
+// i need it no cache , i don,t need it to buffer any thing , i need it to be live stream
+        return ReplayProcessor.createTimeout(Duration.ofMillis(1));
     }
 
 
