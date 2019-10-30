@@ -1,5 +1,6 @@
 package org.revo.base.service.auth;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import reactor.core.publisher.Mono;
 
@@ -11,4 +12,6 @@ public interface AuthService {
     Mono<Jwt> currentJwt(String token);
 
     Mono<String> currentOAuth2User();
+
+    Mono<Authentication> currentAuthentication();
 }

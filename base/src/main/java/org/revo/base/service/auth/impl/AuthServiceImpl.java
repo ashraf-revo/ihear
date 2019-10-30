@@ -61,4 +61,9 @@ public class AuthServiceImpl implements AuthService {
                 .next();
     }
 
+    @Override
+    public Mono<Authentication> currentAuthentication() {
+        return ReactiveSecurityContextHolder.getContext().map(SecurityContext::getAuthentication);
+    }
+
 }

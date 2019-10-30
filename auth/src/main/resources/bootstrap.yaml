@@ -22,7 +22,7 @@ org:
           - id: 5bfd3df1ad8ce6617f9bf635
             username: revo
             password: "{bcrypt}$2a$10$rPUJCZ6TmrrmDmHuIJptm.UIxsUcGm/WegmuwNfXE4eibF/kOEwWu"
-            roles: "ROLE_USER,ROLE_ADMIN"
+            roles: "ROLE_ADMIN"
             enabled: true
         clientDetails:
           - id: 5bfd3df1ad8ce6617f9bf636

@@ -2,6 +2,7 @@ package org.revo.base.service.user;
 
 import org.revo.base.domain.User;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
@@ -10,4 +11,10 @@ public interface UserService {
     Optional<User> findByUsername(String username);
 
     long count();
+
+    List<User> findByCreatedBy(String id);
+
+    void changeEnabled(String father, String child);
+
+    void delete(String father, String child);
 }

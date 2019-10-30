@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title>Home</title>
+    <title>Index</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
@@ -9,9 +10,30 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
 </head>
 <body>
-
 <div class="limiter">
-    home
+    <div class="container-login100">
+        <div class="wrap-login100 p-t-10">
+            <div sec:authorize="hasRole('ROLE_ADMIN')">
+                <a th:if="${#lists.size(users)}==0" th:href="@{/signup}" class="badge-primary">
+                    Please create users ! don't use default account.
+                </a>
+                <a th:if="${#lists.size(users)}>0" th:href="@{/signup}" class="badge-primary">
+                    Assign more users
+                </a>
+                <ul th:each="user: ${users}">
+                    <li>
+                        <span th:text="${user.getUsername()}"></span>
+                        <a th:href="@{'/user/change/'+${user.getId()}}">
+                            <span th:text="${(user.isEnabled()==true)?'disable':'enable'}"></span>
+                        </a>
+                        <a th:href="@{'/user/delete/'+${user.getId()}}">
+                            delete
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

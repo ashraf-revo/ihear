@@ -2,6 +2,7 @@ package org.revo.base.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
@@ -10,9 +11,11 @@ import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 public class User extends BaseUser {
     @Id
     private String id;
+    @Indexed(unique = true)
     private String username;
     private String password;
     private boolean enabled;
+    private String createdBy;
 
     public String getId() {
         return id;
@@ -48,5 +51,13 @@ public class User extends BaseUser {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 }
