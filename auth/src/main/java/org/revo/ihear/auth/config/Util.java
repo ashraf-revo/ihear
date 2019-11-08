@@ -2,7 +2,7 @@ package org.revo.ihear.auth.config;
 
 import org.revo.base.config.Env;
 import org.revo.base.service.user.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.revo.ihear.auth.service.ClientDetailsService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,8 +24,6 @@ import java.util.Map;
 
 @Configuration
 public class Util {
-    @Autowired
-    private KeyPair keyPair;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -38,23 +36,22 @@ public class Util {
     }
 
     @Bean
-    public TokenStore tokenStore() {
-        return new JwtTokenStore(accessTokenConverter());
+    public TokenStore tokenStore(KeyPair keyPair) {
+        return new JwtTokenStore(accessTokenConverter(keyPair));
     }
 
     @Bean
-    public CommandLineRunner runner(UserService userService, org.revo.ihear.auth.service.ClientDetailsService clientDetailsService, Env env) {
+    public CommandLineRunner runner(UserService userService, ClientDetailsService clientDetailsService, Env env) {
         return args -> {
-            if (userService.count() == 0 && env.getUsers().size() > 0) env.getUsers().forEach(userService::save);
-            if (clientDetailsService.count() == 0 && env.getClientDetails().size() > 0)
-                env.getClientDetails().forEach(clientDetailsService::save);
+            env.getUsers().stream().filter(it -> userService.count() == 0).forEach(userService::save);
+            env.getClientDetails().stream().filter(it -> clientDetailsService.count() == 0).forEach(clientDetailsService::save);
         };
     }
 
     @Bean
-    public JwtAccessTokenConverter accessTokenConverter() {
+    public JwtAccessTokenConverter accessTokenConverter(KeyPair keyPair) {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        converter.setKeyPair(this.keyPair);
+        converter.setKeyPair(keyPair);
         DefaultAccessTokenConverter accessTokenConverter = new DefaultAccessTokenConverter();
         accessTokenConverter.setUserTokenConverter(new DefaultUserAuthenticationConverter() {
             @Override
