@@ -57,7 +57,7 @@ spring:
             jwk-set-uri: http://${node:localhost:8080}/auth/.well-known/jwks.json
       resourceserver:
         jwt:
-          jwk-set-uri: http://${node:localhost:9999}/auth/.well-known/jwks.json
+          jwk-set-uri: http://${node:localhost:8080}/auth/.well-known/jwks.json
 management:
   endpoints:
     web:
