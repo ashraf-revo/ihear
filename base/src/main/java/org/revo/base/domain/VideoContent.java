@@ -9,6 +9,7 @@ public class VideoContent extends Content {
     private byte[] sps;
     // type=8
     private byte[] pps;
+    private int[] dimension;
 
     public byte[] getIdr() {
         return idr;
@@ -40,5 +41,13 @@ public class VideoContent extends Content {
 
     public void setPps(byte[] pps) {
         this.pps = pps;
+    }
+
+    public int[] getDimension() {
+        return dimension;
+    }
+
+    public void setDimension(int[] dimension) {
+        this.dimension = dimension;
     }
 }

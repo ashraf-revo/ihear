@@ -28,6 +28,7 @@ public class RtspMessageHandler extends ChannelInboundHandlerAdapter {
     private HolderImpl holderImpl;
     private RtspSession session;
     private String id;
+    private int state = 0;
     private final Encoder<RtpPkt, NALU> rtpNaluEncoder = new RtpNaluEncoder();
 
     public RtspMessageHandler(HolderImpl holderImpl) {
@@ -40,6 +41,7 @@ public class RtspMessageHandler extends ChannelInboundHandlerAdapter {
             DefaultFullHttpRequest request = (DefaultFullHttpRequest) msg;
             if (request.method() == RtspMethods.OPTIONS) {
                 ctx.writeAndFlush(new OptionsAction(request, this.session).call());
+                state = 1;
             }
             if (request.method() == RtspMethods.ANNOUNCE) {
                 String sessionId = UUID.randomUUID().toString();
@@ -84,24 +86,30 @@ public class RtspMessageHandler extends ChannelInboundHandlerAdapter {
                     this.holderImpl.getStreamService().setSdp(this.id, sdp, StreamType.UNKNOWN);
                 }
                 ctx.writeAndFlush(new AnnounceAction(request, this.session).call());
+                state = 2;
             }
             if (request.method() == RtspMethods.SETUP) {
                 ctx.writeAndFlush(new SetupAction(request, this.session).call());
+                state = 3;
             }
             if (request.method() == RtspMethods.RECORD) {
                 ctx.writeAndFlush(new RecordAction(request, this.session).call());
+                state = 4;
             }
             if (request.method() == RtspMethods.TEARDOWN) {
                 ctx.writeAndFlush(new TeardownAction(request, this.session).call());
+                state = 5;
             }
         } else if (msg instanceof RtpPkt) {
+            if (state != 4)
+                ctx.close().sync();
             RtpPkt rtpPkt = (RtpPkt) msg;
             InterLeavedRTPSession rtpSession = session.getRTPSessions()[session.getStreamIndex(rtpPkt.getRtpChannle())];
             if (rtpPkt.getRtpChannle() == rtpSession.rtpChannel()) {
-
                 if (rtpSession.getMediaStream().getMediaType() == MediaType.VIDEO) {
                     synchronized (rtpNaluEncoder) {
                         rtpNaluEncoder.encode(rtpPkt).forEach(it -> {
+                            if (it.getNaluHeader().getTYPE()!=1) System.out.println(it.getNaluHeader().getTYPE());
                             if (it.getNaluHeader().getTYPE() == 5) {
                                 holderImpl.getStreamService().setIdr(id, it.getPayload());
                             }
