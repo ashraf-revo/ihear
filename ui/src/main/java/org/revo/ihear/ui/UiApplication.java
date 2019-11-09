@@ -7,7 +7,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.io.Resource;
@@ -49,7 +48,6 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 @EnableDiscoveryClient
 @EnableWebFluxSecurity
 @ComponentScan(basePackages = {"org.revo.base.service.auth", "org.revo.ihear.ui"})
-@EnableFeignClients
 public class UiApplication {
     private static final List<String> services = Arrays.asList("/auth/**", "/pi/**", "/streamer/**", "/echo/**", "/login", "/loginx", "/user");
     private final RequestPredicate requestPredicate = serverRequest -> services.stream().map(it -> new PathPatternParser().parse(it))
