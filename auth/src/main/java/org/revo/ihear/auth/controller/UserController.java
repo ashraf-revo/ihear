@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class UserController {
@@ -23,12 +22,6 @@ public class UserController {
     private UserService userService;
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @GetMapping({"/", "/home"})
-    public ModelAndView home(@AuthenticationPrincipal User current) {
-        ModelAndView modelMap = new ModelAndView("home");
-        return modelMap;
-    }
 
     @GetMapping("/user")
     @ResponseBody

@@ -47,6 +47,13 @@ spring:
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             scope: read,write
+          device:
+            provider: auth
+            client-id: device
+            client-secret: device
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope: read,rtsp,ws
         provider:
           auth:
             authorization-uri: http://${node:localhost:8080}/auth/oauth/authorize
