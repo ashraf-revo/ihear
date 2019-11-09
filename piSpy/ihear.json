@@ -1,0 +1,6 @@
+{
+  "host": "localhost:8080",
+  "stream": "localhost:8085/stream/:SESSION/5da0d0039c750d106725fce5",
+  "fun": "rtp",
+  "key": "5dc697dba7a6607cf96d8fda.key"
+}
