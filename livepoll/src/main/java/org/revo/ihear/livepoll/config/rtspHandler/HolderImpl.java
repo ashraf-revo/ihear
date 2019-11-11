@@ -1,6 +1,7 @@
 package org.revo.ihear.livepoll.config.rtspHandler;
 
 import org.revo.base.service.stream.StreamService;
+import org.revo.ihear.livepoll.service.UiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.messaging.Source;
 import org.springframework.stereotype.Component;
@@ -11,6 +12,8 @@ public class HolderImpl {
     private Source source;
     @Autowired
     private StreamService streamService;
+    @Autowired
+    private UiService uiService;
 
     public Source getSource() {
         return source;
@@ -18,5 +21,9 @@ public class HolderImpl {
 
     public StreamService getStreamService() {
         return streamService;
+    }
+
+    public UiService getUiService() {
+        return uiService;
     }
 }

@@ -41,7 +41,9 @@ org:
             scope:
               - "read"
               - "write"
-            autoApproveScopes: "read"
+            autoApproveScopes:
+              - "read"
+              - "write"
             authorities:
             resourceIds:
 management:

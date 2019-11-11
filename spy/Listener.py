@@ -1,5 +1,4 @@
 import json
-
 import websocket
 
 from Stream import Stream
@@ -11,13 +10,14 @@ class Listener:
         websocket.enableTrace(False)
         self.___ihear = ihear
         self.___SESSION = SESSION
-        self.___ws = websocket.WebSocketApp("ws://" + ihear['host'] + "/echo",
-                                            on_open=(lambda ws: self.___on_open(self)),
-                                            on_message=(lambda ws, msg: self.___on_message(self, msg)),
-                                            on_error=(lambda ws, msg: self.___on_error(self, msg)),
-                                            on_close=(lambda ws: self.___on_close(self)),
-                                            header={'Cookie: SESSION=' + SESSION}
-                                            )
+        self.___ws = websocket.WebSocketApp(
+            ("wss" if ihear['secure'] == True else "ws") + "://" + ihear['host'] + "/echo",
+            on_open=(lambda ws: self.___on_open(self)),
+            on_message=(lambda ws, msg: self.___on_message(self, msg)),
+            on_error=(lambda ws, msg: self.___on_error(self, msg)),
+            on_close=(lambda ws: self.___on_close(self)),
+            header={'Cookie: SESSION=' + SESSION}
+        )
 
     def ___on_open(self, ws):
         self.___stream = Stream(self.___ihear, self.___SESSION)

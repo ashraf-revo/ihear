@@ -7,7 +7,7 @@ spec:
   selector:
     matchLabels:
       run: streamer
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:

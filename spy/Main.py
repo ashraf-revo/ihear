@@ -1,5 +1,4 @@
 import json
-
 import requests
 
 from Listener import Listener
@@ -10,8 +9,8 @@ def read(file):
         return json.load(json_file)
 
 
-def login(host, key):
-    result = requests.post("http://" + host + '/loginx', json=key)
+def login(ihear, key):
+    result = requests.post(("https" if ihear['secure'] == True else "http") + "://" + ihear['host'] + '/loginx', json=key)
     if result.status_code == 200:
         if result.cookies.__contains__("SESSION"):
             return result.cookies.get("SESSION")
@@ -20,7 +19,8 @@ def login(host, key):
 if __name__ == "__main__":
     ihear = read("ihear.json")
     if ihear:
-        SESSION = login(ihear['host'], read(ihear['key']))
+        SESSION = login(ihear, read(ihear['key']))
+        print SESSION
         if SESSION:
             listener = Listener(ihear, SESSION)
             listener.listen()

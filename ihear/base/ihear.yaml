@@ -41,7 +41,7 @@ metadata:
   name: default
 data:
   default.yaml: |-
-    node: 35.222.108.11
+    node: 192.168.99.172:30641
     spring:
       profiles:
         active: kubernetes
