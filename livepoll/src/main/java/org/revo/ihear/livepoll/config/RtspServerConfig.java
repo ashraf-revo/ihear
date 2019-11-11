@@ -49,7 +49,7 @@ public class RtspServerConfig implements ApplicationListener<ApplicationStartedE
     private static ServerBootstrap build(NioEventLoopGroup group, HolderImpl holderImpl, Integer port) {
         ServerBootstrap serverBootstrap = new ServerBootstrap();
         serverBootstrap.group(group);
-        serverBootstrap.localAddress(new InetSocketAddress("localhost", port));
+        serverBootstrap.localAddress(port);
         serverBootstrap.option(ChannelOption.SO_BACKLOG, 0);
         serverBootstrap.childOption(ChannelOption.SO_KEEPALIVE, true)
                 .childOption(ChannelOption.SO_RCVBUF, 128 * 1500)
