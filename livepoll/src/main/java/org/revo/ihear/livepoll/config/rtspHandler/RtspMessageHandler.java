@@ -38,6 +38,7 @@ public class RtspMessageHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws InterruptedException {
         if (msg instanceof DefaultFullHttpRequest) {
+            System.out.println(msg);
             DefaultFullHttpRequest request = (DefaultFullHttpRequest) msg;
             if (request.method() == RtspMethods.OPTIONS) {
                 ctx.writeAndFlush(new OptionsAction(request, this.session).call());
