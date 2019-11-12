@@ -1,7 +1,7 @@
 {
-  "host": "localhost:8080",
+  "host": "35.223.9.17",
   "secure": false,
-  "stream": "localhost:8085/stream/:SESSION/5da0d0039c750d106725fce5",
-  "fun": "rtp",
+  "stream": "130.211.213.237:8085/stream/5dcb05644df8ec0001c959d6",
+  "fun": "rtsp",
   "key": "5dc697dba7a6607cf96d8fda.key"
 }

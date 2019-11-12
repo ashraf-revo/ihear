@@ -1,5 +1,5 @@
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: services-ingress
@@ -30,7 +30,7 @@ spec:
               servicePort: 80
 
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: auth-ingress
@@ -48,3 +48,7 @@ spec:
             backend:
               serviceName: auth
               servicePort: 9999
+          - path: /echo/?(.*)
+            backend:
+              serviceName: pi
+              servicePort: 8082

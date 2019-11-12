@@ -41,7 +41,7 @@ metadata:
   name: default
 data:
   default.yaml: |-
-    node: 192.168.99.172:30641
+    node: 35.223.9.17
     spring:
       profiles:
         active: kubernetes
@@ -71,6 +71,12 @@ data:
                 - PreserveHostHeader
               predicates:
                 - Path=/auth/**
+            - id: echo
+              uri: "ws://ingress-nginx.ingress-nginx.svc.cluster.local/echo"
+              filters:
+                - RemoveSessionHeaderRequest
+              predicates:
+                - Path=/echo/**
           discovery:
             locator:
               enabled: true

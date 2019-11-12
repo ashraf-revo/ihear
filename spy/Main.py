@@ -20,7 +20,6 @@ if __name__ == "__main__":
     ihear = read("ihear.json")
     if ihear:
         SESSION = login(ihear, read(ihear['key']))
-        print SESSION
         if SESSION:
             listener = Listener(ihear, SESSION)
             listener.listen()
