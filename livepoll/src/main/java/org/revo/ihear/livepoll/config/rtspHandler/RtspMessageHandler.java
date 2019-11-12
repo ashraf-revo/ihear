@@ -14,6 +14,8 @@ import org.revo.ihear.livepoll.rtsp.rtp.RtpNaluEncoder;
 import org.revo.ihear.livepoll.rtsp.rtp.base.NALU;
 import org.revo.ihear.livepoll.rtsp.rtp.base.RtpPkt;
 import org.revo.ihear.livepoll.rtsp.utils.URLObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sdp.MediaDescription;
 import javax.sdp.SdpException;
@@ -30,6 +32,7 @@ public class RtspMessageHandler extends ChannelInboundHandlerAdapter {
     private String id;
     private int state = 0;
     private final Encoder<RtpPkt, NALU> rtpNaluEncoder = new RtpNaluEncoder();
+    private final Logger logger = LoggerFactory.getLogger(RtspMessageHandler.class);
 
     public RtspMessageHandler(HolderImpl holderImpl) {
         this.holderImpl = holderImpl;
@@ -38,7 +41,7 @@ public class RtspMessageHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws InterruptedException {
         if (msg instanceof DefaultFullHttpRequest) {
-            System.out.println(msg);
+            logger.info(msg.toString());
             DefaultFullHttpRequest request = (DefaultFullHttpRequest) msg;
             if (request.method() == RtspMethods.OPTIONS) {
                 ctx.writeAndFlush(new OptionsAction(request, this.session).call());
@@ -110,7 +113,7 @@ public class RtspMessageHandler extends ChannelInboundHandlerAdapter {
                 if (rtpSession.getMediaStream().getMediaType() == MediaType.VIDEO) {
                     synchronized (rtpNaluEncoder) {
                         rtpNaluEncoder.encode(rtpPkt).forEach(it -> {
-                            if (it.getNaluHeader().getTYPE()!=1) System.out.println(it.getNaluHeader().getTYPE());
+                            if (it.getNaluHeader().getTYPE() != 1) System.out.println(it.getNaluHeader().getTYPE());
                             if (it.getNaluHeader().getTYPE() == 5) {
                                 holderImpl.getStreamService().setIdr(id, it.getPayload());
                             }
