@@ -6,7 +6,7 @@ services:
 before_install:
   - chmod +x mvnw
 install: true
-script: ./mvnw clean install -DskipTests=true
+script: ./mvnw clean install -DskipTests=true -Ddocker.username=$DOCKER_USERNAME -Ddocker.password=$DOCKER_PASSWORD
 cache:
   directories:
     - $HOME/.m2
