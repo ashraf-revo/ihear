@@ -3,8 +3,8 @@ import threading
 
 
 class Stream:
-    def __init__(self, ihear, SESSION):
-        self.___streamUrl = ihear['stream'].replace(":SESSION", SESSION)
+    def __init__(self, ihear, result):
+        self.___streamUrl = ihear['stream'].replace(":session", result.cookies.get("SESSION"))
         self.___fun = ihear['fun']
 
         self.teardown()

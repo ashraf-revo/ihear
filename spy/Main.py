@@ -10,16 +10,15 @@ def read(file):
 
 
 def login(ihear, key):
-    result = requests.post(("https" if ihear['secure'] == True else "http") + "://" + ihear['host'] + '/loginx', json=key)
-    if result.status_code == 200:
-        if result.cookies.__contains__("SESSION"):
-            return result.cookies.get("SESSION")
+    url = ("https" if ihear['secure'] == True else "http") + "://" + ihear['host']
+    user = requests.get(url + '/user')
+    return requests.post(url + '/loginx', json=key, cookies=user.cookies,
+                         headers={"X-XSRF-TOKEN": user.cookies["XSRF-TOKEN"]})
 
 
 if __name__ == "__main__":
     ihear = read("ihear.json")
     if ihear:
-        SESSION = login(ihear, read(ihear['key']))
-        if SESSION:
-            listener = Listener(ihear, SESSION)
-            listener.listen()
+        result = login(ihear, read(ihear['key']))
+        if result.status_code == 200:
+            listener = Listener(ihear, result).listen()
