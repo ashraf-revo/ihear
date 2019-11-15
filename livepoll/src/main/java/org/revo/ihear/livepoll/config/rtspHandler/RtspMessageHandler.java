@@ -43,6 +43,9 @@ public class RtspMessageHandler extends ChannelInboundHandlerAdapter {
         if (msg instanceof DefaultFullHttpRequest) {
             logger.info(msg.toString());
             DefaultFullHttpRequest request = (DefaultFullHttpRequest) msg;
+            if (!this.holderImpl.getAuthorizationCheck().test(request)) {
+                ctx.close().sync();
+            }
             if (request.method() == RtspMethods.OPTIONS) {
                 ctx.writeAndFlush(new OptionsAction(request, this.session).call());
                 state = 1;

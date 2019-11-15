@@ -6,6 +6,7 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.http.DefaultFullHttpRequest;
 import io.netty.handler.codec.rtsp.RtspEncoder;
 import org.revo.ihear.livepoll.config.rtspHandler.HolderImpl;
 import org.revo.ihear.livepoll.config.rtspHandler.RtspMessageHandler;
@@ -19,8 +20,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 
-import java.io.FileNotFoundException;
-import java.net.InetSocketAddress;
+import java.util.function.Predicate;
 
 @Configuration
 public class RtspServerConfig implements ApplicationListener<ApplicationStartedEvent> {
@@ -68,5 +68,10 @@ public class RtspServerConfig implements ApplicationListener<ApplicationStartedE
     @Bean
     public ReactiveJwtDecoder jwtDecoder(@Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri") String jwkSetUri) {
         return new NimbusReactiveJwtDecoder(jwkSetUri);
+    }
+
+    @Bean
+    public Predicate<DefaultFullHttpRequest> authorizationCheck() {
+        return defaultFullHttpRequest -> true;
     }
 }
