@@ -16,6 +16,7 @@ import org.revo.ihear.livepoll.rtsp.rtp.base.RtpPkt;
 import org.revo.ihear.livepoll.rtsp.utils.URLObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Mono;
 
 import javax.sdp.MediaDescription;
 import javax.sdp.SdpException;
@@ -39,12 +40,14 @@ public class RtspMessageHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws InterruptedException {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
         if (msg instanceof DefaultFullHttpRequest) {
             logger.info(msg.toString());
             DefaultFullHttpRequest request = (DefaultFullHttpRequest) msg;
-            if (!this.holderImpl.getAuthorizationCheck().test(request)) {
-                ctx.close().sync();
+            if (!this.holderImpl.getAuthorizationCheck().apply(request)
+                    .onErrorResume(throwable -> Mono.empty())
+                    .blockOptional().isPresent()) {
+                close(ctx, "not authorized ");
             }
             if (request.method() == RtspMethods.OPTIONS) {
                 ctx.writeAndFlush(new OptionsAction(request, this.session).call());
@@ -53,33 +56,31 @@ public class RtspMessageHandler extends ChannelInboundHandlerAdapter {
             if (request.method() == RtspMethods.ANNOUNCE) {
                 String sessionId = UUID.randomUUID().toString();
                 this.id = URLObject.getId(request.uri());
-                if (!this.holderImpl.getStreamService().findOneById(this.id).isPresent()) {
-                    ctx.close().sync();
-                }
                 String sdp = request.content().toString(StandardCharsets.UTF_8);
                 this.session = new RtspSession(request.uri()).setId(sessionId).withSdp(sdp);
                 String[] sprop = new String[]{};
                 boolean haveAudio = false;
                 boolean haveVideo = false;
                 try {
-                    for (Object mediaDescription : session.getSessionDescription().getMediaDescriptions(true)) {
+                    for (Object mediaDescription : this.session.getSessionDescription().getMediaDescriptions(true)) {
                         MediaDescription description = (MediaDescription) mediaDescription;
                         if (description.getMedia().getMediaType().equals("video")) {
                             if (description.getAttribute("rtpmap") == null || !description.getAttribute("rtpmap").contains("H264/90000")) {
-                                ctx.close().sync();
+                                close(ctx, "only support H264/90000 video encoding");
+
                             }
                             sprop = description.getAttribute("fmtp").split("; ")[1].replace("sprop-parameter-sets=", "").split(",");
                             haveVideo = true;
                         }
                         if (description.getMedia().getMediaType().equals("audio")) {
                             if (description.getAttribute("rtpmap") == null || !description.getAttribute("rtpmap").contains("MPEG4-GENERIC")) {
-                                ctx.close().sync();
+                                close(ctx, "only support MPEG4-GENERIC audio encoding");
                             }
                             haveAudio = true;
                         }
                     }
                 } catch (SdpException e) {
-                    ctx.close().sync();
+                    close(ctx, "error when parsing your sdp");
                 }
                 if (haveAudio && haveVideo) {
                     this.holderImpl.getStreamService().setSdp(this.id, sdp, StreamType.BOOTH);
@@ -109,7 +110,7 @@ public class RtspMessageHandler extends ChannelInboundHandlerAdapter {
             }
         } else if (msg instanceof RtpPkt) {
             if (state != 4)
-                ctx.close().sync();
+                close(ctx, "not follwing rtsp seqance (OPTIONS,ANNOUNCE,SETUP,RECORD,TEARDOWN)");
             RtpPkt rtpPkt = (RtpPkt) msg;
             InterLeavedRTPSession rtpSession = session.getRTPSessions()[session.getStreamIndex(rtpPkt.getRtpChannle())];
             if (rtpPkt.getRtpChannle() == rtpSession.rtpChannel()) {
@@ -146,5 +147,14 @@ public class RtspMessageHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) {
+    }
+
+    private void close(ChannelHandlerContext ctx, String reasoon) {
+        try {
+            logger.info("will close because " + reasoon);
+            ctx.close().sync();
+        } catch (InterruptedException e) {
+            logger.error(e.getMessage());
+        }
     }
 }

@@ -1,5 +1,6 @@
 package org.revo.ihear.livepoll.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -8,6 +9,8 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.DefaultFullHttpRequest;
 import io.netty.handler.codec.rtsp.RtspEncoder;
+import org.revo.base.service.auth.AuthService;
+import org.revo.base.service.stream.StreamService;
 import org.revo.ihear.livepoll.config.rtspHandler.HolderImpl;
 import org.revo.ihear.livepoll.config.rtspHandler.RtspMessageHandler;
 import org.revo.ihear.livepoll.rtsp.codec.RtspRequestDecoder;
@@ -19,13 +22,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
+import reactor.core.publisher.Mono;
 
-import java.util.function.Predicate;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.function.Function;
 
 @Configuration
 public class RtspServerConfig implements ApplicationListener<ApplicationStartedEvent> {
     @Autowired
     private ServerBootstrap serverBootstrap;
+    @Autowired
+    private ObjectMapper mapper;
 
     @Bean
     public NioEventLoopGroup group() {
@@ -71,7 +80,22 @@ public class RtspServerConfig implements ApplicationListener<ApplicationStartedE
     }
 
     @Bean
-    public Predicate<DefaultFullHttpRequest> authorizationCheck() {
-        return defaultFullHttpRequest -> true;
+    public Function<DefaultFullHttpRequest, Mono<LinkedHashMap>> authorizationCheck(AuthService authService, StreamService streamService) {
+        return req -> Mono.just(URI.create(req.uri()).getPath().split("/"))
+                .filter(it -> it.length >= 4).flatMap(parts ->
+                        authService.remoteUser(parts[2])
+                                .map(it -> convertAndGet(it, "user"))
+                                .filter(it -> it.containsKey("id"))
+                                .filter(it -> streamService.findOneById(parts[3])
+                                        .map(one -> one.getCreateBy().equals(it.get("id").toString())).orElse(false)));
     }
+
+    private LinkedHashMap convertAndGet(String it, String key) {
+        try {
+            return (LinkedHashMap) mapper.readValue(it, HashMap.class).get(key);
+        } catch (Exception e) {
+            return new LinkedHashMap();
+        }
+    }
+
 }
