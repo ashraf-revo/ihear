@@ -14,4 +14,7 @@ public interface AuthService {
     Mono<String> currentOAuth2User();
 
     Mono<Authentication> currentAuthentication();
+
+    Mono<String> remoteUser(String session);
+
 }

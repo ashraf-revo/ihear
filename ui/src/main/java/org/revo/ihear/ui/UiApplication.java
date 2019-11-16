@@ -51,7 +51,7 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 @EnableWebFluxSecurity
 @ComponentScan(basePackages = {"org.revo.base.service.auth", "org.revo.ihear.ui"})
 public class UiApplication {
-    private static final List<String> services = Arrays.asList("/auth/**", "/pi/**", "/streamer/**", "/echo/**", "/login", "/loginx", "/user");
+    private static final List<String> services = Arrays.asList("/auth/**", "/pi/**", "/streamer/**", "/echo/**", "/login", "/loginx", "/user", "/test/**");
     private final RequestPredicate requestPredicate = serverRequest -> services.stream().map(it -> new PathPatternParser().parse(it))
             .noneMatch(it -> it.matches(serverRequest.exchange().getRequest().getPath().pathWithinApplication())) && !serverRequest.path().contains(".");
     @Autowired
@@ -91,7 +91,8 @@ public class UiApplication {
                             return ok().body(voidMono, Void.class);
                         })
                 .andRoute(GET("/user"), serverRequest -> ok().body(authService.currentAuthentication().cast(OAuth2AuthenticationToken.class)
-                        .flatMap(it -> authorizedClientRepository.loadAuthorizedClient(it.getAuthorizedClientRegistrationId(), it, serverRequest.exchange())), OAuth2AuthorizedClient.class));
+                        .flatMap(it -> authorizedClientRepository.loadAuthorizedClient(it.getAuthorizedClientRegistrationId(), it, serverRequest.exchange())), OAuth2AuthorizedClient.class))
+                .andRoute(GET("/test/{name}"), serverRequest -> ok().body(authService.remoteUser(serverRequest.pathVariable("name")), String.class));
     }
 
     @Bean
