@@ -73,13 +73,8 @@ public class AuthServiceImpl implements AuthService {
 
 
     public Mono<String> remoteUser(String session) {
-        boolean kubernetes = Arrays.asList(environment.getActiveProfiles()).stream()
-                .anyMatch("kubernetes"::equals);
-        String baseUr = "http://localhost:8080";
-        if (kubernetes) {
-            baseUr = "http://ui";
-        }
-        return WebClient.create(baseUr)
+        return WebClient.create((Arrays.asList(environment.getActiveProfiles()).stream()
+                .anyMatch("kubernetes"::equals) ? "http://ui" : "http://localhost:8080"))
                 .get()
                 .uri("/auth/user")
                 .cookie("SESSION", session)
