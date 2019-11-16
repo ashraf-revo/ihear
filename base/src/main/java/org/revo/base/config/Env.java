@@ -11,6 +11,8 @@ import java.util.List;
 public class Env {
     private List<User> users = new ArrayList<>();
     private List<ClientDetails> clientDetails = new ArrayList<>();
+    private String url;
+    private String streamUrl;
 
     public List<User> getUsers() {
         return users;
@@ -26,5 +28,21 @@ public class Env {
 
     public void setClientDetails(List<ClientDetails> clientDetails) {
         this.clientDetails = clientDetails;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getStreamUrl() {
+        return streamUrl;
+    }
+
+    public void setStreamUrl(String streamUrl) {
+        this.streamUrl = streamUrl;
     }
 }

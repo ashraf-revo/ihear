@@ -41,7 +41,11 @@ metadata:
   name: default
 data:
   default.yaml: |-
-    node: 35.223.9.17
+    org:
+      revo:
+        base:
+          env:
+            url: 35.223.9.17
     spring:
       profiles:
         active: kubernetes

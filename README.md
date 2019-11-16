@@ -1,4 +1,5 @@
 # Ihear
+![Build](https://travis-ci.org/ashraf-revo/ihear.svg?branch=master)
 
 ### what is used for?
 - it help you to make live stream from your raspberry pi camera
@@ -16,3 +17,14 @@
 
 ![Alt text](ihear/images/ihear.png?raw=true)
 
+
+### your steps to run it on GKE
+- open your Cloud Shell
+- type ```git clone https://github.com/ashraf-revo/ihear```
+- type ```cd ihear/ihear```
+- type ```kubectl apply -f ui-svc.yaml```
+- type ```kubectl get svc```
+- copy ip of ui service and past it to base/ihear.yaml in the node property of default config map
+- type ```kubectl apply -f base/.```
+- wait 1 miniutes
+- type ```kubectl apply -f ui-dep.yaml```
