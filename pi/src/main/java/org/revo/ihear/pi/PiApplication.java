@@ -33,7 +33,6 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 @ComponentScan(basePackages = {"org.revo.base.config", "org.revo.base.service.auth", "org.revo.base.service.stream", "org.revo.base.repository.stream", "org.revo.ihear.pi"})
 @EnableMongoRepositories(basePackages = {"org.revo.base.repository.stream", "org.revo.ihear.pi"})
 @EnableMongoAuditing
-@EnableBinding(Processor.class)
 public class PiApplication {
 
     public static void main(String[] args) {
