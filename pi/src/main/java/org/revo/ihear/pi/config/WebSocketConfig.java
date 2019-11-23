@@ -1,5 +1,6 @@
 package org.revo.ihear.pi.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.revo.base.service.auth.AuthService;
 import org.revo.ihear.pi.config.domain.WSMessage;
 import org.springframework.context.ApplicationEventPublisher;
@@ -12,17 +13,21 @@ import org.springframework.web.reactive.socket.WebSocketHandler;
 import org.springframework.web.reactive.socket.server.support.HandshakeWebSocketService;
 import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAdapter;
 import org.springframework.web.reactive.socket.server.upgrade.ReactorNettyRequestUpgradeStrategy;
-import reactor.core.publisher.UnicastProcessor;
+import reactor.core.publisher.FluxProcessor;
+import reactor.core.publisher.ReplayProcessor;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
 public class WebSocketConfig {
     @Bean
-    public HandlerMapping handlerMapping(AuthService authService, ApplicationEventPublisher applicationEventPublisher, UnicastProcessor<Message<WSMessage>> wsMessages) {
+    public HandlerMapping handlerMapping(AuthService authService, ApplicationEventPublisher applicationEventPublisher, FluxProcessor<Message<WSMessage>, Message<WSMessage>> wsMessages) {
         Map<String, WebSocketHandler> map = new HashMap<>();
-        map.put("/echo", new WsSocketHandler(authService, applicationEventPublisher, wsMessages));
+        ObjectMapper mapper = new ObjectMapper();
+
+        map.put("/echo/{user}/{streamId}", new WsSocketHandler(authService, applicationEventPublisher, wsMessages, mapper));
         SimpleUrlHandlerMapping mapping = new SimpleUrlHandlerMapping();
         mapping.setUrlMap(map);
         mapping.setOrder(-1);
@@ -40,8 +45,8 @@ public class WebSocketConfig {
     }
 
     @Bean
-    public UnicastProcessor<Message<WSMessage>> processor() {
-        return UnicastProcessor.create();
+    public FluxProcessor<Message<WSMessage>, Message<WSMessage>> processor() {
+        return ReplayProcessor.createTimeout(Duration.ofMillis(1));
     }
 
 }

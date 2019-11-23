@@ -9,14 +9,14 @@ import org.springframework.cloud.stream.messaging.Sink;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.messaging.Message;
-import reactor.core.publisher.UnicastProcessor;
+import reactor.core.publisher.FluxProcessor;
 
 @Configuration
 @EnableBinding(Processor.class)
 @Profile("!direct")
 public class StreamConfig {
     @Autowired
-    private UnicastProcessor<Message<WSMessage>> wsMessages;
+    private FluxProcessor<Message<WSMessage>, Message<WSMessage>> wsMessages;
 
     @StreamListener(Sink.INPUT)
     public void handle(Message<WSMessage> message) {

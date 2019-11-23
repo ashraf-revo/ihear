@@ -1,18 +1,18 @@
 package org.revo.ihear.pi.config.domain;
 
 public class WSMessage {
-    private String payload;
+    private Object payload;
     private String from;
     private String to;
 
     public WSMessage() {
     }
 
-    public String getPayload() {
+    public Object getPayload() {
         return payload;
     }
 
-    public WSMessage setPayload(String payload) {
+    public WSMessage setPayload(Object payload) {
         this.payload = payload;
         return this;
     }

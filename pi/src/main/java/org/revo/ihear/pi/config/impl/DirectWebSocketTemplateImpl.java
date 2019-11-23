@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.UnicastProcessor;
+import reactor.core.publisher.FluxProcessor;
 
 @Service
 @Profile("direct")
 public class DirectWebSocketTemplateImpl implements WebSocketTemplate {
     @Autowired
-    private UnicastProcessor<Message<WSMessage>> wsMessages;
+    private FluxProcessor<Message<WSMessage>, Message<WSMessage>> wsMessages;
 
     @Override
     public void send(Message<WSMessage> wsMessage) {
