@@ -18,6 +18,7 @@ public class Stream {
     private String createBy;
     private String title;
     private String meta;
+    private String schemaId;
     private AudioContent audioContent;
     private VideoContent videoContent;
     private String sdp;
@@ -75,6 +76,14 @@ public class Stream {
     public Stream setMeta(String meta) {
         this.meta = meta;
         return this;
+    }
+
+    public String getSchemaId() {
+        return schemaId;
+    }
+
+    public void setSchemaId(String schemaId) {
+        this.schemaId = schemaId;
     }
 
     public AudioContent getAudioContent() {

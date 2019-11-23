@@ -9,4 +9,6 @@ import java.util.List;
 public interface StreamRepository extends CrudRepository<Stream, String> {
     @Query(fields = "{'videoContent': 0 ,'audioContent': 0 }")
     List<Stream> findAllByCreateBy(String id);
+
+    long countBySchemaId(String id);
 }

@@ -11,10 +11,11 @@ public interface StreamService {
 
     Optional<Stream> findOneById(String id);
 
+    long countBySchemaId(String id);
+
     long setSpsPps(String id, byte[] sps, byte[] pps);
 
     List<Stream> findAll(String id);
-
 
     long setSdp(String id, String sdp, StreamType streamType);
 

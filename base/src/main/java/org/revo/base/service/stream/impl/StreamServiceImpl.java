@@ -35,8 +35,13 @@ public class StreamServiceImpl implements StreamService {
     }
 
     @Override
+    public long countBySchemaId(String id) {
+        return streamRepository.countBySchemaId(id);
+    }
+
+    @Override
     public long setSpsPps(String id, byte[] sps, byte[] pps) {
-        return mongoOperations.updateFirst(new Query().addCriteria(where("id").is(id)), new Update().set("videoContent.sps", sps).set("videoContent.dimension",Dimension(sps)).set("videoContent.pps", pps), Stream.class).getModifiedCount();
+        return mongoOperations.updateFirst(new Query().addCriteria(where("id").is(id)), new Update().set("videoContent.sps", sps).set("videoContent.dimension", Dimension(sps)).set("videoContent.pps", pps), Stream.class).getModifiedCount();
     }
 
     @Override
@@ -61,7 +66,7 @@ public class StreamServiceImpl implements StreamService {
 
     @Override
     public long setSps(String id, byte[] sps) {
-        return mongoOperations.updateFirst(new Query().addCriteria(where("id").is(id)), new Update().set("videoContent.sps", sps).set("videoContent.dimension",Dimension(sps)), Stream.class).getModifiedCount();
+        return mongoOperations.updateFirst(new Query().addCriteria(where("id").is(id)), new Update().set("videoContent.sps", sps).set("videoContent.dimension", Dimension(sps)), Stream.class).getModifiedCount();
     }
 
     @Override
