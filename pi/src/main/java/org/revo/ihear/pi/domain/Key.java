@@ -1,4 +1,4 @@
-package org.revo.base.domain;
+package org.revo.ihear.pi.domain;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package org.revo.base.domain;
+package org.revo.ihear.pi.domain;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;

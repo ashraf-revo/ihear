@@ -1,8 +1,8 @@
-package org.revo.base.service.schema.impl;
+package org.revo.ihear.pi.service.impl;
 
-import org.revo.base.domain.Schema;
-import org.revo.base.repository.schema.SchemaRepository;
-import org.revo.base.service.schema.schemaService;
+import org.revo.ihear.pi.domain.Schema;
+import org.revo.ihear.pi.repository.SchemaRepository;
+import org.revo.ihear.pi.service.schemaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,6 @@
-package org.revo.base.service.schema;
+package org.revo.ihear.pi.service;
 
-import org.revo.base.domain.Schema;
+import org.revo.ihear.pi.domain.Schema;
 
 import java.util.Optional;
 

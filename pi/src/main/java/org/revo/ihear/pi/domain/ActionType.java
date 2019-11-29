@@ -1,4 +1,4 @@
-package org.revo.base.domain;
+package org.revo.ihear.pi.domain;
 
 public enum ActionType {
     ON,
