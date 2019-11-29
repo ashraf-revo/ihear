@@ -1,6 +1,5 @@
 package org.revo.ihear.livepoll.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -11,7 +10,6 @@ import io.netty.handler.codec.http.DefaultFullHttpRequest;
 import io.netty.handler.codec.rtsp.RtspEncoder;
 import org.revo.base.domain.Stream;
 import org.revo.base.service.auth.AuthService;
-import org.revo.base.service.stream.StreamService;
 import org.revo.ihear.livepoll.config.rtspHandler.HolderImpl;
 import org.revo.ihear.livepoll.config.rtspHandler.RtspMessageHandlerImpl;
 import org.revo.ihear.livepoll.rtsp.codec.RtspRequestDecoder;
@@ -26,16 +24,15 @@ import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.function.Function;
 
 @Configuration
 public class RtspServerConfig implements ApplicationListener<ApplicationStartedEvent> {
     @Autowired
     private ServerBootstrap serverBootstrap;
-    @Autowired
-    private ObjectMapper mapper;
+
+    @Value("${security.check:false}")
+    public boolean securitCheck;
 
     @Bean
     public NioEventLoopGroup group() {
@@ -81,7 +78,8 @@ public class RtspServerConfig implements ApplicationListener<ApplicationStartedE
     }
 
     @Bean
-    public Function<DefaultFullHttpRequest, Mono<Stream>> authorizationCheck(AuthService authService, StreamService streamService) {
+    public Function<DefaultFullHttpRequest, Mono<Stream>> authorizationCheck(AuthService authService) {
+        if (!securitCheck) return req -> Mono.just(new Stream());
         return req -> Mono.just(URI.create(req.uri()).getPath().split("/"))
                 .filter(it -> it.length >= 4).flatMap(parts -> authService.remoteStream(parts[2], parts[3]));
     }
