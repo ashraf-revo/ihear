@@ -31,9 +31,6 @@ public class RtspServerConfig implements ApplicationListener<ApplicationStartedE
     @Autowired
     private ServerBootstrap serverBootstrap;
 
-    @Value("${security.check:false}")
-    public boolean securitCheck;
-
     @Bean
     public NioEventLoopGroup group() {
         return new NioEventLoopGroup();
@@ -78,7 +75,7 @@ public class RtspServerConfig implements ApplicationListener<ApplicationStartedE
     }
 
     @Bean
-    public Function<DefaultFullHttpRequest, Mono<Stream>> authorizationCheck(AuthService authService) {
+    public Function<DefaultFullHttpRequest, Mono<Stream>> authorizationCheck(AuthService authService, @Value("${security.check:false}") boolean securitCheck) {
         if (!securitCheck) return req -> Mono.just(new Stream());
         return req -> Mono.just(URI.create(req.uri()).getPath().split("/"))
                 .filter(it -> it.length >= 4).flatMap(parts -> authService.remoteStream(parts[2], parts[3]));

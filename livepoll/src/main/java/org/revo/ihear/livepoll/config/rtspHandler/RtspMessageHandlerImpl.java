@@ -19,6 +19,7 @@ import org.revo.ihear.livepoll.rtsp.rtp.base.RtpPkt;
 import org.revo.ihear.livepoll.rtsp.utils.URLObject;
 import org.revo.ihear.livepoll.util.SdpUtil;
 import org.springframework.messaging.Message;
+import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -43,11 +44,11 @@ public class RtspMessageHandlerImpl extends RtspMessageHandler {
 
     @Override
     void handleRtsp(ChannelHandlerContext ctx, DefaultFullHttpRequest request) {
-//            if (!this.holderImpl.getAuthorizationCheck().apply(request)
-//                    .onErrorResume(throwable -> Mono.empty())
-//                    .blockOptional().isPresent()) {
-//                close(ctx, "not authorized ");
-//            }
+        if (!this.holderImpl.getAuthorizationCheck().apply(request)
+                .onErrorResume(throwable -> Mono.empty())
+                .blockOptional().isPresent()) {
+            close(ctx, "not authorized ");
+        }
         if (request.method() == RtspMethods.ANNOUNCE) {
             this.streamId = URLObject.getId(request.uri());
             this.session = new RtspSession(request.uri()).withSdp(request.content().toString(StandardCharsets.UTF_8));
