@@ -59,8 +59,9 @@ public class PiApplication {
     @Bean
     public RouterFunction<ServerResponse> routes(AuthService authService, StreamService streamService, WebSocketTemplate webSocketTemplate) {
         return route(POST("/"), serverRequest -> ok().body(serverRequest.bodyToMono(Stream.class).flatMap(it -> authService.currentJwtUserId().map(it::setCreateBy)).map(streamService::save), Stream.class))
-                .andRoute(GET("/"), serverRequest -> ok().body(authService.currentJwtUserId().flatMapMany(it -> Flux.fromIterable(streamService.findAll(it))), Stream.class))
+                .andRoute(GET("/findAll"), serverRequest -> ok().body(authService.currentJwtUserId().flatMapMany(it -> Flux.fromIterable(streamService.findAll(it))), Stream.class))
                 .andRoute(GET("/user"), serverRequest -> ok().body(authService.currentJwtUserId().map(it -> "user " + it + "  from " + serverRequest.exchange().getRequest().getRemoteAddress()), String.class))
+                .andRoute(GET("/{id}"), serverRequest -> ok().body(authService.currentJwtUserId().flatMap(it -> streamService.findOneById(serverRequest.pathVariable("id")).filter(its->its.getCreateBy().equals(it)).map(Mono::just).orElseGet(Mono::empty)), Stream.class))
                 .andRoute(POST("/notify/{streamId}"), serverRequest -> {
                     Mono<Void> notiy = authService.currentJwtUserId()
                             .filter(it -> streamService.findOneById(serverRequest.pathVariable("streamId")).

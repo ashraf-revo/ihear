@@ -1,5 +1,6 @@
 package org.revo.base.service.auth.impl;
 
+import org.revo.base.domain.Stream;
 import org.revo.base.service.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -80,6 +81,17 @@ public class AuthServiceImpl implements AuthService {
                 .cookie("SESSION", session)
                 .retrieve()
                 .bodyToMono(String.class);
+    }
+
+    @Override
+    public Mono<Stream> remoteStream(String session, String streamId) {
+        return WebClient.create((Arrays.asList(environment.getActiveProfiles()).stream()
+                .anyMatch("kubernetes"::equals) ? "http://ui" : "http://localhost:8080"))
+                .get()
+                .uri("/pi/stream/" + streamId)
+                .cookie("SESSION", session)
+                .retrieve()
+                .bodyToMono(Stream.class);
     }
 
 }
