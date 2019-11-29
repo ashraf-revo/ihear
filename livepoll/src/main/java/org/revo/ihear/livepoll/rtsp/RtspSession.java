@@ -15,19 +15,18 @@ import javax.sdp.SdpException;
 import javax.sdp.SessionDescription;
 import javax.sip.TransportNotSupportedException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
 public class RtspSession {
     private String id;
     private String uri;
     private InterLeavedRTPSession[] rtpSessions = null;
     private SessionDescriptionImpl sd;
+    private String sdp;
 
     public RtspSession(String uri) {
         this.uri = uri;
+        this.id = UUID.randomUUID().toString();
     }
 
     public RtspSession setId(String id) {
@@ -47,6 +46,14 @@ public class RtspSession {
     public RtspSession setUri(String uri) {
         this.uri = uri;
         return this;
+    }
+
+    public String getSdp() {
+        return sdp;
+    }
+
+    public void setSdp(String sdp) {
+        this.sdp = sdp;
     }
 
     public InterLeavedRTPSession[] getRTPSessions() {
@@ -105,6 +112,7 @@ public class RtspSession {
 
 
     public RtspSession withSdp(String sdp) {
+        this.sdp=sdp;
         SessionDescriptionImpl sd = new SessionDescriptionImpl();
 
         if (!StringUtils.isEmpty(sdp)) {

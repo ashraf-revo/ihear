@@ -60,6 +60,10 @@ public class NALU extends Packet {
         private int F;
         private int NRI;
         private int TYPE;
+        public static final int HIGH = 3;
+        public static final int MIDUM = 2;
+        public static final int LOW = 1;
+        public static final int IGNORE = 0;
 
         private NaluHeader() {
 
@@ -77,6 +81,18 @@ public class NALU extends Packet {
             naluHeader.NRI = (b & 0x60) >> 5;
             naluHeader.TYPE = b & 0x1F;
             return naluHeader;
+        }
+
+        public static boolean isH264IdrKeyFrame(byte b0, byte b1) {
+            NALU.NaluHeader read_0 = NALU.NaluHeader.read(b0);
+            NALU.NaluHeader read_1 = NALU.NaluHeader.read(b1);
+            return (read_0.getNRI() == 3 && read_0.getTYPE() == 28 && read_1.getTYPE() == 5 && read_1.getF() == 1);
+        }
+
+        public static boolean isH264IdrFrame(byte b0, byte b1) {
+            NALU.NaluHeader read_0 = NALU.NaluHeader.read(b0);
+            NALU.NaluHeader read_1 = NALU.NaluHeader.read(b1);
+            return (read_0.getNRI() == 3 && read_0.getTYPE() == 28 && read_1.getTYPE() == 5);
         }
 
         @Override

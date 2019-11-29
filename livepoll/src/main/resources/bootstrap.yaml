@@ -9,12 +9,15 @@ spring:
           - name: default
     stream:
       bindings:
-        output:
-          destination: asrevo.ihear.pkt
+        output1:
+          destination: asrevo.ihear.nalu.all
+          contentType: application/octet-stream
+        output2:
+          destination: asrevo.ihear.nalu.sprop
           contentType: application/octet-stream
       rabbit:
         bindings:
-          output:
+          output1:
             producer:
               exchangeType: fanout
               durableSubscription: false

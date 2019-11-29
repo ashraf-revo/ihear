@@ -9,13 +9,17 @@ spring:
           - name: default
     stream:
       bindings:
-        input:
-          destination: asrevo.ihear.pkt
+        input1:
+          destination: asrevo.ihear.nalu.all
           contentType: application/octet-stream
           group: ${random.uuid}
+        input2:
+          destination: asrevo.ihear.nalu.sprop
+          contentType: application/octet-stream
+          group: s1
       rabbit:
         bindings:
-          input:
+          input1:
             consumer:
               exchangeType: fanout
               durableSubscription: false

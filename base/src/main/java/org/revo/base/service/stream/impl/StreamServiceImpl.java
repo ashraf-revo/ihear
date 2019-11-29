@@ -40,8 +40,13 @@ public class StreamServiceImpl implements StreamService {
     }
 
     @Override
-    public long setSpsPps(String id, byte[] sps, byte[] pps) {
-        return mongoOperations.updateFirst(new Query().addCriteria(where("id").is(id)), new Update().set("videoContent.sps", sps).set("videoContent.dimension", Dimension(sps)).set("videoContent.pps", pps), Stream.class).getModifiedCount();
+    public long setSps(String id, byte[] sps) {
+        return mongoOperations.updateFirst(new Query().addCriteria(where("id").is(id)), new Update().set("videoContent.sps", sps), Stream.class).getModifiedCount();
+    }
+
+    @Override
+    public long setPps(String id, byte[] pps) {
+        return mongoOperations.updateFirst(new Query().addCriteria(where("id").is(id)), new Update().set("videoContent.pps", pps), Stream.class).getModifiedCount();
     }
 
     @Override
@@ -52,26 +57,6 @@ public class StreamServiceImpl implements StreamService {
     @Override
     public long setSdp(String id, String sdp, StreamType streamType) {
         return mongoOperations.updateFirst(new Query().addCriteria(where("id").is(id)), new Update().set("sdp", sdp).set("streamType", streamType), Stream.class).getModifiedCount();
-    }
-
-    @Override
-    public long setIdr(String id, byte[] idr) {
-        return mongoOperations.updateFirst(new Query().addCriteria(where("id").is(id)), new Update().set("videoContent.idr", idr), Stream.class).getModifiedCount();
-    }
-
-    @Override
-    public long setSei(String id, byte[] sei) {
-        return mongoOperations.updateFirst(new Query().addCriteria(where("id").is(id)), new Update().set("videoContent.sei", sei), Stream.class).getModifiedCount();
-    }
-
-    @Override
-    public long setSps(String id, byte[] sps) {
-        return mongoOperations.updateFirst(new Query().addCriteria(where("id").is(id)), new Update().set("videoContent.sps", sps).set("videoContent.dimension", Dimension(sps)), Stream.class).getModifiedCount();
-    }
-
-    @Override
-    public long setPps(String id, byte[] pps) {
-        return mongoOperations.updateFirst(new Query().addCriteria(where("id").is(id)), new Update().set("videoContent.pps", pps), Stream.class).getModifiedCount();
     }
 
     private static int[] Dimension(byte[] sps) {

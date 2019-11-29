@@ -6,6 +6,7 @@ import org.springframework.messaging.Message;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxProcessor;
 import reactor.core.publisher.ReplayProcessor;
+import reactor.core.publisher.UnicastProcessor;
 
 import java.time.Duration;
 
@@ -13,14 +14,13 @@ import java.time.Duration;
 public class Config {
     @Bean
     public FluxProcessor<Message<byte[]>, Message<byte[]>> processor() {
-//        return UnicastProcessor.create();
+        return UnicastProcessor.create();
 //        return ReplayProcessor.create();
-//        return ReplayProcessor.create(0);
+//        return ReplayProcessor.create(100);
 //        return DirectProcessor.create();
 //        return TopicProcessor.create();
-//        i need it no cache , i don,t need it to buffer any thing , i need it to be live stream
-//        think it as rtp jitter buffer
-        return ReplayProcessor.createTimeout(Duration.ofMillis(250));
+// i need it no cache , i don,t need it to buffer any thing , i need it to be live stream
+//        return ReplayProcessor.createTimeout(Duration.ofMillis(1000));
     }
 
 

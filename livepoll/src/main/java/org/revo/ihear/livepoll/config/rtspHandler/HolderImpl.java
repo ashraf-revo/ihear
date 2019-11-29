@@ -1,9 +1,10 @@
 package org.revo.ihear.livepoll.config.rtspHandler;
 
 import io.netty.handler.codec.http.DefaultFullHttpRequest;
+import org.revo.base.domain.Stream;
 import org.revo.base.service.stream.StreamService;
+import org.revo.ihear.livepoll.config.PiSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.stream.messaging.Source;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -13,21 +14,21 @@ import java.util.function.Function;
 @Component
 public class HolderImpl {
     @Autowired
-    private Source source;
+    private PiSource piSource;
     @Autowired
     private StreamService streamService;
     @Autowired
-    private Function<DefaultFullHttpRequest, Mono<LinkedHashMap>> authorizationCheck;
+    private Function<DefaultFullHttpRequest, Mono<Stream>> authorizationCheck;
 
-    public Source getSource() {
-        return source;
+    public PiSource getPiSource() {
+        return piSource;
     }
 
     public StreamService getStreamService() {
         return streamService;
     }
 
-    public Function<DefaultFullHttpRequest, Mono<LinkedHashMap>> getAuthorizationCheck() {
+    public Function<DefaultFullHttpRequest, Mono<Stream>> getAuthorizationCheck() {
         return authorizationCheck;
     }
 }

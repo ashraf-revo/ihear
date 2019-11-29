@@ -1,31 +1,10 @@
 package org.revo.base.domain;
 
 public class VideoContent extends Content {
-    // type=5
-    private byte[] idr;
-    // type=6
-    private byte[] sei;
     // type=7
     private byte[] sps;
     // type=8
     private byte[] pps;
-    private int[] dimension;
-
-    public byte[] getIdr() {
-        return idr;
-    }
-
-    public void setIdr(byte[] idr) {
-        this.idr = idr;
-    }
-
-    public byte[] getSei() {
-        return sei;
-    }
-
-    public void setSei(byte[] sei) {
-        this.sei = sei;
-    }
 
     public byte[] getSps() {
         return sps;
@@ -43,11 +22,4 @@ public class VideoContent extends Content {
         this.pps = pps;
     }
 
-    public int[] getDimension() {
-        return dimension;
-    }
-
-    public void setDimension(int[] dimension) {
-        this.dimension = dimension;
-    }
 }

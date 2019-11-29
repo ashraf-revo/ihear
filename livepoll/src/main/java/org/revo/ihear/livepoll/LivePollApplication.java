@@ -1,5 +1,6 @@
 package org.revo.ihear.livepoll;
 
+import org.revo.ihear.livepoll.config.PiSource;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -12,7 +13,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @EnableDiscoveryClient
 @ComponentScan(basePackages = {"org.revo.base.config", "org.revo.base.service.auth", "org.revo.base.service.stream", "org.revo.base.repository.stream", "org.revo.ihear.livepoll"})
 @EnableMongoRepositories(basePackages = {"org.revo.base.repository.stream", "org.revo.ihear.livepoll"})
-@EnableBinding(Source.class)
+@EnableBinding(PiSource.class)
 public class LivePollApplication {
     public static void main(String[] args) {
         SpringApplication.run(LivePollApplication.class, args);

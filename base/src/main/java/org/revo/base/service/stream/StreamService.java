@@ -13,17 +13,12 @@ public interface StreamService {
 
     long countBySchemaId(String id);
 
-    long setSpsPps(String id, byte[] sps, byte[] pps);
+    long setSps(String id, byte[] sps);
+
+    long setPps(String id, byte[] pps);
 
     List<Stream> findAll(String id);
 
     long setSdp(String id, String sdp, StreamType streamType);
 
-    long setIdr(String id, byte[] idr);
-
-    long setSei(String id, byte[] sei);
-
-    long setSps(String id, byte[] sps);
-
-    long setPps(String id, byte[] pps);
 }
