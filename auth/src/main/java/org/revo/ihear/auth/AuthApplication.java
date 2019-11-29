@@ -10,8 +10,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@ComponentScan(basePackages = {"org.revo.base.config", "org.revo.base.service.user", "org.revo.base.repository.user", "org.revo.ihear.auth"})
-@EnableMongoRepositories(basePackages = {"org.revo.base.repository.user", "org.revo.ihear.auth"})
+@ComponentScan(basePackages = {"org.revo.base.config", "org.revo.ihear.auth"})
 @EnableConfigurationProperties(Env.class)
 public class AuthApplication {
 

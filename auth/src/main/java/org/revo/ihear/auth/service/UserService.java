@@ -1,4 +1,4 @@
-package org.revo.base.service.user;
+package org.revo.ihear.auth.service;
 
 import org.revo.base.domain.User;
 
