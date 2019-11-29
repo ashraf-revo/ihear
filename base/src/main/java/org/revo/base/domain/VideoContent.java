@@ -1,6 +1,6 @@
 package org.revo.base.domain;
 
-public class VideoContent extends Content {
+public class VideoContent {
     // type=7
     private byte[] sps;
     // type=8

@@ -19,7 +19,6 @@ public class Stream {
     private String title;
     private String meta;
     private String schemaId;
-    private AudioContent audioContent;
     private VideoContent videoContent;
     private String sdp;
     private StreamType streamType;
@@ -84,14 +83,6 @@ public class Stream {
 
     public void setSchemaId(String schemaId) {
         this.schemaId = schemaId;
-    }
-
-    public AudioContent getAudioContent() {
-        return audioContent;
-    }
-
-    public void setAudioContent(AudioContent audioContent) {
-        this.audioContent = audioContent;
     }
 
     public VideoContent getVideoContent() {
