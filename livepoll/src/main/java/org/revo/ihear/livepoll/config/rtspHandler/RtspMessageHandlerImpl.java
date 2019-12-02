@@ -74,11 +74,11 @@ public class RtspMessageHandlerImpl extends RtspMessageHandler {
         synchronized (holderImpl.getPiSource().output1()) {
             if (rtpSession.getMediaStream().getMediaType() == MediaType.VIDEO) {
                 rtpNaluEncoder.encode(rtpPkt).forEach(it ->
-                        holderImpl.getPiSource().output1().send(buildMessage(it.getPayload(), rtpSession.getMediaStream().getMediaType())));
+                        holderImpl.getPiSource().output1().send(buildMessage(rtpPkt, it.getPayload(), rtpSession.getMediaStream().getMediaType())));
             }
             if (rtpSession.getMediaStream().getMediaType() == MediaType.AUDIO) {
                 rtpAdtsFrameEncoder.encode(rtpPkt).forEach(it ->
-                        holderImpl.getPiSource().output1().send(buildMessage(it.getPayload(), rtpSession.getMediaStream().getMediaType())));
+                        holderImpl.getPiSource().output1().send(buildMessage(rtpPkt, it.getPayload(), rtpSession.getMediaStream().getMediaType())));
             }
         }
     }
@@ -98,15 +98,18 @@ public class RtspMessageHandlerImpl extends RtspMessageHandler {
         return session;
     }
 
-    private Message<byte[]> buildMessage(byte[] payload, MediaType type) {
+    private Message<byte[]> buildMessage(RtpPkt rtpPkt, byte[] payload, MediaType type) {
         return withPayload(payload)
                 .setHeader("type", type)
-                .setHeader("streamId", streamId).build();
+                .setHeader("streamId", streamId)
+                .setHeader("seqNumber", rtpPkt != null ? rtpPkt.getSeqNumber() : 0)
+                .setHeader("timeStamp", rtpPkt != null ? rtpPkt.getTimeStamp() : 0)
+                .build();
     }
 
     private void sendSpsPps() {
         spropParameter.stream().flatMap(it -> Arrays.asList(it.split(",")).stream())
-                .map(RtpUtil::toNalu).map(it -> buildMessage(it.getPayload(), MediaType.VIDEO))
+                .map(RtpUtil::toNalu).map(it -> buildMessage(null, it.getPayload(), MediaType.VIDEO))
                 .forEach(it -> holderImpl.getPiSource().output2().send(it));
     }
 }
