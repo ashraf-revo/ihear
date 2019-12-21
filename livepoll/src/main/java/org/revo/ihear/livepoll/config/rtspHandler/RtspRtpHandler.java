@@ -32,31 +32,31 @@ import java.util.function.Function;
 import static org.springframework.messaging.support.MessageBuilder.withPayload;
 
 public class RtspRtpHandler implements Function<Object, Publisher<?>> {
-    private RtspHandler RtspHandler;
-    private RtpHandler RtpHandler;
+    private RtspHandler rtspHandler;
+    private RtpHandler rtpHandler;
 
 
     public RtspRtpHandler(HolderImpl holderImpl) {
-        this.RtspHandler = new RtspHandler(holderImpl);
-        this.RtpHandler = new RtpHandler(holderImpl);
+        this.rtspHandler = new RtspHandler(holderImpl);
+        this.rtpHandler = new RtpHandler(holderImpl);
     }
 
     @Override
     public Publisher<?> apply(Object o) {
         if (o instanceof DefaultFullHttpRequest) {
-            return RtspHandler.apply(((DefaultFullHttpRequest) o));
+            return rtspHandler.apply(((DefaultFullHttpRequest) o));
         }
-        if (o instanceof RtpPkt && this.RtspHandler.getState() == RtspMethods.RECORD) {
-            return RtpHandler.apply((RtpPkt) o, this.RtspHandler.getSession());
+        if (o instanceof RtpPkt && this.rtspHandler.getState() == RtspMethods.RECORD) {
+            return rtpHandler.apply((RtpPkt) o, this.rtspHandler.getSession());
         }// else       close(signal, "not follwing rtsp seqance (OPTIONS,ANNOUNCE,SETUP,RECORD,TEARDOWN)");
-        return RtspHandler.error;
+        return rtspHandler.error;
     }
 
 
     private Message<byte[]> buildMessage(RtpPkt rtpPkt, byte[] payload, MediaType type) {
         return withPayload(payload)
                 .setHeader("type", type)
-                .setHeader("streamId", RtspHandler.getSession().getStreamId())
+                .setHeader("streamId", rtspHandler.getSession().getStreamId())
                 .setHeader("seqNumber", rtpPkt != null ? rtpPkt.getSeqNumber() : 0)
                 .setHeader("timeStamp", rtpPkt != null ? rtpPkt.getTimeStamp() : 0)
                 .build();
