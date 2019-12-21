@@ -98,8 +98,6 @@ public class StreamerApplication {
                                         .filter(it -> Objects.equals(it.getHeaders().get("streamId"), serverRequest.pathVariable("id")))
                                         .filter(it -> it.getPayload().length > 0)
                                         .map(Message::getPayload))
-
-
                                 .map(NALU::getRaw)
                                 .map(ddbf::wrap)
                         , DataBuffer.class)).andRoute(GET("/audio/{id}"), serverRequest -> ok()

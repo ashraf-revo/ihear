@@ -5,6 +5,7 @@ import gov.nist.javax.sdp.SessionDescriptionImpl;
 import gov.nist.javax.sdp.fields.SDPField;
 import gov.nist.javax.sdp.parser.ParserFactory;
 import gov.nist.javax.sdp.parser.SDPParser;
+import io.netty.handler.codec.http.DefaultFullHttpRequest;
 import org.apache.commons.lang.StringUtils;
 import org.revo.ihear.livepoll.rtsp.d.InterLeavedRTPSession;
 import org.revo.ihear.livepoll.rtsp.d.MediaStream;
@@ -14,11 +15,13 @@ import javax.sdp.MediaDescription;
 import javax.sdp.SdpException;
 import javax.sdp.SessionDescription;
 import javax.sip.TransportNotSupportedException;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.*;
 
 public class RtspSession {
     private String id;
+    private String streamId;
     private String uri;
     private InterLeavedRTPSession[] rtpSessions = null;
     private SessionDescriptionImpl sd;
@@ -27,6 +30,19 @@ public class RtspSession {
     public RtspSession(String uri) {
         this.uri = uri;
         this.id = UUID.randomUUID().toString();
+    }
+
+    public static RtspSession from(DefaultFullHttpRequest request) {
+        return new RtspSession(request.uri()).withSdp(request.content().toString(StandardCharsets.UTF_8)).setStreamId(URLObject.getId(request.uri()));
+    }
+
+    public String getStreamId() {
+        return streamId;
+    }
+
+    public RtspSession setStreamId(String streamId) {
+        this.streamId = streamId;
+        return this;
     }
 
     public RtspSession setId(String id) {
@@ -112,7 +128,7 @@ public class RtspSession {
 
 
     public RtspSession withSdp(String sdp) {
-        this.sdp=sdp;
+        this.sdp = sdp;
         SessionDescriptionImpl sd = new SessionDescriptionImpl();
 
         if (!StringUtils.isEmpty(sdp)) {
