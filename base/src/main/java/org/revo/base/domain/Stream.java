@@ -15,7 +15,7 @@ public class Stream {
     private Date createdDate;
     @LastModifiedDate
     private Date lastModifiedDate;
-    private String createBy;
+    private String createdBy;
     private String title;
     private String meta;
     private String schemaId;
@@ -50,12 +50,12 @@ public class Stream {
         return this;
     }
 
-    public String getCreateBy() {
-        return createBy;
+    public String getCreatedBy() {
+        return createdBy;
     }
 
-    public Stream setCreateBy(String createBy) {
-        this.createBy = createBy;
+    public Stream setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
         return this;
     }
 

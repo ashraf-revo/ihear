@@ -51,7 +51,7 @@ public class StreamServiceImpl implements StreamService {
 
     @Override
     public List<Stream> findAll(String id) {
-        return streamRepository.findAllByCreateBy(id);
+        return streamRepository.findAllByCreatedBy(id);
     }
 
     @Override
