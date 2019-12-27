@@ -46,6 +46,20 @@ org:
               - "write"
             authorities:
             resourceIds:
+          - id: 5bfd3df1ad8ce6617f9bf637
+            clientId: micro
+            clientSecret: "{bcrypt}$2a$10$rPUJCZ6TmrrmDmHuIJptm.UIxsUcGm/WegmuwNfXE4eibF/kOEwWu"
+            refreshTokenValiditySeconds: 43200
+            accessTokenValiditySeconds: 43200
+            authorizedGrantTypes: "client_credentials"
+            scope:
+              - "read"
+              - "write"
+            autoApproveScopes:
+              - "read"
+              - "write"
+            authorities:
+            resourceIds:
 management:
   endpoints:
     web:
@@ -54,3 +68,9 @@ management:
   endpoint:
     health:
       show-details: always
+logging:
+  level:
+    org: debug
+    com: debug
+    reactor: debug
+    io: debug

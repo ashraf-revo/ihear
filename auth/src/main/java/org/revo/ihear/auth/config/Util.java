@@ -1,8 +1,8 @@
 package org.revo.ihear.auth.config;
 
 import org.revo.base.config.Env;
-import org.revo.ihear.auth.service.UserService;
 import org.revo.ihear.auth.service.ClientDetailsService;
+import org.revo.ihear.auth.service.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,8 +43,8 @@ public class Util {
     @Bean
     public CommandLineRunner runner(UserService userService, ClientDetailsService clientDetailsService, Env env) {
         return args -> {
-            env.getUsers().stream().filter(it -> userService.count() == 0).forEach(userService::save);
-            env.getClientDetails().stream().filter(it -> clientDetailsService.count() == 0).forEach(clientDetailsService::save);
+            if (userService.count() == 0) env.getUsers().stream().forEach(userService::save);
+            if (clientDetailsService.count() == 0) env.getClientDetails().stream().forEach(clientDetailsService::save);
         };
     }
 
