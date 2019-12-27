@@ -63,7 +63,7 @@ public class UiApplication {
 
     @Bean
     public RouterFunction<ServerResponse> routes(@Value("classpath:/static/index.html") Resource index, AuthService authService, OAuth2ClientProperties oAuth2ClientProperties, CookieServerCsrfTokenRepository cookieServerCsrfTokenRepository) {
-        return route(requestPredicate, serverRequest -> ok().contentType(MediaType.TEXT_HTML).syncBody(index))
+        return route(requestPredicate, serverRequest -> ok().contentType(MediaType.TEXT_HTML).bodyValue(index))
                 .andRoute(GET("/login"), serverRequest -> authService.currentOAuth2User().defaultIfEmpty("")
                         .zipWith(generateToken(cookieServerCsrfTokenRepository, serverRequest.exchange()))
                         .map(Tuple2::getT1)
@@ -108,7 +108,6 @@ public class UiApplication {
                 .pathMatchers("/android.html").authenticated()
                 .anyExchange().permitAll()
                 .and().oauth2Login()
-                .and().formLogin()
                 .and().logout()
                 .and().csrf().csrfTokenRepository(cookieServerCsrfTokenRepository)
                 .requireCsrfProtectionMatcher(exchange -> (exchange.getRequest().getMethod() != HttpMethod.GET && !exchange.getRequest().getPath().toString().startsWith("/auth")) ? ServerWebExchangeMatcher.MatchResult.match() : ServerWebExchangeMatcher.MatchResult.notMatch())
