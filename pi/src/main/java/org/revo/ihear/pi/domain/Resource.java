@@ -1,16 +1,7 @@
 package org.revo.ihear.pi.domain;
 
-public class Action {
-    private ActionType actionType;
+public class Resource {
     private ResourceType resourceType;
-
-    public ActionType getActionType() {
-        return actionType;
-    }
-
-    public void setActionType(ActionType actionType) {
-        this.actionType = actionType;
-    }
 
     public ResourceType getResourceType() {
         return resourceType;
