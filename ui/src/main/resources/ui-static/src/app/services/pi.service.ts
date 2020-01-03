@@ -1,56 +1,38 @@
 import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {Schema} from '../models/schema';
-import {Key} from '../models/key';
-import {KeyType} from '../models/key-type.enum';
-import {Listener} from '../models/listener';
-import {ListenerType} from '../models/listener-type.enum';
-import {Action} from '../models/action';
-import {ActionType} from '../models/action-type.enum';
-import {PinType} from '../models/pin-type.enum';
+import {HttpClient} from "@angular/common/http";
+import {Stream} from "../models/stream";
 
 @Injectable({
   providedIn: 'root'
 })
 export class PiService {
 
-  constructor() {
+  constructor(private http: HttpClient) {
   }
 
-  public findOne(id: string): Observable<Schema> {
-
-    let schema = new Schema();
-    schema.id = id;
-    schema.meta = 'asfa';
-    let key1 = new Key();
-    key1.keyType = KeyType.DOWN;
-    let l1 = new Listener();
-    l1.listenerType = ListenerType.CLICK;
-    let a11 = new Action();
-    a11.actionType = ActionType.RECORD;
-    a11.pinType = PinType.NONE;
-    let a12 = new Action();
-    a12.actionType = ActionType.SLEEP;
-    a12.pinType = PinType.NONE;
-    l1.actions = [a11, a12];
-
-
-    let l2 = new Listener();
-    l2.listenerType = ListenerType.HOVER;
-    let a21 = new Action();
-    a21.actionType = ActionType.RECORD;
-    a21.pinType = PinType.NONE;
-    let a22 = new Action();
-    a22.actionType = ActionType.SLEEP;
-    a22.pinType = PinType.NONE;
-    l2.actions = [a21, a22];
-    key1.listener = [l1, l2];
-
-    schema.keys = [key1];
-    return of(schema);
+  public findSchema(id: string): Observable<Schema> {
+    return this.http.get<Schema>("/pi/schema/" + id);
   }
 
-  public save(schema: Schema): Observable<Schema> {
-    return of(schema);
+  public findStream(id: string): Observable<Stream> {
+    return this.http.get<Stream>("/pi/stream/" + id);
+  }
+
+  public saveSchema(schema: Schema): Observable<Schema> {
+    return this.http.post<Schema>("/pi/schema", schema);
+  }
+
+  public saveStream(stream: Stream): Observable<Stream> {
+    return this.http.post<Stream>("/pi/stream", stream);
+  }
+
+  findAllSchemas(): Observable<Schema[]> {
+    return this.http.get<Schema[]>("/pi/schema");
+  }
+
+  findAllStreams(): Observable<Stream[]> {
+    return this.http.get<Stream[]>("/pi/stream");
   }
 }

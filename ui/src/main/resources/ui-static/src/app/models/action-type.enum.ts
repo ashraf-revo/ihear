@@ -1,6 +1,6 @@
 export enum ActionType {
   ON="ON",
-  OFF="OF",
+  OFF="OFF",
   TOGGLE="TOGGLE",
   BLINK="BLINK",
   SLEEP="SLEEP",

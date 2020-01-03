@@ -1,0 +1,29 @@
+<js-basic-ui-model [title]="'header'" (events)="onEvent($event)" [showSave]="showSave">
+  <div class="app-modal-body">
+
+    <div class="form-group row  ">
+      <div class="col-sm-12">
+        <div class="pl-lg-5 pr-lg-5">
+          <input placeholder="Search" type="text" class="form-control" [(ngModel)]="query">
+        </div>
+      </div>
+    </div>
+
+    <div style="height: 250px ;overflow-y: scroll">
+      <ul class="justify-content-center list-unstyled ">
+        <li *ngFor="let schema of schemas | search: query">
+          <div class="p-2 pl-lg-5 pr-lg-5">
+          <span class="p-1 btn">
+            <a [title]="schema.id">{{schema.title}}</a>
+        </span>
+            <span class="float-right">
+            <a [title]="schema.id" (click)="select(schema)" class="btn btn-sm btn-primary">select</a>
+        </span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</js-basic-ui-model>
+
+

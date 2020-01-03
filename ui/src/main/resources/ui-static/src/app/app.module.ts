@@ -1,23 +1,46 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { JoyStickComponent } from './componants/joy-stick/joy-stick.component';
+import {AppRoutingModule} from './app-routing.module';
+import {AppComponent} from './app.component';
+import {SchemaComponent} from './componants/schema/schema.component';
 import {FormsModule} from '@angular/forms';
 import {PiService} from './services/pi.service';
+import {AddKeyComponent} from './componants/add-key/add-key.component';
+import {AddListenerComponent} from './componants/add-listener/add-listener.component';
+import {AddActionComponent} from './componants/add-action/add-action.component';
+import {BasicUiModelComponent} from './componants/basic-ui-model/basic-ui-model.component';
+import {HomeComponent} from './componants/home/home.component';
+import {AddResourceComponent} from './componants/add-resource/add-resource.component';
+import {HttpClientModule} from "@angular/common/http";
+import {SearchSchemaComponent} from "./componants/search-schema/search-schema.component";
+import {StreamComponent} from './componants/stream/stream.component';
+import {BaseComponent} from './componants/base/base.component';
+import {SearchPipe} from './services/search.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
-    JoyStickComponent
+    SchemaComponent,
+    AddKeyComponent,
+    AddListenerComponent,
+    AddActionComponent,
+    BasicUiModelComponent,
+    HomeComponent,
+    AddResourceComponent,
+    SearchSchemaComponent,
+    StreamComponent,
+    BaseComponent,
+    SearchPipe
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
   providers: [PiService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

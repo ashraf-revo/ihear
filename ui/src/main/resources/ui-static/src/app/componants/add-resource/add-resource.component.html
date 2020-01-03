@@ -1,0 +1,12 @@
+<js-basic-ui-model [title]="'header'" (events)="onEvent($event)" [showSave]="showSave">
+  <div class="app-modal-body" *ngIf="resource">
+    <div class="form-group row">
+      <label for="ResourceType" class="col-sm-3 col-form-label">ResourceType</label>
+      <div class="col-sm-9">
+        <select class="form-control" id="ResourceType" name="resource.resourceType" [(ngModel)]="resource.resourceType">
+          <option *ngFor="let rts of resourceTypes" [value]="rts">{{rts}}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</js-basic-ui-model>

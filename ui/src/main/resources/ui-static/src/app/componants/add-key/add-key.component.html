@@ -1,0 +1,12 @@
+<js-basic-ui-model [title]="'header'" (events)="onEvent($event)" [showSave]="showSave">
+  <div class="app-modal-body" *ngIf="key">
+    <div class="form-group row">
+      <label for="keyType" class="col-sm-3 col-form-label">KeyType</label>
+      <div class="col-sm-9">
+        <select class="form-control" id="keyType" name="key.keyType" [(ngModel)]="key.keyType">
+          <option *ngFor="let kts of keyTypes" [value]="kts">{{kts}}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</js-basic-ui-model>

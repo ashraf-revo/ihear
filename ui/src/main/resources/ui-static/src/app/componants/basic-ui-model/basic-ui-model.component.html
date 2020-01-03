@@ -1,0 +1,21 @@
+<div (click)="onContainerClicked($event)" class="modal fade" tabindex="-1" [ngClass]="{'show': visibleAnimate}"
+     [ngStyle]="{'display': visible ? 'block' : 'none', 'opacity': visibleAnimate ? 1 : 0}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="app-modal-header">
+          {{title}}
+        </div>
+      </div>
+      <div class="modal-body">
+        <ng-content select=".app-modal-body"></ng-content>
+      </div>
+      <div class="modal-footer">
+        <div class="app-modal-footer">
+          <button type="button" class="btn btn-default" (click)="hide()">Close</button>
+          <button type="button" class="btn btn-primary" *ngIf="showSave" (click)="save()">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

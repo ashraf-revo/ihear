@@ -1,7 +1,7 @@
 import {ActionType} from './action-type.enum';
-import {PinType} from './pin-type.enum';
+import {ResourceType} from "./resource-type.enum";
 
 export class Action {
-  pinType: PinType;
   actionType: ActionType;
+  resourceType: ResourceType;
 }

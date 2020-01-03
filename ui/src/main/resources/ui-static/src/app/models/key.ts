@@ -3,5 +3,5 @@ import {KeyType} from './key-type.enum';
 
 export class Key {
   keyType: KeyType;
-  listener: Listener[];
+  listeners: Listener[]=[];
 }

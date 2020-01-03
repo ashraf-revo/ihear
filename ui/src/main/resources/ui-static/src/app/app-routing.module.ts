@@ -1,9 +1,22 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {JoyStickComponent} from './componants/joy-stick/joy-stick.component';
+import {SchemaComponent} from './componants/schema/schema.component';
+import {HomeComponent} from "./componants/home/home.component";
+import {StreamComponent} from "./componants/stream/stream.component";
+import {BaseComponent} from "./componants/base/base.component";
 
 const routes: Routes = [
-  {path: 'schema/:id', component: JoyStickComponent}
+  {
+    path: '', component: BaseComponent, children:
+      [
+        {path: '', component: HomeComponent},
+        {path: 'home', component: HomeComponent},
+        {path: 'stream', component: StreamComponent},
+        {path: 'stream/:id', component: StreamComponent},
+        {path: 'schema', component: SchemaComponent},
+        {path: 'schema/:id', component: SchemaComponent}
+      ]
+  }
 ];
 
 @NgModule({

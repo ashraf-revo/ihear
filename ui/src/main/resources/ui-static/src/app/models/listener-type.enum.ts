@@ -1,4 +1,4 @@
 export enum ListenerType {
-  CLICK="CLICK",
-  HOVER="HOVER"
+  CLICK = "CLICK",
+  LOOAD = "LOOAD"
 }

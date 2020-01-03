@@ -3,5 +3,6 @@ import {Action} from './action';
 
 export class Listener {
   listenerType: ListenerType;
-  actions: Action[];
+  threading: boolean;
+  actions: Action[]=[];
 }

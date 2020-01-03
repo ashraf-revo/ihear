@@ -1,9 +1,10 @@
-import {Key} from './key';
+import {Event} from "./event";
 
 export class Schema {
   id: string;
   createdBy: string;
   createdDate: Date;
+  title: string;
   meta: string;
-  keys: Key[];
+  event: Event = new Event();
 }
