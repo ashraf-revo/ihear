@@ -18,6 +18,7 @@ spec:
           image: ashraf1abdelrasool/livepoll:0.0.1-SNAPSHOT
           ports:
             - containerPort: 8085
+          imagePullPolicy: Always
 ---
 apiVersion: v1
 kind: Service

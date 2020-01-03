@@ -18,6 +18,7 @@ spec:
           image: ashraf1abdelrasool/auth:0.0.1-SNAPSHOT
           ports:
             - containerPort: 9999
+          imagePullPolicy: Always
 ---
 apiVersion: v1
 kind: Service
