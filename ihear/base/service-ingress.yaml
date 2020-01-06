@@ -24,6 +24,10 @@ spec:
             backend:
               serviceName: streamer
               servicePort: 8083
+          - path: /livepoll/?(.*)
+            backend:
+              serviceName: livepoll
+              servicePort: 8085
           - path: /?(.*)
             backend:
               serviceName: ui

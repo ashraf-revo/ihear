@@ -18,6 +18,9 @@ spec:
           image: ashraf1abdelrasool/livepoll:0.0.1-SNAPSHOT
           ports:
             - containerPort: 8085
+              name: http
+            - containerPort: 8086
+              name: rtsp
           imagePullPolicy: Always
 ---
 apiVersion: v1
@@ -32,6 +35,10 @@ spec:
       protocol: TCP
       port: 8085
       targetPort: 8085
+    - name: rtsp
+      protocol: TCP
+      port: 8086
+      targetPort: 8086
   type: LoadBalancer
   selector:
     run: livepoll
