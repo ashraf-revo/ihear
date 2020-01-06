@@ -14,7 +14,7 @@ import reactor.netty.tcp.TcpServer;
 public class RtspServerConfig {
     @Bean
     public DisposableServer tcpServer(HolderImpl holder, @Value("${server.port:8085}") Integer port) {
-        return TcpServer.create().port(port)
+        return TcpServer.create().port(port + 1)
                 .doOnConnection(it -> it.addHandlerLast(new RtspEncoder()).addHandlerLast(new RtspRequestDecoder()))
                 .handle((inbound, outbound) -> outbound.sendObject(inbound.receiveObject().flatMap(new RtspRtpHandler(holder)))).bindNow();
     }
