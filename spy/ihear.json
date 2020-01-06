@@ -1,7 +1,8 @@
 {
-  "host": "127.0.0.1:8080",
+  "host": "35.192.30.145",
   "secure": false,
-  "stream": "127.0.0.1:8085/stream/5dcb05644df8ec0001c959d6",
+  "streamId": "5e104ed5a7302b488f36bbb8",
+  "streamUrl": "127.0.0.1:8085/stream/:session/",
   "fun": "rtsp",
   "key": "5dc697dba7a6607cf96d8fda.key"
 }
