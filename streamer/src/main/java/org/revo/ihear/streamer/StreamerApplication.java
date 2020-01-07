@@ -14,8 +14,6 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.core.io.buffer.DataBuffer;
-import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.messaging.Message;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
@@ -28,6 +26,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxProcessor;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
@@ -88,7 +87,6 @@ public class StreamerApplication {
 
     @Bean
     public RouterFunction<ServerResponse> function(AuthService authService, Flux<Message<byte[]>> stream) {
-        DefaultDataBufferFactory ddbf = new DefaultDataBufferFactory();
         return route(GET("/video/{id}"), serverRequest -> ok()
                 .header("Content-Type", "video/h264")
                 .body(Flux.fromIterable(streamService.findOneById(serverRequest.pathVariable("id")).
@@ -98,15 +96,15 @@ public class StreamerApplication {
                                         .filter(it -> Objects.equals(it.getHeaders().get("streamId").toString(), serverRequest.pathVariable("id")) && it.getPayload().length > 0)
                                         .map(Message::getPayload))
                                 .map(NALU::getRaw)
-                                .map(ddbf::wrap)
-                        , DataBuffer.class)).andRoute(GET("/audio/{id}"), serverRequest -> ok()
+                                .map(ByteBuffer::wrap)
+                        , ByteBuffer.class)).andRoute(GET("/audio/{id}"), serverRequest -> ok()
                 .header("Content-Type", "audio/aac")
                 .body(stream.filter(it -> AUDIO.name().equals(it.getHeaders().get("type").toString()))
                                 .filter(it -> Objects.equals(it.getHeaders().get("streamId").toString(), serverRequest.pathVariable("id")) && it.getPayload().length > 0)
                                 .map(Message::getPayload)
                                 .map(AdtsFrame::getRaw)
-                                .map(ddbf::wrap)
-                        , DataBuffer.class))
+                                .map(ByteBuffer::wrap)
+                        , ByteBuffer.class))
                 .andRoute(GET("/user"), serverRequest -> ok().body(authService.currentJwtUserId()
                         .map(it -> "user " + it + "  from " + serverRequest.exchange().getRequest().getRemoteAddress()), String.class));
     }
