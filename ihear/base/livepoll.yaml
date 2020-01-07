@@ -17,8 +17,6 @@ spec:
         - name: livepoll
           image: ashraf1abdelrasool/livepoll:0.0.1-SNAPSHOT
           ports:
-#            - containerPort: 8085
-#              name: http
             - containerPort: 8086
               name: rtsp
           imagePullPolicy: Always

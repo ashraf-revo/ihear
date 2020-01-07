@@ -13,7 +13,8 @@
     <description>Demo project for Spring Boot</description>
     <properties>
         <spring.skip>false</spring.skip>
-        <project.port>8085/tcp 8086/tcp</project.port>
+<!--        <project.port>8085/tcp 8086/tcp</project.port>-->
+        <project.port>8086/tcp</project.port>
     </properties>
     <packaging>jar</packaging>
     <dependencies>
