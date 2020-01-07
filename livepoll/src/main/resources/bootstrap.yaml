@@ -30,8 +30,6 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: http://${org.revo.base.env.url:localhost:8080}/auth/.well-known/jwks.json
-  main:
-    web-application-type: none
 management:
   endpoints:
     web:
