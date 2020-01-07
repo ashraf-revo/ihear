@@ -4,6 +4,7 @@ import {SchemaComponent} from './componants/schema/schema.component';
 import {HomeComponent} from "./componants/home/home.component";
 import {StreamComponent} from "./componants/stream/stream.component";
 import {BaseComponent} from "./componants/base/base.component";
+import {PlayerComponent} from "./componants/player/player.component";
 
 const routes: Routes = [
   {
@@ -12,6 +13,7 @@ const routes: Routes = [
         {path: '', component: HomeComponent},
         {path: 'home', component: HomeComponent},
         {path: 'stream', component: StreamComponent},
+        {path: 'player/:id', component: PlayerComponent},
         {path: 'stream/:id', component: StreamComponent},
         {path: 'schema', component: SchemaComponent},
         {path: 'schema/:id', component: SchemaComponent}

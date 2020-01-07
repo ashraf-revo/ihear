@@ -17,6 +17,7 @@ import {SearchSchemaComponent} from "./componants/search-schema/search-schema.co
 import {StreamComponent} from './componants/stream/stream.component';
 import {BaseComponent} from './componants/base/base.component';
 import {SearchPipe} from './services/search.pipe';
+import { PlayerComponent } from './componants/player/player.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import {SearchPipe} from './services/search.pipe';
     SearchSchemaComponent,
     StreamComponent,
     BaseComponent,
-    SearchPipe
+    SearchPipe,
+    PlayerComponent
   ],
   imports: [
     BrowserModule,

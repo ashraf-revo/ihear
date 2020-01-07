@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {NavigationEnd, Router} from "@angular/router";
 import {AuthService} from "./auth.service";
 
@@ -9,7 +9,7 @@ export class DefaultService {
 
   public url = '';
   private _lastRoute: NavigationEnd = null;
-  private protectedUrl: string[] = ['schema', 'stream'];
+  private protectedUrl: string[] = ['schema', 'stream', 'player'];
 
   constructor() {
   }
@@ -43,4 +43,5 @@ export class DefaultService {
     authService.onChange().subscribe(it => {
       this.isAccessible(router, authService);
     });
-  }}
+  }
+}
