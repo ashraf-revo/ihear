@@ -51,7 +51,7 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 @EnableWebFluxSecurity
 @ComponentScan(basePackages = {"org.revo.base.service.auth", "org.revo.ihear.ui"})
 public class UiApplication {
-    private static final List<String> services = Arrays.asList("/auth/**", "/pi/**", "/streamer/**", "/echo/**", "/login", "/loginx", "/user", "/test/**");
+    private static final List<String> services = Arrays.asList("/auth/**", "/pi/**", "/streamer/**","/livepoll/**", "/echo/**", "/login", "/loginx", "/user", "/test/**");
     private final RequestPredicate requestPredicate = serverRequest -> services.stream().map(it -> new PathPatternParser().parse(it))
             .noneMatch(it -> it.matches(serverRequest.exchange().getRequest().getPath().pathWithinApplication())) && !serverRequest.path().contains(".");
     @Autowired
