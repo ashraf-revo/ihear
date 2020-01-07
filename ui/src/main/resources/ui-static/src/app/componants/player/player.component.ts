@@ -24,7 +24,6 @@ export class PlayerComponent implements OnInit {
 
     this.activatedRoute.params.pipe(map((it: Params) => it['id']), filter(it => it), mergeMap(it => this.eventStreamService.stream('/streamer/video/' + it)))
       .subscribe((it: Uint8Array) => {
-        console.log(it);
         player.decode(it)
       });
 
