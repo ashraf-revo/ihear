@@ -1,6 +1,6 @@
 package org.revo.ihear.auth.repository;
 
-import org.revo.base.domain.ClientDetails;
+import org.revo.ihear.entites.domain.ClientDetails;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {ReplaySubject, Subject} from "rxjs";
 import {AuthUser} from "../models/auth-user";
 import {User} from "../models/user";
@@ -31,4 +31,5 @@ export class AuthService {
 
   public onChange(): Subject<AuthUser> {
     return this._change;
-  }}
+  }
+}

@@ -1,9 +1,9 @@
 package org.revo.ihear.livepoll.config.rtspHandler;
 
 import io.netty.handler.codec.http.DefaultFullHttpRequest;
-import org.revo.base.domain.Stream;
-import org.revo.base.service.auth.AuthService;
+import org.revo.ihear.entites.domain.Stream;
 import org.revo.ihear.livepoll.config.PiSource;
+import org.revo.ihear.service.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -28,6 +28,8 @@ public class HolderImpl {
     public Function<DefaultFullHttpRequest, Mono<Stream>> getAuthorizationCheck() {
         if (!securitCheck) return req -> Mono.just(new Stream());
         return req -> Mono.just(URI.create(req.uri()).getPath().split("/"))
-                .filter(it -> it.length >= 4).flatMap(parts -> authService.remoteStream(parts[2], parts[3]));
+                .filter(it -> it.length >= 4)
+                .flatMap(parts -> Mono.empty());
+//                .flatMap(parts -> authService.remoteStream(parts[2], parts[3]));
     }
 }

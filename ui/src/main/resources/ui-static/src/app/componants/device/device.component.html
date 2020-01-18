@@ -1,0 +1,49 @@
+<div class="p-2">
+  <div class="row">
+    <div class="col col-md-6">
+      <div class="app-modal-body">
+        <div class="row justify-content-md-center p-2">
+          <span>Device</span>
+        </div>
+        <div class="form-group row">
+          <label for="Name" class="col-sm-3 col-form-label">Name</label>
+          <div class="col-sm-9">
+            <input class="form-control" id="Name" name="device.name" [(ngModel)]="device.name">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="DeviceType" class="col-sm-3 col-form-label">DeviceType</label>
+          <div class="col-sm-9">
+            <select class="form-control" id="DeviceType" name="device.DeviceType" [(ngModel)]="device.deviceType">
+              <option *ngFor="let dts of deviceTypes  , let i = index" [value]="dts" [selected]="i==0">{{dts}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="SchemaId" class="col-sm-3 col-form-label">SchemaId</label>
+          <div class="col-sm-9">
+            <a id="SchemaId" (click)="showSelect()" class="btn btn-sm btn-success">
+              <span>Select</span>
+            </a>
+            <span class="pl-2">{{device.schemaId}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row p-3">
+    <button (click)="save()" class="btn btn-primary">save</button>
+  </div>
+  <div class="row">
+    <ul class="list-unstyled">
+      <li *ngFor="let d of devices">
+    <span>
+      {{d.id}}
+    </span>
+        <a *ngIf="d.id" [routerLink]="['/device',d.id]">device</a>
+        <a *ngIf="d.schemaId" [routerLink]="['/schema',d.schemaId]">schema</a>
+      </li>
+    </ul>
+  </div>
+</div>
+

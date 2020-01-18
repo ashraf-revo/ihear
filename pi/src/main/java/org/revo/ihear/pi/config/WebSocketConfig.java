@@ -1,8 +1,8 @@
 package org.revo.ihear.pi.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.revo.base.service.auth.AuthService;
 import org.revo.ihear.pi.config.domain.WSMessage;
+import org.revo.ihear.service.auth.AuthService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +27,7 @@ public class WebSocketConfig {
         Map<String, WebSocketHandler> map = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();
 
-        map.put("/echo/{user}/{streamId}", new WsSocketHandler(authService, applicationEventPublisher, wsMessages, mapper));
+        map.put("/echo/{user}/{device}", new WsSocketHandler(authService, applicationEventPublisher, wsMessages, mapper));
         SimpleUrlHandlerMapping mapping = new SimpleUrlHandlerMapping();
         mapping.setUrlMap(map);
         mapping.setOrder(-1);

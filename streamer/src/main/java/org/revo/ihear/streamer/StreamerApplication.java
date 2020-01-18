@@ -1,9 +1,9 @@
 package org.revo.ihear.streamer;
 
-import org.revo.base.service.auth.AuthService;
-import org.revo.base.service.stream.StreamService;
-import org.revo.ihear.livepoll.rtsp.rtp.base.AdtsFrame;
-import org.revo.ihear.livepoll.rtsp.rtp.base.NALU;
+import org.revo.ihear.entites.service.stream.StreamService;
+import org.revo.ihear.rtsp.commons.rtp.base.AdtsFrame;
+import org.revo.ihear.rtsp.commons.rtp.base.NALU;
+import org.revo.ihear.service.auth.AuthService;
 import org.revo.ihear.streamer.config.PiSink;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -31,8 +31,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 
-import static org.revo.ihear.livepoll.rtsp.d.MediaType.AUDIO;
-import static org.revo.ihear.livepoll.rtsp.d.MediaType.VIDEO;
+import static org.revo.ihear.rtsp.commons.d.MediaType.AUDIO;
+import static org.revo.ihear.rtsp.commons.d.MediaType.VIDEO;
 import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
@@ -40,8 +40,8 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableWebFluxSecurity
-@ComponentScan(basePackages = {"org.revo.base.config", "org.revo.base.service.auth", "org.revo.base.service.stream", "org.revo.base.repository.stream", "org.revo.ihear.streamer"})
-@EnableMongoRepositories(basePackages = {"org.revo.base.repository.stream", "org.revo.ihear.streamer"})
+@ComponentScan(basePackages = {"org.revo.ihear.entites.config", "org.revo.ihear.service.auth", "org.revo.ihear.entites.service.stream", "org.revo.ihear.entites.repository.stream", "org.revo.ihear.streamer"})
+@EnableMongoRepositories(basePackages = {"org.revo.ihear.entites.repository.stream", "org.revo.ihear.streamer"})
 @EnableBinding(PiSink.class)
 public class StreamerApplication {
     @Autowired

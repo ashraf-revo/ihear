@@ -2,7 +2,7 @@ package org.revo.ihear.livepoll.util;
 
 import gov.nist.javax.sdp.MediaDescriptionImpl;
 import gov.nist.javax.sdp.fields.AttributeField;
-import org.revo.base.domain.StreamType;
+import org.revo.ihear.entites.domain.StreamType;
 
 import javax.sdp.SdpException;
 import javax.sdp.SessionDescription;

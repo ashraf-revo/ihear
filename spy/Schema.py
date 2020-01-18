@@ -1,60 +1,100 @@
-import threading
+import json
+from enum import Enum
 
-from Available import Available
-from Camera import Camera
-from Closeable import Closeable
-from Pin import Pin
-from Thread import Thread
+import requests
 
 
-class Schema(Closeable, Available):
-    def available(self):
-        for c in self.___resources.values():
-            c.available()
+class Schema:
+    def __init__(self, id, parentId, createdBy, createdDate, title, meta, event):
+        self.id = id
+        self.parentId = parentId
+        self.createdBy = createdBy
+        self.createdDate = createdDate
+        self.title = title
+        self.meta = meta
+        self.event = Event(**event)
 
-    def close(self):
-        for c in self.___resources.values():
-            c.close()
+    @classmethod
+    def read(cls, path, oauth):
+        sc = requests.get(path, headers={"Authorization": "Bearer " + oauth.access_token})
+        return Schema(**json.loads(sc.content))
 
-    def __init__(self, schema, param):
-        self.___schema = schema
-        self.___param = param
-        self.___resources = {}
-        self.___parse()
-        self.available()
 
-    def ___parse(self):
-        if self.___schema and self.___schema['resources']:
-            for r in self.___schema['resources']:
-                if str.startswith(str(r['resourceType']), "PIN"):
-                    pin = str.replace(str(r['resourceType']), "PIN_", "")
-                    self.___resources[str(r['resourceType'])] = Pin({"pin": pin})
-                if str(r['resourceType']) == "CAMERA":
-                    self.___resources[str(r['resourceType'])] = Camera(self.___param)
-                if str(r['resourceType']) == "THREAD":
-                    self.___resources[str(r['resourceType'])] = Thread({"time": 1})
+class Event:
+    def __init__(self, resources, listeners, keys):
+        self.resources = []
+        self.listeners = []
+        self.keys = []
+        for r in resources:
+            self.resources.append(Resource(**r))
+        for l in listeners:
+            self.listeners.append(Listener(**l))
+        for k in keys:
+            self.keys.append(Key(**k))
 
-    def ___call(self, actions):
-        for action in actions:
-            getattr(self.___resources[action['resourceType']], str.lower(str(action['actionType'])))()
 
-    def ___run_or_start(self, listener):
-        thread = threading.Thread(target=self.___call, args=(listener['actions'],))
-        if listener['threading']:
-            thread.start()
-        else:
-            thread.run()
+class Key:
+    def __init__(self, keyType, listeners):
+        self.keyType = keyType
+        self.listeners = []
+        for l in listeners:
+            self.listeners.append(Listener(**l))
 
-    def execute_on_load(self):
-        if self.___schema and self.___schema['listeners']:
-            for listener in self.___schema['listeners']:
-                if listener['listenerType'] == "LOOAD":
-                    self.___run_or_start(listener)
 
-    def execute_on_key(self, message):
-        if self.___schema and self.___schema['keys']:
-            for k in self.___schema['keys']:
-                if k['keyType'] == message['keyType']:
-                    for listener in k['listeners']:
-                        if listener['listenerType'] == message['listenerType']:
-                            self.___run_or_start(listener)
+class Listener:
+    def __init__(self, listenerType, threading, actions):
+        self.listenerType = listenerType
+        self.threading = threading
+        self.actions = []
+        for a in actions:
+            self.actions.append(Action(**a))
+
+
+class Call:
+
+    def __init__(self, keyType, listenerType):
+        self.keyType = keyType
+        self.listenerType = listenerType
+
+
+class Action:
+    def __init__(self, actionType, resourceType):
+        self.actionType = actionType
+        self.resourceType = resourceType
+
+
+class Resource:
+    def __init__(self, resourceType):
+        self.resourceType = resourceType
+
+
+class ResourceType(Enum):
+    PIN_1 = "PIN_1"
+    CAMERA = "CAMERA"
+    THREAD = "THREAD"
+
+
+class ListenerType(Enum):
+    LOOAD = "LOOAD"
+    CLICK = "CLICK"
+
+
+class ActionType(Enum):
+    ON = "ON"
+    OFF = "OFF"
+    TOGGLE = "TOGGLE"
+    BLINK = "BLINK"
+    SLEEP = "SLEEP"
+    RECORD = "RECORD"
+    TEARDOWN = "TEARDOWN"
+
+
+class KeyType(Enum):
+    UP = "UP"
+    DOWN = "DOWN"
+    LEFT = "LEFT"
+    RIGHT = "RIGHT"
+    Y = "Y"
+    A = "A"
+    X = "X"
+    B = "B"

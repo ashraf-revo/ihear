@@ -1,9 +1,10 @@
 package org.revo.ihear.auth.service.impl;
 
-import org.revo.base.domain.User;
 import org.revo.ihear.auth.domain.Key;
 import org.revo.ihear.auth.repository.KeyRepository;
 import org.revo.ihear.auth.service.KeyService;
+import org.revo.ihear.entites.domain.Authority;
+import org.revo.ihear.entites.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -54,7 +55,7 @@ public class KeyServiceImpl implements KeyService {
         accessToken.setRefreshToken(refreshToken);
         accessToken.setScope(new HashSet<>(Arrays.asList("ws", "rtsp", "read")));
         User user = currentUser();
-        user.setRoles("ROLE_DEVICE");
+        user.setAuthorities(Arrays.asList(Authority.ROLE_DEVICE));
         UsernamePasswordAuthenticationToken userAuthentication = new UsernamePasswordAuthenticationToken(user, null);
         OAuth2Request fakeDevice = new OAuth2Request(null, "device", null, true, null, null, "", null, null);
         return jwtAccessTokenConverter.enhance(accessToken, new OAuth2Authentication(fakeDevice, userAuthentication));

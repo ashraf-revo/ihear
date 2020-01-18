@@ -1,18 +1,21 @@
 package org.revo.ihear.pi.config.domain;
 
-public class WSMessage {
-    private Object payload;
+import java.io.Serializable;
+import java.util.Map;
+
+public class WSMessage implements Serializable {
+    private Map<String, Object> payload;
     private String from;
     private String to;
 
     public WSMessage() {
     }
 
-    public Object getPayload() {
+    public Map<String, Object> getPayload() {
         return payload;
     }
 
-    public WSMessage setPayload(Object payload) {
+    public WSMessage setPayload(Map<String, Object> payload) {
         this.payload = payload;
         return this;
     }

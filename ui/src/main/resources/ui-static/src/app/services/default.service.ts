@@ -9,7 +9,8 @@ export class DefaultService {
 
   public url = '';
   private _lastRoute: NavigationEnd = null;
-  private protectedUrl: string[] = ['schema', 'stream', 'player'];
+  private protectedUrl: string[] = ['schema', 'stream', 'player', 'home', 'device'];
+  private homeUrl: string = 'home';
 
   constructor() {
   }
@@ -19,10 +20,15 @@ export class DefaultService {
   }
 
   isAccessible(router: Router, authService: AuthService): boolean {
-    if (authService.getAuthUser().isAuth == null || authService.getAuthUser().isAuth === 'true') {
+    if (authService.getAuthUser().isAuth == null) {
       return true;
     } else if (authService.getAuthUser().isAuth === 'false' && this.protectedUrl.indexOf(this._lastRoute.url.split('/')[1]) !== -1) {
-      router.navigate(['/']);
+      // router.navigate(['/login']);
+      window.location.href = "/login";
+
+      return false;
+    } else if (authService.getAuthUser().isAuth === 'true' && (this._lastRoute.url === '/' || this._lastRoute.url === '')) {
+      router.navigate(['/' + this.homeUrl]);
       return false;
     }
     return true;

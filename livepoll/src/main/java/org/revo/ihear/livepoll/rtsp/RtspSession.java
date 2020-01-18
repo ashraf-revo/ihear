@@ -7,9 +7,9 @@ import gov.nist.javax.sdp.parser.ParserFactory;
 import gov.nist.javax.sdp.parser.SDPParser;
 import io.netty.handler.codec.http.DefaultFullHttpRequest;
 import org.apache.commons.lang.StringUtils;
-import org.revo.ihear.livepoll.rtsp.d.InterLeavedRTPSession;
-import org.revo.ihear.livepoll.rtsp.d.MediaStream;
-import org.revo.ihear.livepoll.rtsp.utils.URLObject;
+import org.revo.ihear.rtsp.commons.d.InterLeavedRTPSession;
+import org.revo.ihear.rtsp.commons.d.MediaStream;
+import org.revo.ihear.rtsp.commons.utils.URLObject;
 
 import javax.sdp.MediaDescription;
 import javax.sdp.SdpException;

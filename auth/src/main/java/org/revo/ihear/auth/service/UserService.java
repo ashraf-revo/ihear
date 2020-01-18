@@ -1,6 +1,6 @@
 package org.revo.ihear.auth.service;
 
-import org.revo.base.domain.User;
+import org.revo.ihear.entites.domain.User;
 
 import java.util.List;
 import java.util.Optional;

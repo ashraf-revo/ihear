@@ -13,6 +13,6 @@ public class ResourceServer extends ResourceServerConfigurerAdapter {
         http
                 .authorizeRequests()
                 .anyRequest().access("#oauth2.hasAnyScope('read')")
-                .and().requestMatchers().antMatchers("/user");
+                .and().requestMatchers().antMatchers("/user", "/client");
     }
 }

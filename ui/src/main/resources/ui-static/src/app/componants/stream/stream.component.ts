@@ -45,6 +45,7 @@ export class StreamComponent implements OnInit {
     this.piService.saveStream(this.stream).subscribe(it => {
         if (this.id == null) {
           this.streams.push(it);
+          this.stream=new Stream();
         } else {
           this.stream = it;
           this.streams[this.streams.findIndex(st => st.id == it.id)] = it;

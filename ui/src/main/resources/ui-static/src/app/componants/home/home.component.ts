@@ -59,12 +59,11 @@ export class HomeComponent implements OnInit {
     let top = (height - h) / 2 / systemZoom + dualScreenTop;
     let newWindow = window.open(url, title, 'scrollbars=yes, width=' + w / systemZoom + ', height=' + h / systemZoom + ', top=' + top + ', left=' + left);
 
-    newWindow.addEventListener("popstate", function(event){
+    newWindow.addEventListener("popstate", function (event) {
       console.log(event);
     });
     // Puts focus on the newWindow
     if (window.focus) newWindow.focus();
-
 
 
   }
@@ -125,4 +124,9 @@ export class HomeComponent implements OnInit {
   //   });
   // }
 
+  // download() {
+  //   window.location.href="data:application/octet-stream;base64,SGVsbG8="
+  //
+  //
+  // }
 }

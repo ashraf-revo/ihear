@@ -11,12 +11,9 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.socket.WebSocketSession;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class WebSocketEventListener {
@@ -64,13 +61,7 @@ public class WebSocketEventListener {
         String bearer = authorization.get(0);
         if (bearer != null && !bearer.isEmpty() && !bearer.startsWith("Bearer ")) return Mono.empty();
         return reactiveJwtDecoder.decode(bearer.substring(7))
-                .map(Jwt::getClaims)
-                .map(it -> it.get("user"))
-                .map(it -> (HashMap<String, String>) it)
-                .flatMapMany(it -> Flux.fromStream(it.entrySet().stream()))
-                .filter(it -> it.getKey().equals("id"))
-                .map(Map.Entry::getValue)
-                .next();
+                .map(Jwt::getSubject);
     }
 
 }

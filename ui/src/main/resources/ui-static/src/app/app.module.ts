@@ -18,6 +18,9 @@ import {StreamComponent} from './componants/stream/stream.component';
 import {BaseComponent} from './componants/base/base.component';
 import {SearchPipe} from './services/search.pipe';
 import { PlayerComponent } from './componants/player/player.component';
+import { DeviceComponent } from './componants/device/device.component';
+import { BaseHomeComponent } from './componants/base-home/base-home.component';
+import {WsService} from "./services/ws.service";
 
 @NgModule({
   declarations: [
@@ -33,7 +36,9 @@ import { PlayerComponent } from './componants/player/player.component';
     StreamComponent,
     BaseComponent,
     SearchPipe,
-    PlayerComponent
+    PlayerComponent,
+    DeviceComponent,
+    BaseHomeComponent
   ],
   imports: [
     BrowserModule,
@@ -41,7 +46,7 @@ import { PlayerComponent } from './componants/player/player.component';
     FormsModule,
     HttpClientModule
   ],
-  providers: [PiService],
+  providers: [PiService,WsService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -1,6 +1,6 @@
 package org.revo.ihear.auth.repository;
 
-import org.revo.base.domain.User;
+import org.revo.ihear.entites.domain.User;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

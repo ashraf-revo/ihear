@@ -33,9 +33,8 @@ public class Schema {
         return parentId;
     }
 
-    public Schema setParentId(String parentId) {
+    public void setParentId(String parentId) {
         this.parentId = parentId;
-        return this;
     }
 
     public String getCreatedBy() {

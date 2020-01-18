@@ -38,8 +38,8 @@
             <artifactId>spring-security-oauth2-jose</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.revo.ihear</groupId>
-            <artifactId>base</artifactId>
+            <groupId>org.revo.ihear.base</groupId>
+            <artifactId>auth-commons</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
@@ -57,18 +57,21 @@
                 <executions>
                     <execution>
                         <id>install node and npm</id>
+                        <phase>install</phase>
                         <goals>
                             <goal>install-node-and-npm</goal>
                         </goals>
                     </execution>
                     <execution>
                         <id>npm install</id>
+                        <phase>install</phase>
                         <goals>
                             <goal>npm</goal>
                         </goals>
                     </execution>
                     <execution>
                         <id>npm run build</id>
+                        <phase>install</phase>
                         <goals>
                             <goal>npm</goal>
                         </goals>

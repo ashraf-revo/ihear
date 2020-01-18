@@ -15,7 +15,7 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@ComponentScan(basePackages = {"org.revo.base.config", "org.revo.base.service.auth", "org.revo.ihear.livepoll"})
+@ComponentScan(basePackages = {"org.revo.ihear.entites.config", "org.revo.ihear.service.auth", "org.revo.ihear.livepoll"})
 @EnableBinding(PiSource.class)
 public class LivePollApplication {
     public static void main(String[] args) {

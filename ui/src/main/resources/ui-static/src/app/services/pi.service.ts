@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {Schema} from '../models/schema';
 import {HttpClient} from "@angular/common/http";
 import {Stream} from "../models/stream";
+import {Schema} from '../models/schema';
+import {Device} from "../models/device";
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,10 @@ export class PiService {
     return this.http.get<Stream>("/pi/stream/" + id);
   }
 
+  public findDevice(id: string): Observable<Device> {
+    return this.http.get<Device>("/pi/device/" + id);
+  }
+
   public saveSchema(schema: Schema): Observable<Schema> {
     return this.http.post<Schema>("/pi/schema", schema);
   }
@@ -28,11 +33,19 @@ export class PiService {
     return this.http.post<Stream>("/pi/stream", stream);
   }
 
+  public saveDevice(device: Device): Observable<Device> {
+    return this.http.post<Device>("/pi/device", device);
+  }
+
   findAllSchemas(): Observable<Schema[]> {
     return this.http.get<Schema[]>("/pi/schema");
   }
 
   findAllStreams(): Observable<Stream[]> {
     return this.http.get<Stream[]>("/pi/stream");
+  }
+
+  findAllDevices(): Observable<Device[]> {
+    return this.http.get<Device[]>("/pi/device");
   }
 }

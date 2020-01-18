@@ -22,7 +22,8 @@ org:
           - id: 5bfd3df1ad8ce6617f9bf635
             username: revo
             password: "{bcrypt}$2a$10$rPUJCZ6TmrrmDmHuIJptm.UIxsUcGm/WegmuwNfXE4eibF/kOEwWu"
-            roles: "ROLE_ADMIN"
+            authorities:
+              - "ROLE_ADMIN"
             enabled: true
         clientDetails:
           - id: 5bfd3df1ad8ce6617f9bf636
@@ -45,6 +46,7 @@ org:
               - "read"
               - "write"
             authorities:
+              - "ROLE_ADMIN"
             resourceIds:
           - id: 5bfd3df1ad8ce6617f9bf637
             clientId: micro
@@ -59,6 +61,7 @@ org:
               - "read"
               - "write"
             authorities:
+              - "ROLE_MICRO"
             resourceIds:
 management:
   endpoints:

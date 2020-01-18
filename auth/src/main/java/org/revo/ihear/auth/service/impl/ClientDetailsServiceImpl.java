@@ -1,8 +1,8 @@
 package org.revo.ihear.auth.service.impl;
 
-import org.revo.base.domain.ClientDetails;
 import org.revo.ihear.auth.repository.ClientDetailsRepository;
 import org.revo.ihear.auth.service.ClientDetailsService;
+import org.revo.ihear.entites.domain.ClientDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +19,8 @@ public class ClientDetailsServiceImpl implements ClientDetailsService {
     }
 
     @Override
-    public void save(ClientDetails clientDetails) {
-        clientDetailsRepository.save(clientDetails);
+    public ClientDetails save(ClientDetails clientDetails) {
+        return clientDetailsRepository.save(clientDetails);
     }
 
     @Override

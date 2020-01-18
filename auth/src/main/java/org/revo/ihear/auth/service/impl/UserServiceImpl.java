@@ -1,9 +1,8 @@
 package org.revo.ihear.auth.service.impl;
 
-import org.revo.base.domain.User;
-
 import org.revo.ihear.auth.repository.UserRepository;
 import org.revo.ihear.auth.service.UserService;
+import org.revo.ihear.entites.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
