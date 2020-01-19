@@ -6,7 +6,7 @@ matrix:
       install:
         - pip install -r spy/requirements.txt
       script:
-        - spy/Main.py
+        - python spy/Main.py
     - language: java
       jdk:
         - openjdk12
