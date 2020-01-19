@@ -1,12 +1,21 @@
-language: java
-jdk:
-  - openjdk12
-services:
-  - docker
-before_install:
-  - chmod +x mvnw
-install: true
-script: ./mvnw clean install -DskipTests=true -Ddocker.username=$DOCKER_USERNAME -Ddocker.password=$DOCKER_PASSWORD
-cache:
-  directories:
-    - $HOME/.m2
+matrix:
+  include:
+    - language: python
+      python:
+        - "3.6"
+      install:
+        - pip install -r spy/requirements.txt
+      script:
+        - spy/Main.py
+    - language: java
+      jdk:
+        - openjdk12
+      services:
+        - docker
+      before_install:
+        - chmod +x mvnw
+      install: true
+      script: ./mvnw clean install -DskipTests=true -Ddocker.username=$DOCKER_USERNAME -Ddocker.password=$DOCKER_PASSWORD
+      cache:
+        directories:
+          - $HOME/.m2
