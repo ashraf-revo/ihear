@@ -1,4 +1,4 @@
-FROM openjdk:12
+FROM openjdk:8-jre-alpine
 MAINTAINER org.revo
 EXPOSE ${project.port}
 COPY maven /maven/
