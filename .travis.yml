@@ -8,6 +8,7 @@ addons:
       - ffmpeg
       - opus
       - libvpx
+      - pkg-config
     update: true
 matrix:
   include:
