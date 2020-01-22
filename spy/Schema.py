@@ -72,6 +72,7 @@ class ResourceType(Enum):
     PIN_1 = "PIN_1"
     CAMERA = "CAMERA"
     THREAD = "THREAD"
+    SOCKET = "SOCKET"
 
 
 class ListenerType(Enum):
@@ -87,6 +88,8 @@ class ActionType(Enum):
     SLEEP = "SLEEP"
     RECORD = "RECORD"
     TEARDOWN = "TEARDOWN"
+    ACK = "ACK"
+    NAK = "NAK"
 
 
 class KeyType(Enum):

@@ -5,6 +5,7 @@ from Camera import Camera
 from Closeable import Closeable
 from Pin import Pin
 from Schema import ListenerType, ResourceType, KeyType
+from Socket import Socket
 from Thread import Thread
 
 
@@ -15,6 +16,7 @@ class Executor(Closeable, Available):
         self.___schema = schema
         self.___parse()
         self.available()
+        self.___notify = notify
 
     def available(self):
         for c in self.___resources.values():
@@ -31,9 +33,11 @@ class Executor(Closeable, Available):
                     self.___resources[ResourceType[r.resourceType]] = Pin(
                         {"pin": str.replace(str(r.resourceType), "PIN_", "")})
                 if ResourceType[r.resourceType] == ResourceType.CAMERA:
-                    self.___resources[ResourceType[r.resourceType]] = Camera(None)
+                    self.___resources[ResourceType[r.resourceType]] = Camera({})
                 if ResourceType[r.resourceType] == ResourceType.THREAD:
                     self.___resources[ResourceType[r.resourceType]] = Thread({"time": 1})
+                if ResourceType[r.resourceType] == ResourceType.SOCKET:
+                    self.___resources[ResourceType[r.resourceType]] = Socket({"notify": self.___notify})
 
     def ___call(self, actions):
         for action in actions:

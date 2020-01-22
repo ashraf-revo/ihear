@@ -14,6 +14,7 @@ class Thread(Closeable, Available):
 
     def __init__(self, param):
         self.___param = param
+        self.___available = False
 
     def sleep(self):
         if self.___available:

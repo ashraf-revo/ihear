@@ -12,6 +12,7 @@ class Pin(Closeable, Available):
 
     def __init__(self, param):
         self.___param = param
+        self.___available = False
 
     def on(self):
         if self.___available:

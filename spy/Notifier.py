@@ -9,5 +9,7 @@ class Notifier:
         self.___headers = {"X-XSRF-TOKEN": "dummy", "Authorization": "Bearer " + oauth.access_token}
 
     def notify(self, call):
-        return requests.post(self.___env.ws.notifyUrl, json={"to": self.___env.createdBy + "/-", "payload": call},
-                             headers=self.___headers, cookies=self.___cookies)
+        return self.___post(self.___env.ws.notifyUrl, {"to": self.___env.createdBy + "/-", "payload": call})
+
+    def ___post(self, url, data):
+        return requests.post(url, json=data, headers=self.___headers, cookies=self.___cookies)

@@ -1,10 +1,10 @@
 import {ActionType} from "./action-type.enum";
 
 export enum ResourceType {
-  PIN_1 = "PIN_1", CAMERA = "CAMERA", THREAD = "THREAD"
+  PIN_1 = "PIN_1", CAMERA = "CAMERA", THREAD = "THREAD", SOCKET = "SOCKET"
 }
 
- function getResourceTypeKind(resourceType: ResourceType): string {
+function getResourceTypeKind(resourceType: ResourceType): string {
   return resourceType.toString().replace(/_.*/, "");
 }
 
@@ -17,6 +17,8 @@ export function getAllowedActionsOnResourceType(resourceType: ResourceType): Act
       return [ActionType.RECORD, ActionType.TEARDOWN];
     case "THREAD":
       return [ActionType.SLEEP];
+    case "SOCKET":
+      return [ActionType.ACK, ActionType.NAK];
     default:
       return []
   }
