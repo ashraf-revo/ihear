@@ -3,6 +3,9 @@ addons:
     packages:
       - libopus-dev
       - libvpx-dev
+  homebrew:
+    packages:
+      - ffmpeg
 matrix:
   include:
     - language: python
@@ -10,7 +13,6 @@ matrix:
         - "3.7"
       before_install:
         - cd spy
-        - sudo apt install ffmpeg libavdevice-dev libavfilter-dev libopus-dev libvpx-dev pkg-config
       install:
         - pip install -r requirements.txt
       script:
