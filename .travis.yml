@@ -1,3 +1,8 @@
+addons:
+  apt:
+    packages:
+      - libopus-dev
+      - libvpx-dev
 matrix:
   include:
     - language: python
