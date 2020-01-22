@@ -6,6 +6,9 @@ addons:
   homebrew:
     packages:
       - ffmpeg
+      - opus
+      - libvpx
+    update: true
 matrix:
   include:
     - language: python
