@@ -24,6 +24,7 @@ class Listener:
 
     async def ___on_open(self, ws):
         await self.___executor.close()
+        await self.___executor.available()
 
     async def ___on_message(self, ws, call):
         await self.___executor.call(Key(**json.loads(call)))
