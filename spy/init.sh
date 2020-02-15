@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-sudo add-apt-repository ppa:jonathonf/ffmpeg-3
+sudo add-apt-repository ppa:mc3man/trusty-media
 sudo apt-get update
 sudo apt-get install ffmpeg
 ffmpeg -version
