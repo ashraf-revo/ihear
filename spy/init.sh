@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-sudo add-apt-repository -y ppa:mc3man/trusty-media
-sudo apt-get -qq update
-sudo apt-get install -y ffmpeg
+sudo add-apt-repository -y ppa:jonathonf/ffmpeg-4
+sudo apt-get update
+sudo apt-get install ffmpeg
 ffmpeg -version
 sudo apt-get install libavdevice-dev
 sudo apt-get install libavfilter-dev
