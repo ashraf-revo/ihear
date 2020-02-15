@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 sudo apt-get update
 sudo apt-get install ffmpeg
+
+ffmpeg -version
+echo "end************"
 sudo apt-get install libavdevice-dev
 sudo apt-get install libavfilter-dev
 sudo apt-get install libopus-dev
