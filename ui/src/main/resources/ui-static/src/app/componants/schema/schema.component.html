@@ -1,3 +1,170 @@
+<!--<div class="p-2">-->
+<!--  <div class="row">-->
+<!--    <div class="col">-->
+<!--      <div class="app-modal-body">-->
+<!--        <div class="row justify-content-md-center p-2">-->
+<!--          <span>Schema</span>-->
+<!--        </div>-->
+<!--        <div class="form-group row">-->
+<!--          <label for="Title" class="col-sm-1 col-form-label">Title</label>-->
+<!--          <div class="col-sm-5">-->
+<!--            <input id="Title" class="form-control" name="schema.title" [disabled]="true"-->
+<!--                   [(ngModel)]='schema.title'>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="form-group row">-->
+<!--          <label for="Meta" class="col-sm-1 col-form-label">Meta</label>-->
+<!--          <div class="col-sm-5">-->
+<!--            <textarea id="Meta" class="form-control" name="schema.meta" rows="2" style="resize: none"-->
+<!--                      [(ngModel)]='schema.meta'></textarea>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <ul class=" tree">-->
+<!--          <li>-->
+<!--            <button type="button" class="btn btn-light btn-sm" (click)="addResourceComponent.show('schema',[])">-->
+<!--              <i class="fa fa-plus" aria-hidden="true"></i>-->
+<!--            </button>-->
+<!--            <button type="button" class="btn btn-light btn-sm" (click)="delete(schema.event.resources,-1)">-->
+<!--              <i class="fa fa-minus" aria-hidden="true"></i>-->
+<!--            </button>-->
+<!--            Resources-->
+<!--            <ul class="tree" *ngFor="let resource of schema.event.resources ; let iKey = index">-->
+<!--              <li>-->
+<!--                <button type="button" class="btn btn-light btn-sm" (click)="delete(schema.event.resources,iKey)">-->
+<!--                  <i class="fa fa-minus" aria-hidden="true"></i>-->
+<!--                </button>-->
+<!--                {{resource.resourceType}}-->
+<!--              </li>-->
+<!--            </ul>-->
+<!--          </li>-->
+<!--          <li>-->
+<!--            <button type="button" class="btn btn-light btn-sm" (click)="addListenerComponent.show(schema.event.listeners,[])">-->
+<!--              <i class="fa fa-plus" aria-hidden="true"></i>-->
+<!--            </button>-->
+<!--            <button type="button" class="btn btn-light btn-sm" (click)="delete(schema.event.listeners,-1)">-->
+<!--              <i class="fa fa-minus" aria-hidden="true"></i>-->
+<!--            </button>-->
+<!--            Listeners-->
+<!--            <ul *ngFor="let listener of schema.event.listeners; let iListener = index">-->
+<!--              <li>-->
+<!--                <button type="button" class="btn btn-light btn-sm"-->
+<!--                        (click)="addActionComponent.show(listener.actions,[null,schema.event.resources])">-->
+<!--                  <i class="fa fa-plus" aria-hidden="true"></i>-->
+<!--                </button>-->
+<!--                <button type="button" class="btn btn-light btn-sm" (click)="delete(schema.event.listeners,iListener)">-->
+<!--                  <i class="fa fa-minus" aria-hidden="true"></i>-->
+<!--                </button>-->
+<!--                <a (click)="addListenerComponent.show(listener,[listener])">-->
+<!--                  {{listener.listenerType}}-->
+<!--                </a>-->
+<!--                <ul *ngFor="let action of listener.actions; let iAction = index">-->
+<!--                  <li>-->
+<!--                    <button type="button" class="btn btn-light btn-sm" (click)="delete(listener.actions,iAction)">-->
+<!--                      <i class="fa fa-minus" aria-hidden="true"></i>-->
+<!--                    </button>-->
+<!--                    <a-->
+<!--                      (click)="addActionComponent.show({'identifer1':-1,'identifer2':iListener},[action,schema.event.resources])">-->
+<!--                      {{action.actionType}}  on {{action.resourceType }}-->
+<!--                    </a>-->
+<!--                  </li>-->
+<!--                </ul>-->
+<!--              </li>-->
+<!--            </ul>-->
+<!--          </li>-->
+<!--          <li>-->
+<!--            <button type="button" class="btn btn-light btn-sm" (click)="addKeyComponent.show('schema',[])">-->
+<!--              <i class="fa fa-plus" aria-hidden="true"></i>-->
+<!--            </button>-->
+<!--            <button type="button" class="btn btn-light btn-sm" (click)="delete(schema.event.keys,-1)">-->
+<!--              <i class="fa fa-minus" aria-hidden="true"></i>-->
+<!--            </button>-->
+<!--            Keys-->
+<!--            <ul class="tree" *ngFor="let key of schema.event.keys ; let iKey = index">-->
+<!--              <li>-->
+<!--                <button type="button" class="btn btn-light btn-sm" (click)="addListenerComponent.show(key.listeners,[])">-->
+<!--                  <i class="fa fa-plus" aria-hidden="true"></i>-->
+<!--                </button>-->
+<!--                <button type="button" class="btn btn-light btn-sm" (click)="delete(schema.event.keys,iKey)">-->
+<!--                  <i class="fa fa-minus" aria-hidden="true"></i>-->
+<!--                </button>-->
+<!--                <a (click)="addKeyComponent.show(iKey,[key])">{{key.keyType}}</a>-->
+<!--                <ul *ngFor="let listener of key.listeners; let iListener = index">-->
+<!--                  <li>-->
+<!--                    <button type="button" class="btn btn-light btn-sm"-->
+<!--                            (click)="addActionComponent.show(listener.actions,[null,schema.event.resources])">-->
+<!--                      <i class="fa fa-plus" aria-hidden="true"></i>-->
+<!--                    </button>-->
+<!--                    <button type="button" class="btn btn-light btn-sm" (click)="delete(key.listeners,iListener)">-->
+<!--                      <i class="fa fa-minus" aria-hidden="true"></i>-->
+<!--                    </button>-->
+<!--                    <a (click)="addListenerComponent.show(listener,[listener])">-->
+<!--                      {{listener.listenerType}}-->
+<!--                    </a>-->
+<!--                    <ul *ngFor="let action of listener.actions; let iAction = index">-->
+<!--                      <li>-->
+<!--                        <button type="button" class="btn btn-light btn-sm" (click)="delete(listener.actions,iAction)">-->
+<!--                          <i class="fa fa-minus" aria-hidden="true"></i>-->
+<!--                        </button>-->
+<!--                        <a-->
+<!--                          (click)="addActionComponent.show({'identifer1':iKey,'identifer2':iListener},[action,schema.event.resources])">-->
+<!--                          {{action.actionType}}  on {{action.resourceType }}-->
+<!--                        </a>-->
+<!--                      </li>-->
+<!--                    </ul>-->
+<!--                  </li>-->
+<!--                </ul>-->
+<!--              </li>-->
+<!--            </ul>-->
+<!--          </li>-->
+<!--          <li>-->
+<!--            <button type="button" class="btn btn-light btn-sm" (click)="addButtonComponent.show(-1,[])">-->
+<!--              <i class="fa fa-plus" aria-hidden="true"></i>-->
+<!--            </button>-->
+<!--            <button type="button" class="btn btn-light btn-sm" (click)="delete(schema.event.buttons,-1)">-->
+<!--              <i class="fa fa-minus" aria-hidden="true"></i>-->
+<!--            </button>-->
+<!--            Clicks-->
+<!--            <ul *ngFor="let button of schema.event.buttons; let iButton = index">-->
+<!--              <li>-->
+<!--                <button type="button" class="btn btn-light btn-sm"-->
+<!--                        (click)="addActionComponent.show(button.actions,[null,schema.event.resources])">-->
+<!--                  <i class="fa fa-plus" aria-hidden="true"></i>-->
+<!--                </button>-->
+<!--                <button type="button" class="btn btn-light btn-sm" (click)="delete(schema.event.buttons,iButton)">-->
+<!--                  <i class="fa fa-minus" aria-hidden="true"></i>-->
+<!--                </button>-->
+<!--                <a (click)="addButtonComponent.show(button,[button])">-->
+<!--                  {{button.buttonType}}-->
+<!--                </a>-->
+<!--                <ul *ngFor="let action of button.actions; let iAction = index">-->
+<!--                  <li>-->
+<!--                    <button type="button" class="btn btn-light btn-sm" (click)="delete(button.actions,iAction)">-->
+<!--                      <i class="fa fa-minus" aria-hidden="true"></i>-->
+<!--                    </button>-->
+<!--                    <a-->
+<!--                      (click)="addActionComponent.show({'identifer1':-1,'identifer2':iButton},[action,schema.event.resources])">-->
+<!--                      {{action.actionType}}  on {{action.resourceType }}-->
+<!--                    </a>-->
+<!--                  </li>-->
+<!--                </ul>-->
+<!--              </li>-->
+<!--            </ul>-->
+<!--          </li>-->
+<!--        </ul>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="col">-->
+<!--      <div class="form-group">-->
+<!--        <textarea class="form-control" rows="16" disabled="true" [ngModel]='schema | json'></textarea>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--  <div class="row p-3">-->
+<!--    <button (click)="save()" class="btn btn-primary">save</button>-->
+<!--  </div>-->
+<!--</div>-->
+
+
 <div class="p-2">
   <div class="row">
     <div class="col">
@@ -21,96 +188,31 @@
         </div>
         <ul class=" tree">
           <li>
-            <button type="button" class="btn btn-light btn-sm" (click)="addResourceComponent.show('schema',[])">
+            <button type="button" class="btn btn-light btn-sm" (click)="addKeyComponent.show('',null)">
               <i class="fa fa-plus" aria-hidden="true"></i>
             </button>
-            <button type="button" class="btn btn-light btn-sm" (click)="delete(schema.event.resources,-1)">
-              <i class="fa fa-minus" aria-hidden="true"></i>
-            </button>
-            Resources
-            <ul class="tree" *ngFor="let resource of schema.event.resources ; let iKey = index">
-              <li>
-                <button type="button" class="btn btn-light btn-sm" (click)="delete(schema.event.resources,iKey)">
-                  <i class="fa fa-minus" aria-hidden="true"></i>
-                </button>
-                {{resource.resourceType}}
-              </li>
-            </ul>
-          </li>
-          <li>
-            <button type="button" class="btn btn-light btn-sm" (click)="addListenerComponent.show(-1,[])">
-              <i class="fa fa-plus" aria-hidden="true"></i>
-            </button>
-            <button type="button" class="btn btn-light btn-sm" (click)="delete(schema.event.listeners,-1)">
-              <i class="fa fa-minus" aria-hidden="true"></i>
-            </button>
-            Listeners
-            <ul *ngFor="let listener of schema.event.listeners; let iListener = index">
-              <li>
-                <button type="button" class="btn btn-light btn-sm"
-                        (click)="addActionComponent.show({'identifer1':-1,'identifer2':iListener},[null,schema.event.resources])">
-                  <i class="fa fa-plus" aria-hidden="true"></i>
-                </button>
-                <button type="button" class="btn btn-light btn-sm" (click)="delete(schema.event.listeners,iListener)">
-                  <i class="fa fa-minus" aria-hidden="true"></i>
-                </button>
-                <a (click)="addListenerComponent.show(-1,[listener])">
-                  {{listener.listenerType}}  Threading:{{listener.threading}}
-                </a>
-                <ul *ngFor="let action of listener.actions; let iAction = index">
-                  <li>
-                    <button type="button" class="btn btn-light btn-sm" (click)="delete(listener.actions,iAction)">
-                      <i class="fa fa-minus" aria-hidden="true"></i>
-                    </button>
-                    <a
-                      (click)="addActionComponent.show({'identifer1':-1,'identifer2':iListener},[action,schema.event.resources])">
-                      {{action.actionType}}  on {{action.resourceType }}
-                    </a>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <button type="button" class="btn btn-light btn-sm" (click)="addKeyComponent.show('schema',[])">
-              <i class="fa fa-plus" aria-hidden="true"></i>
-            </button>
-            <button type="button" class="btn btn-light btn-sm" (click)="delete(schema.event.keys,-1)">
+            <button type="button" class="btn btn-light btn-sm" (click)="delete(schema.keys,-1)">
               <i class="fa fa-minus" aria-hidden="true"></i>
             </button>
             Keys
-            <ul class="tree" *ngFor="let key of schema.event.keys ; let iKey = index">
+            <ul class="tree" *ngFor="let key of schema.keys ; let iKey = index">
               <li>
-                <button type="button" class="btn btn-light btn-sm" (click)="addListenerComponent.show(iKey,[])">
+                <button type="button" class="btn btn-light btn-sm" (click)="addActionComponent.show(iKey+'',null)">
                   <i class="fa fa-plus" aria-hidden="true"></i>
                 </button>
-                <button type="button" class="btn btn-light btn-sm" (click)="delete(schema.event.keys,iKey)">
+                <button type="button" class="btn btn-light btn-sm" (click)="delete(schema.keys,iKey)">
                   <i class="fa fa-minus" aria-hidden="true"></i>
                 </button>
-                <a (click)="addKeyComponent.show(iKey,[key])">{{key.keyType}}</a>
-                <ul *ngFor="let listener of key.listeners; let iListener = index">
+                <a (click)="addKeyComponent.show('',key)">{{key.keyType}}</a>
+                <ul *ngFor="let action of key.actions; let iAction = index">
                   <li>
-                    <button type="button" class="btn btn-light btn-sm"
-                            (click)="addActionComponent.show({'identifer1':iKey,'identifer2':iListener},[null,schema.event.resources])">
-                      <i class="fa fa-plus" aria-hidden="true"></i>
-                    </button>
-                    <button type="button" class="btn btn-light btn-sm" (click)="delete(key.listeners,iListener)">
+                    <button type="button" class="btn btn-light btn-sm" (click)="delete(key.actions,iAction)">
                       <i class="fa fa-minus" aria-hidden="true"></i>
                     </button>
-                    <a (click)="addListenerComponent.show(iKey,[listener])">
-                      {{listener.listenerType}}  Threading:{{listener.threading}}
+                    <a
+                      (click)="addActionComponent.show('',action)">
+                      {{action | resourceName  }}
                     </a>
-                    <ul *ngFor="let action of listener.actions; let iAction = index">
-                      <li>
-                        <button type="button" class="btn btn-light btn-sm" (click)="delete(listener.actions,iAction)">
-                          <i class="fa fa-minus" aria-hidden="true"></i>
-                        </button>
-                        <a
-                          (click)="addActionComponent.show({'identifer1':iKey,'identifer2':iListener},[action,schema.event.resources])">
-                          {{action.actionType}}  on {{action.resourceType }}
-                        </a>
-                      </li>
-                    </ul>
                   </li>
                 </ul>
               </li>

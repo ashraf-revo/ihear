@@ -14,7 +14,6 @@ export class Device {
 export class BaseDevice {
   id: string;
   createdBy: string;
-  schemaUrl: string;
   oauth: Oauth = new Oauth();
   ws: Ws = new Ws();
 
@@ -23,7 +22,6 @@ export class BaseDevice {
     let baseDevice = new BaseDevice();
     baseDevice.id = sf.id;
     baseDevice.createdBy = sf.createdBy;
-    baseDevice.schemaUrl = location.origin + "/pi/schema/" + sf.schemaId;
     baseDevice.oauth.clintId = sf.clientId;
     baseDevice.oauth.clientSecret = sf.clientSecret;
     baseDevice.oauth.authorize = location.origin + '/auth/oauth/authorize';

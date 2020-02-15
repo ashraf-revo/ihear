@@ -3,18 +3,36 @@
     <div class="form-group row">
       <label for="ResourceType" class="col-sm-3 col-form-label">ResourceType</label>
       <div class="col-sm-9">
-        <select class="form-control" id="ResourceType" name="action.resourceType" [(ngModel)]="action.resourceType" (change)="onChange()">
-          <option *ngFor="let resource of resources" [value]="resource.resourceType">{{resource.resourceType}}</option>
+        <select class="form-control" id="ResourceType" name="action.resourceType" [(ngModel)]="action.resourceType"
+                (change)="onChange()">
+          <option *ngFor="let rts of resourceTypes" [value]="rts">{{rts}}</option>
         </select>
       </div>
     </div>
     <div class="form-group row">
       <label for="ActionType" class="col-sm-3 col-form-label">ActionType</label>
       <div class="col-sm-9">
-        <select class="form-control" id="ActionType" name="action.actionType" [(ngModel)]="action.actionType">
+        <select class="form-control" id="ActionType" name="action.actionType" [(ngModel)]="action.actionType"
+                (change)="onChange()">
           <option *ngFor="let ats of actionTypes  , let i = index" [value]="ats" [selected]="i==0">{{ats}}</option>
         </select>
       </div>
     </div>
+
+
+    <div class="form-group row">
+      <label for="ActionType" class="col-sm-3 col-form-label">Data</label>
+      <div class="form-group row" *ngFor="let op of options | keyvalue">
+        <label [for]="'data'+op.key" class="col-sm-3 col-form-label">{{op.key}}</label>
+        <div class="col-sm-9">
+          <select class="form-control" [id]="'data'+op.key" [name]="action.data[op.key]"
+                  [(ngModel)]="action.data[op.key]">
+            <option *ngFor="let val of op.value  , let i = index" [value]="val">{{val}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+
   </div>
 </js-basic-ui-model>

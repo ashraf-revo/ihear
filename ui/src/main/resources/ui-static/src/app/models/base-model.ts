@@ -4,19 +4,14 @@ import {Entry} from "./entry";
 
 export abstract class BaseModel<T> {
   @ViewChild(BasicUiModelComponent)
-  private model: BasicUiModelComponent;
+  public model: BasicUiModelComponent;
   protected _onSave: EventEmitter<Entry<T>> = new EventEmitter<Entry<T>>();
-  private _identifer: any;
+  public _identifer: any;
 
   hide() {
     this.model.hide()
   }
 
-  show(identifer: any, instance: any[]) {
-    this._identifer = identifer;
-    this.onShow(instance);
-    this.model.show()
-  }
 
   public get onSave(): EventEmitter<Entry<T>> {
     return this._onSave;
@@ -28,6 +23,8 @@ export abstract class BaseModel<T> {
 
   abstract onEvent(event: string): void;
 
-  abstract onShow(instance: any[]): void;
+  abstract onShow(instance: Entry<T>): void;
+
+  abstract show(identifer: string, data: T): void;
 
 }

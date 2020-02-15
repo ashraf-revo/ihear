@@ -6,12 +6,9 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-websocket-client = "*"
 oauth2-client = "*"
-aiohttp="*"
-opencv-python="*"
-requests = "*"
 aiortc="*"
-
+psutil="*"
+websockets="*"
 [requires]
 python_version = "3.7"

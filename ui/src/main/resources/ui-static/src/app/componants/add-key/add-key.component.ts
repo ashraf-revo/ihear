@@ -10,7 +10,7 @@ import {Entry} from "../../models/entry";
   styleUrls: ['./add-key.component.css']
 })
 export class AddKeyComponent extends BaseModel<Key> implements OnInit {
-  keyTypes: KeyType[] = Object.keys(KeyType).map(it=>KeyType[it]);
+  keyTypes: KeyType[] = Object.keys(KeyType).map(it => KeyType[it]);
   key: Key;
   showSave: boolean = false;
 
@@ -28,15 +28,34 @@ export class AddKeyComponent extends BaseModel<Key> implements OnInit {
     this.hide();
   }
 
-  onShow(instance: any[]): void {
-    this.showSave = false;
-    if (instance != null && instance.length > 0 && instance[0] != null) {
-      this.key = instance[0];
-    }
-    if (instance == null || instance[0] == null) {
-      this.showSave = true;
+  onShow(entry: Entry<Key>): void {
+    this._identifer = entry.identifer;
+    if (entry.data) {
+      this.key = entry.data;
+      this.showSave = false;
+    } else {
       this.key = new Key();
-      this.key.keyType = KeyType[this.keyTypes[0]];
+      if (this.keyTypes.length > 0)
+        this.key.keyType = this.keyTypes[0];
+      this.showSave = true;
     }
+
+
+    // this.showSave = false;
+    // if (instance != null && instance.length > 0 && instance[0] != null) {
+    //   this.key = instance[0];
+    // }
+    // if (instance == null || instance[0] == null) {
+    //   this.showSave = true;
+    //   this.key = new Key();
+    //   this.key.keyType = KeyType[this.keyTypes[0]];
+    // }
+
+
+  }
+
+  show(identifer: string, data: Key) {
+    this.onShow(new Entry<Key>(identifer, data));
+    this.model.show()
   }
 }

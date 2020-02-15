@@ -1,6 +1,6 @@
-from Env import Env
 from Listener import Listener
-from Oauth import Oauth
+from domain.Env import Env
+from util.Oauth import Oauth
 
 if __name__ == "__main__":
     env = Env.read("ihear.key")

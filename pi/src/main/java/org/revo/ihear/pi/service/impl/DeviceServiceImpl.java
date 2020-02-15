@@ -7,6 +7,7 @@ import org.revo.ihear.pi.service.DeviceService;
 import org.revo.ihear.service.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -22,6 +23,8 @@ public class DeviceServiceImpl implements DeviceService {
     private WebClient microWebClient;
     @Autowired
     private AuthService authService;
+    @Autowired
+    private Environment environment;
 
     private static String random() {
         return (UUID.randomUUID().toString().hashCode() & 0xfffffff) + "";
@@ -53,7 +56,11 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     private Mono<BaseClientDetails> createClient(BaseClientDetails baseClientDetails) {
-        return microWebClient.post().uri("http://localhost:9999/auth/client").body(Mono.just(baseClientDetails)
+        String auth = "localhost:9999/auth";
+        if (Arrays.asList(environment.getActiveProfiles()).contains("kubernetes")) {
+            auth = "auth";
+        }
+        return microWebClient.post().uri("http://" + auth + "/client").body(Mono.just(baseClientDetails)
                 , BaseClientDetails.class).exchange().flatMap(it -> it.bodyToMono(BaseClientDetails.class));
     }
 

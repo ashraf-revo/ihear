@@ -1,7 +1,5 @@
 package org.revo.ihear.pi;
 
-import org.revo.ihear.entites.domain.Stream;
-import org.revo.ihear.entites.service.stream.StreamService;
 import org.revo.ihear.pi.config.WebSocketTemplate;
 import org.revo.ihear.pi.config.domain.WSMessage;
 import org.revo.ihear.pi.domain.Device;
@@ -36,9 +34,8 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableWebFluxSecurity
-@ComponentScan(basePackages = {"org.revo.ihear.entites.config", "org.revo.ihear.service.auth",
-        "org.revo.ihear.entites.service.stream", "org.revo.ihear.entites.repository.stream", "org.revo.ihear.pi"})
-@EnableMongoRepositories(basePackages = {"org.revo.ihear.entites.repository.stream", "org.revo.ihear.pi"})
+@ComponentScan(basePackages = {"org.revo.ihear.entites.config", "org.revo.ihear.service.auth", "org.revo.ihear.pi"})
+@EnableMongoRepositories(basePackages = {"org.revo.ihear.pi"})
 @EnableMongoAuditing
 public class PiApplication {
 
@@ -64,7 +61,6 @@ public class PiApplication {
     @Bean
     public RouterFunction<ServerResponse> routes(AuthService authService,
                                                  DeviceService deviceService,
-                                                 StreamService streamService,
                                                  SchemaService schemaService,
                                                  WebSocketTemplate webSocketTemplate) {
         return route(POST("/device"), serverRequest ->
@@ -88,27 +84,6 @@ public class PiApplication {
                 .andRoute(GET("/device"), serverRequest ->
                         ok().body(authService.currentJwtUserId()
                                 .flatMapMany(it -> Flux.fromIterable(deviceService.findAll(it))), Device.class))
-                .andRoute(POST("/stream"), serverRequest ->
-                        ok().body(serverRequest.bodyToMono(Stream.class)
-                                .filterWhen(it -> {
-                                    if (it.getId() != null)
-                                        return authService.currentJwtUserId()
-                                                .map(user -> streamService.findOneById(it.getId())
-                                                        .map(stream -> stream.getCreatedBy().equals(user)).orElse(false))
-                                                .filter(user -> user).defaultIfEmpty(false);
-                                    else
-                                        return Mono.just(true);
-                                })
-                                .flatMap(it -> authService.currentJwtUserId().map(it::setCreatedBy))
-                                .map(streamService::save), Stream.class))
-                .andRoute(GET("/stream/{id}"), serverRequest ->
-                        ok().body(authService.currentJwtUserId()
-                                .flatMap(it -> streamService.findOneById(serverRequest.pathVariable("id"))
-                                        .filter(its -> it.equals(its.getCreatedBy()))
-                                        .map(Mono::just).orElseGet(Mono::empty)), Stream.class))
-                .andRoute(GET("/stream"), serverRequest ->
-                        ok().body(authService.currentJwtUserId()
-                                .flatMapMany(it -> Flux.fromIterable(streamService.findAll(it))), Stream.class))
                 .andRoute(POST("/schema"), serverRequest ->
                         ok().body(serverRequest.bodyToMono(Schema.class)
                                 .zipWith(authService.currentJwtUserId(), (schema, createdBy) -> {

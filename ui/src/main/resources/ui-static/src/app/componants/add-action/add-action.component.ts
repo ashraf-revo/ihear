@@ -4,7 +4,11 @@ import {Entry} from "../../models/entry";
 import {ActionType} from "../../models/action-type.enum";
 import {Action} from "../../models/action";
 import {Resource} from "../../models/resource";
-import {getAllowedActionsOnResourceType} from "../../models/resource-type.enum";
+import {
+  getAllowedActionsOnResourceType,
+  getAllowedOptionsOnResourceType,
+  ResourceType
+} from "../../models/resource-type.enum";
 
 @Component({
   selector: 'js-add-action',
@@ -14,8 +18,11 @@ import {getAllowedActionsOnResourceType} from "../../models/resource-type.enum";
 export class AddActionComponent extends BaseModel<Action> implements OnInit {
   actionTypes: ActionType[] = [];
   resources: Resource[] = [];
+  resourceTypes: ResourceType[] = Object.keys(ResourceType).map(it => ResourceType[it]);
+
   action: Action;
   showSave: boolean = false;
+  options: Map<string, string[]> = new Map<string, string[]>();
 
   constructor() {
     super()
@@ -30,30 +37,34 @@ export class AddActionComponent extends BaseModel<Action> implements OnInit {
     this.hide();
   }
 
-  onShow(instance: any[]): void {
-    this.showSave = false;
-    if (instance != null && instance.length > 0 && instance[0] != null) {
-      this.action = instance[0];
-      this.onChange();
-    }
-    if (instance != null && instance.length > 1 && instance[1] != null) {
-      this.resources = (<Resource[]>instance[1]);
-    }
-    if (instance == null || instance[0] == null) {
-      this.showSave = true;
+  onShow(entry: Entry<Action>): void {
+    this._identifer = entry.identifer;
+    if (entry.data) {
+      this.action = entry.data;
+      this.showSave = false;
+    } else {
       this.action = new Action();
-
-      if (this.resources.length > 0) {
-        this.action.resourceType = this.resources[0].resourceType;
-        this.onChange();
-      }
+      if (this.resourceTypes.length > 0)
+        this.action.resourceType = this.resourceTypes[0];
+      this.showSave = true;
     }
+    this.onChange();
   }
 
   onChange() {
     this.actionTypes = getAllowedActionsOnResourceType(this.action.resourceType);
-    if (!(this.action.actionType in this.actionTypes)){
-      this.action.actionType=this.actionTypes[0]
+    if (this.actionTypes.indexOf(this.action.actionType) == -1) {
+      this.action.actionType = this.actionTypes[0];
+      this.action.data = new Map<string, string>();
     }
+    this.options = getAllowedOptionsOnResourceType(this.action.resourceType, this.action.actionType);
+    this.options.forEach((value, key) => {
+      if (value.length > 0&&!this.action.data[key]) this.action.data[key] = value[0];
+    });
+  }
+
+  show(iKey: string, data: Action) {
+    this.onShow(new Entry<Action>(iKey, data));
+    this.model.show()
   }
 }

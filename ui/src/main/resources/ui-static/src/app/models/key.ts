@@ -1,7 +1,7 @@
-import {Listener} from './listener';
 import {KeyType} from './key-type.enum';
+import {Action} from "./action";
 
 export class Key {
   keyType: KeyType;
-  listeners: Listener[]=[];
+  actions: Action[] = [];
 }

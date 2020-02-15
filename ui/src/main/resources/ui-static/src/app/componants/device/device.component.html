@@ -22,7 +22,7 @@
         <div class="form-group row">
           <label for="SchemaId" class="col-sm-3 col-form-label">SchemaId</label>
           <div class="col-sm-9">
-            <a id="SchemaId" (click)="showSelect()" class="btn btn-sm btn-success">
+            <a id="SchemaId" (click)="searchSchemaComponent.show('',null)" class="btn btn-sm btn-success">
               <span>Select</span>
             </a>
             <span class="pl-2">{{device.schemaId}}</span>
@@ -41,6 +41,7 @@
       {{d.id}}
     </span>
         <a *ngIf="d.id" [routerLink]="['/device',d.id]">device</a>
+        <a *ngIf="d.id" [routerLink]="['/device',d.id,'joystick']">joystick</a>
         <a *ngIf="d.schemaId" [routerLink]="['/schema',d.schemaId]">schema</a>
       </li>
     </ul>

@@ -1,5 +1,6 @@
 package org.revo.ihear.pi.config;
 
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
@@ -9,13 +10,16 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 public class UtilConfig {
+
     @Bean
+    @LoadBalanced
     public WebClient microWebClient(ReactiveClientRegistrationRepository clientRegistrationRepository
             , ServerOAuth2AuthorizedClientRepository serverOAuth2AuthorizedClientRepository) {
         ServerOAuth2AuthorizedClientExchangeFilterFunction oauth = new ServerOAuth2AuthorizedClientExchangeFilterFunction(
                 clientRegistrationRepository, serverOAuth2AuthorizedClientRepository/*new UnAuthenticatedServerOAuth2AuthorizedClientRepository()*/);
         oauth.setDefaultClientRegistrationId("micro");
-        return WebClient.builder().filter(oauth).build();
+        return WebClient.builder().filter(oauth)
+                .build();
     }
 
 }

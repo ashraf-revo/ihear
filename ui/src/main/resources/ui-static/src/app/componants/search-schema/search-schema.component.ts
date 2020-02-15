@@ -24,7 +24,7 @@ export class SearchSchemaComponent extends BaseModel<Schema> implements OnInit {
   onEvent(event: string): void {
   }
 
-  onShow(instance: any[]): void {
+  onShow(instance: Entry<Schema>): void {
     this.piService.findAllSchemas().subscribe(it => this.schemas = it, error => {
     })
   }
@@ -32,5 +32,10 @@ export class SearchSchemaComponent extends BaseModel<Schema> implements OnInit {
   select(schema: Schema) {
     this.onSave.emit(new Entry<Schema>(this.identifer, schema));
     this.hide();
+  }
+
+  show(identifer: string, data: Schema): void {
+    this.onShow(new Entry<Schema>(identifer, data));
+    this.model.show()
   }
 }

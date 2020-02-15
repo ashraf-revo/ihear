@@ -26,20 +26,6 @@ spring:
             - RemoveSessionHeaderRequest
           predicates:
             - Path=/echo/**
-        - id: streamer
-          uri: http://localhost:8083/
-          filters:
-            - StripPrefix=1
-            - RemoveSessionHeaderResponse
-          predicates:
-            - Path=/streamer/**
-        - id: livepoll
-          uri: http://localhost:8085/
-          filters:
-            - StripPrefix=1
-            - RemoveSessionHeaderResponse
-          predicates:
-            - Path=/livepoll/**
       default-filters:
         - PreserveHostHeader
         - AddAuthorizationHeaderRequest

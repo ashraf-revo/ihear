@@ -1,32 +1,32 @@
+import asyncio
 import json
 
-import websocket
+import websockets
 
-from Executor import Executor
-from Notifier import Notifier
-from Schema import Call, Schema
+from domain.Schema import Key
+from resource.Executor import Executor
+from util.Notifier import Notifier
 
 
 class Listener:
+    async def ___handel(self, url, header):
+        async with websockets.connect(url, extra_headers=header) as websocket:
+            await self.___on_open(websocket)
+            while True:
+                message = await websocket.recv()
+                await self.___on_message(websocket, message)
 
     def __init__(self, env, oauth):
-        websocket.enableTrace(False)
-        self.___ws = websocket.WebSocketApp(env.ws.url,
-                                            on_open=(lambda ws: self.___on_open(self)),
-                                            on_message=(lambda ws, msg: self.___on_message(self, msg)),
-                                            on_error=(lambda ws, msg: self.___on_error(self, msg)),
-                                            on_close=(lambda ws: self.___on_close(self)),
-                                            header={"Authorization": "Bearer " + oauth.access_token}
-                                            )
-
+        self.___headers = {"Authorization": "Bearer " + oauth.access_token}
+        self.___url = env.ws.url
         self.___notifier = Notifier(oauth, env)
-        self.___executor = Executor(Schema.read(env.schemaUrl, oauth), (lambda call: self.___notifier.notify(call)))
+        self.___executor = Executor((lambda call: self.___notifier.notify(call)))
 
-    def ___on_open(self, ws):
-        self.___executor.execute_on_load()
+    async def ___on_open(self, ws):
+        await self.___executor.close()
 
-    def ___on_message(self, ws, call):
-        self.___executor.execute_on_key(Call(**json.loads(call)))
+    async def ___on_message(self, ws, call):
+        await self.___executor.call(Key(**json.loads(call)))
 
     def ___on_error(self, ws, error):
         self.___executor.close()
@@ -35,4 +35,6 @@ class Listener:
         self.___executor.close()
 
     def listen(self):
-        self.___ws.run_forever()
+        asyncio.get_event_loop().run_until_complete(
+            self.___handel(self.___url, self.___headers))
+        asyncio.get_event_loop().run_forever()

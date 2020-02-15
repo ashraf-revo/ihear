@@ -22,7 +22,7 @@ export class BaseComponent implements OnInit {
   ngOnInit() {
     this.userService.currentUser().subscribe(it => this.authService.setAuth(it, 'true'), it => this.authService.setAuth(null, 'false'));
     this.wsService.listen.subscribe(it => {
-      console.log(it);
+      // console.log(it);
     });
   }
 

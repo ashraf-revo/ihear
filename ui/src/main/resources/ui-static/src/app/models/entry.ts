@@ -1,5 +1,5 @@
 export class Entry<T> {
-  identifer: any;
+  identifer: string;
   data: T;
 
   constructor(identifer: any, data: T) {

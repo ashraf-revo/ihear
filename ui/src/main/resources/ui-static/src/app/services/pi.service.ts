@@ -48,4 +48,8 @@ export class PiService {
   findAllDevices(): Observable<Device[]> {
     return this.http.get<Device[]>("/pi/device");
   }
+
+  notify(id: string, body): Observable<Object> {
+    return this.http.post("/pi/notify/" + id, body);
+  }
 }

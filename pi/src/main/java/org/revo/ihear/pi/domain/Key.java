@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Key {
     private KeyType keyType;
-    private List<Listener> listeners = new ArrayList<>();
+    private List<Action> actions = new ArrayList<>();
 
     public KeyType getKeyType() {
         return keyType;
@@ -15,11 +15,11 @@ public class Key {
         this.keyType = keyType;
     }
 
-    public List<Listener> getListeners() {
-        return listeners;
+    public List<Action> getActions() {
+        return actions;
     }
 
-    public void setListeners(List<Listener> listeners) {
-        this.listeners = listeners;
+    public void setActions(List<Action> actions) {
+        this.actions = actions;
     }
 }

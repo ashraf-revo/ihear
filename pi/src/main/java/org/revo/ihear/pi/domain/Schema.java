@@ -5,7 +5,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Document
 public class Schema {
@@ -19,7 +21,7 @@ public class Schema {
     private String title;
     @TextIndexed
     private String meta;
-    private Event event = new Event();
+    private List<Key> keys = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -69,12 +71,12 @@ public class Schema {
         this.meta = meta;
     }
 
-    public Event getEvent() {
-        return event;
+    public List<Key> getKeys() {
+        return keys;
     }
 
-    public void setEvent(Event event) {
-        this.event = event;
+    public void setKeys(List<Key> keys) {
+        this.keys = keys;
     }
 }
 

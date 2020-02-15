@@ -6,6 +6,8 @@ import {ActivatedRoute, Params} from "@angular/router";
 import {filter, map, mergeMap} from "rxjs/operators";
 import {DeviceType} from "../../models/device-type.enum";
 import {Util} from "../../services/util";
+import {Entry} from "../../models/entry";
+import {Schema} from "../../models/schema";
 
 @Component({
   selector: 'js-device',
@@ -62,10 +64,6 @@ export class DeviceComponent implements OnInit {
       })
   }
 
-
-  showSelect() {
-    this.searchSchemaComponent.show(undefined, []);
-  }
 
   private load() {
     this.searchSchemaComponent = this.getComponant(SearchSchemaComponent);

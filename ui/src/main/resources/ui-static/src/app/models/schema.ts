@@ -1,4 +1,4 @@
-import {Event} from "./event";
+import {Key} from "./key";
 
 export class Schema {
   id: string;
@@ -6,5 +6,5 @@ export class Schema {
   createdDate: Date;
   title: string;
   meta: string;
-  event: Event = new Event();
+  keys: Key[] = [];
 }
