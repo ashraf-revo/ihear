@@ -1,6 +1,7 @@
 matrix:
   include:
     - language: python
+      sudo: true
       python:
         - "3.7"
       before_install:
@@ -10,15 +11,3 @@ matrix:
         - pip install -r requirements.txt
       script:
         - python Test.py
-    - language: java
-      jdk:
-        - openjdk12
-      services:
-        - docker
-      before_install:
-        - chmod +x mvnw
-      install: true
-      script: ./mvnw clean install -Pstatic -DskipTests=true -Ddocker.username=$DOCKER_USERNAME -Ddocker.password=$DOCKER_PASSWORD
-      cache:
-        directories:
-          - $HOME/.m2
