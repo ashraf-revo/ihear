@@ -56,11 +56,11 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     private Mono<BaseClientDetails> createClient(BaseClientDetails baseClientDetails) {
-        String auth = "localhost:9999/auth";
+        String auth = "http://localhost:9999/auth";
         if (Arrays.asList(environment.getActiveProfiles()).contains("kubernetes")) {
-            auth = "auth";
+            auth = "http://ingress-nginx.ingress-nginx.svc.cluster.local/auth";
         }
-        return microWebClient.post().uri("http://" + auth + "/client").body(Mono.just(baseClientDetails)
+        return microWebClient.post().uri(auth + "/client").body(Mono.just(baseClientDetails)
                 , BaseClientDetails.class).exchange().flatMap(it -> it.bodyToMono(BaseClientDetails.class));
     }
 

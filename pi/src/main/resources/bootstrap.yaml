@@ -70,3 +70,5 @@ logging:
     com: debug
     reactor: debug
     io: debug
+  file:
+    name: ${spring.application.name}.log
