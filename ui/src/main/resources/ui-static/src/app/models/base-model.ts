@@ -3,7 +3,7 @@ import {BasicUiModelComponent} from "../componants/basic-ui-model/basic-ui-model
 import {Entry} from "./entry";
 
 export abstract class BaseModel<T> {
-  @ViewChild(BasicUiModelComponent)
+  @ViewChild(BasicUiModelComponent, {static: false})
   public model: BasicUiModelComponent;
   protected _onSave: EventEmitter<Entry<T>> = new EventEmitter<Entry<T>>();
   public _identifer: any;
