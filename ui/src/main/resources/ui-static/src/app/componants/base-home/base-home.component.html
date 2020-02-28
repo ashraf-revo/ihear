@@ -1,1 +1,14 @@
-<router-outlet></router-outlet>
+<div id="wrapper">
+  <js-nav></js-nav>
+  <div id="content-wrapper" class="d-flex flex-column">
+    <div id="content">
+      <js-header></js-header>
+      <div class="container-fluid">
+        <div class="align-items-center justify-content-between mb-4">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </div>
+<!--    <js-footer></js-footer>-->
+  </div>
+</div>

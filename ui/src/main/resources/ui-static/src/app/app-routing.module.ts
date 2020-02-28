@@ -6,15 +6,15 @@ import {BaseComponent} from "./componants/base/base.component";
 import {DeviceComponent} from "./componants/device/device.component";
 import {BaseHomeComponent} from "./componants/base-home/base-home.component";
 import {JoystickComponent} from "./componants/joystick/joystick.component";
+import {DashboardComponent} from "./componants/dashboard/dashboard.component";
 
 const routes: Routes = [
   {
     path: '', component: BaseComponent, children:
-      [
+      [{path: '', component: DashboardComponent},
         {
-          path: '', component: BaseHomeComponent, children: [
+          path: 'home', component: BaseHomeComponent, children: [
             {path: '', component: HomeComponent},
-            {path: 'home', component: HomeComponent},
             {path: 'schema', component: SchemaComponent},
             {path: 'schema/:id', component: SchemaComponent},
             {path: 'device', component: DeviceComponent},

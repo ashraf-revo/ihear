@@ -1,6 +1,7 @@
+<h1 class="h3 mb-0 text-gray-800">Devices</h1>
 <div class="p-2">
   <div class="row">
-    <div class="col col-md-6">
+    <div class="col col-sm-5">
       <div class="app-modal-body">
         <div class="row justify-content-md-center p-2">
           <span>Device</span>
@@ -20,7 +21,7 @@
           </div>
         </div>
         <div class="form-group row">
-          <label for="SchemaId" class="col-sm-3 col-form-label">SchemaId</label>
+          <label for="SchemaId" class="col-sm-3 col-form-label">Schema</label>
           <div class="col-sm-9">
             <a id="SchemaId" (click)="searchSchemaComponent.show('',null)" class="btn btn-sm btn-success">
               <span>Select</span>
@@ -28,23 +29,44 @@
             <span class="pl-2">{{device.schemaId}}</span>
           </div>
         </div>
+        <div class="row p-3">
+          <button (click)="save()" [disabled]="!device.schemaId||!device.name||!device.deviceType" class="btn btn-primary">save</button>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="row p-3">
-    <button (click)="save()" class="btn btn-primary">save</button>
-  </div>
-  <div class="row">
-    <ul class="list-unstyled">
-      <li *ngFor="let d of devices">
-    <span>
-      {{d.id}}
-    </span>
-        <a *ngIf="d.id" [routerLink]="['/device',d.id]">device</a>
-        <a *ngIf="d.id" [routerLink]="['/device',d.id,'joystick']">joystick</a>
-        <a *ngIf="d.schemaId" [routerLink]="['/schema',d.schemaId]">schema</a>
-      </li>
-    </ul>
+    <div class="col">
+      <div class="row">
+        <table class="table table-hover">
+          <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Device Type</th>
+            <th scope="col">Actions</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let d of devices">
+            <td>
+              <a *ngIf="d.id" [routerLink]="['/home/device',d.id]">{{d.name}}</a>
+            </td>
+            <td>{{d.deviceType}}</td>
+            <td>
+              <span>
+                <a class="p-1" *ngIf="d.id" [routerLink]="['/home/device',d.id,'joystick']">
+                <i class="fas fa-gamepad"></i>
+              </a>
+              </span>
+              <span>
+                <a class="p-1" *ngIf="d.schemaId" [routerLink]="['/home/schema',d.schemaId]">
+                <i class="fas fa-code"></i>
+              </a>
+              </span>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>
 

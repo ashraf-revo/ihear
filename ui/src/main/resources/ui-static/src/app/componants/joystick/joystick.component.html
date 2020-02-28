@@ -1,7 +1,18 @@
-
-<div id="media">
-  <audio id="audio" autoplay="true"></audio>
-  <video id="video" autoplay="true" playsinline="true"></video>
+<h1 class="h5 mb-0 text-gray-800">Device</h1>
+<div class="row">
+  <div class="col col-md-8" style="height: 300px;background-color: #78261f">
+    <div id="media">
+      <audio id="audio" autoplay="true"></audio>
+      <video id="video" autoplay="true" playsinline="true"></video>
+    </div>
+  </div>
 </div>
-<button (click)="stream()">STREAM</button>
-<button (click)="teardown()">TEARDOWN</button>
+
+<div class="row">
+  <div class="btn-group-sm float-right">
+    <button class="btn btn-sm btn-primary" (click)="stream()">STREAM</button>
+    <button class="btn btn-sm btn-primary" (click)="teardown()">TEARDOWN</button>
+  </div>
+</div>
+
+<js-console></js-console>

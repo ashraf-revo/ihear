@@ -19,6 +19,11 @@ import {BaseHomeComponent} from './componants/base-home/base-home.component';
 import {WsService} from "./services/ws.service";
 import {JoystickComponent} from './componants/joystick/joystick.component';
 import {ResourceNamePipe} from './services/resource-name.pipe';
+import { DashboardComponent } from './componants/dashboard/dashboard.component';
+import { HeaderComponent } from './componants/header/header.component';
+import { NavComponent } from './componants/nav/nav.component';
+import { FooterComponent } from './componants/footer/footer.component';
+import { ConsoleComponent } from './componants/console/console.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +39,12 @@ import {ResourceNamePipe} from './services/resource-name.pipe';
     DeviceComponent,
     BaseHomeComponent,
     JoystickComponent,
-    ResourceNamePipe
+    ResourceNamePipe,
+    DashboardComponent,
+    HeaderComponent,
+    NavComponent,
+    FooterComponent,
+    ConsoleComponent
   ],
   imports: [
     BrowserModule,

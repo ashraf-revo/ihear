@@ -116,7 +116,7 @@ export class JoystickComponent implements OnInit {
     };
   }
 
-  generateTeardownMessage(): any {
+  static generateTeardownMessage(): any {
     return {
       "keyType": "SPACE",
       actions: [{
@@ -132,7 +132,7 @@ export class JoystickComponent implements OnInit {
   }
 
   teardown() {
-    this.notify(this.generateTeardownMessage()).subscribe(it => {
+    this.notify(JoystickComponent.generateTeardownMessage()).subscribe(it => {
     }, error => {
     }, () => {
       if (this.pc) {
