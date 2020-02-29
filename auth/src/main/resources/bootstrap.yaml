@@ -78,4 +78,4 @@ logging:
     reactor: debug
     io: debug
   file:
-    name: ${spring.application.name}.log
+    name: logs/${spring.application.name}.log
