@@ -1,0 +1,3 @@
+export enum KeyEvent {
+  KEYDOWN="KEYDOWN", KEYUP="KEYUP", KEYHOLED="KEYHOLED"
+}
