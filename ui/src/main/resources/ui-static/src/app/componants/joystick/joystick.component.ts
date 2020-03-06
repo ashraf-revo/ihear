@@ -18,7 +18,7 @@ import {KeyEvent} from "../../models/key-event";
 })
 export class JoystickComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  private device: Device;
+  public device: Device;
   private schema: Schema;
   private pc: RTCPeerConnection;
   private config = {

@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {PerfectScrollbarConfigInterface} from "ngx-perfect-scrollbar";
+import {AuthService} from "../../services/auth.service";
+import {filter} from "rxjs/operators";
 
 @Component({
   selector: 'js-base-home',
@@ -7,11 +8,15 @@ import {PerfectScrollbarConfigInterface} from "ngx-perfect-scrollbar";
   styleUrls: ['./base-home.component.css']
 })
 export class BaseHomeComponent implements OnInit {
+  isAuth: boolean = false;
 
-  constructor() {
+  constructor(private authService: AuthService) {
   }
 
   ngOnInit() {
+    this.authService.onChange().subscribe(it => {
+      this.isAuth = (it.isAuth == "true");
+    });
   }
 
 }

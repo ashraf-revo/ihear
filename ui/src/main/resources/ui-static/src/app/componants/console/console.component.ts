@@ -10,7 +10,7 @@ import {PerfectScrollbarComponent, PerfectScrollbarConfigInterface} from "ngx-pe
 export class ConsoleComponent implements OnInit {
   config: PerfectScrollbarConfigInterface = {};
   @Input()
-  private device: Device;
+  public device: Device;
   public events: any[] = ["messa1", "messa2"];
 
   @ViewChild(PerfectScrollbarComponent, {static: false})

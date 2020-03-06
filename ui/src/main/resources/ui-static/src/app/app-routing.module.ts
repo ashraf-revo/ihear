@@ -7,6 +7,7 @@ import {DeviceComponent} from "./componants/device/device.component";
 import {BaseHomeComponent} from "./componants/base-home/base-home.component";
 import {JoystickComponent} from "./componants/joystick/joystick.component";
 import {DashboardComponent} from "./componants/dashboard/dashboard.component";
+import {ErrorComponent} from "./componants/error/error.component";
 
 const routes: Routes = [
   {
@@ -21,7 +22,10 @@ const routes: Routes = [
             {path: 'device/:id', component: DeviceComponent},
             {path: 'device/:id/joystick', component: JoystickComponent},
           ]
-        }
+        },
+        {path: '403', component: ErrorComponent},
+        {path: 'error', component: ErrorComponent},
+        {path: '**', component: ErrorComponent}
       ]
   }
 ];

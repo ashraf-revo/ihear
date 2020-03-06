@@ -25,6 +25,7 @@ import {NavComponent} from './componants/nav/nav.component';
 import {FooterComponent} from './componants/footer/footer.component';
 import {ConsoleComponent} from './componants/console/console.component';
 import {PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarConfigInterface, PerfectScrollbarModule} from "ngx-perfect-scrollbar";
+import { ErrorComponent } from './componants/error/error.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   wheelPropagation: true
@@ -49,7 +50,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     HeaderComponent,
     NavComponent,
     FooterComponent,
-    ConsoleComponent
+    ConsoleComponent,
+    ErrorComponent
   ],
   imports: [
     PerfectScrollbarModule,

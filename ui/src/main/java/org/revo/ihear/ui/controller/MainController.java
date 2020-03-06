@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.security.web.server.csrf.CookieServerCsrfTokenRepository;
+import org.springframework.security.web.server.savedrequest.ServerRequestCache;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.server.RequestPredicate;
 import org.springframework.web.reactive.function.server.RouterFunction;
@@ -31,16 +32,26 @@ public class MainController {
             .noneMatch(it -> it.matches(serverRequest.exchange().getRequest().getPath().pathWithinApplication())) && !serverRequest.path().contains(".");
 
     @Bean
-    public RouterFunction<ServerResponse> routes(@Value("classpath:/static/index.html") Resource index, AuthService authService, OAuth2ClientProperties oAuth2ClientProperties, CookieServerCsrfTokenRepository cookieServerCsrfTokenRepository) {
+    public RouterFunction<ServerResponse> routes(@Value("classpath:/static/index.html") Resource index
+            , ServerRequestCache serverRequestCache
+            , AuthService authService, OAuth2ClientProperties oAuth2ClientProperties
+            , CookieServerCsrfTokenRepository cookieServerCsrfTokenRepository) {
         return route(requestPredicate, serverRequest -> ok().contentType(MediaType.TEXT_HTML).bodyValue(index))
-                .andRoute(GET("/login"), serverRequest -> authService.currentOAuth2User().defaultIfEmpty("")
-                        .zipWith(generateToken(cookieServerCsrfTokenRepository, serverRequest.exchange()))
-                        .map(Tuple2::getT1)
-                        .flatMap(it -> {
-                            String red = "/";
-                            if (it.isEmpty())
-                                red = "/oauth2/authorization/" + serverRequest.queryParam("app").orElseGet(() -> oAuth2ClientProperties.getRegistration().entrySet().stream().findAny().map(Map.Entry::getKey).get());
-                            return ServerResponse.temporaryRedirect(URI.create(red)).build();
-                        }));
+                .andRoute(GET("/login"), serverRequest ->
+                        authService.currentOAuth2User().defaultIfEmpty("")
+                                .zipWith(generateToken(cookieServerCsrfTokenRepository, serverRequest.exchange()))
+                                .map(Tuple2::getT1)
+                                .flatMap(it -> {
+                                    String red = "/";
+                                    if (it.isEmpty())
+                                        red = "/oauth2/authorization/" + serverRequest.queryParam("app")
+                                                .orElseGet(() ->
+                                                        oAuth2ClientProperties.getRegistration().entrySet().stream().
+                                                                findAny().map(Map.Entry::getKey).get());
+                                    return ServerResponse.temporaryRedirect(URI.create(red)).build().flatMap(its ->
+                                            serverRequestCache.saveRequest(serverRequest.exchange()).map(itw -> its)
+                                                    .defaultIfEmpty(its));
+                                })
+                );
     }
 }
