@@ -2,10 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title>Index</title>
+    <title>Home</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/util.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
 </head>
@@ -13,20 +12,7 @@
 <div class="limiter">
     <div class="container-login100">
         <div class="wrap-login100 p-t-10">
-            <div sec:authorize="hasRole('ROLE_ADMIN')">
-                <a th:href="@{/key/generate}" class="badge-primary">
-                    Generate A Key
-                </a>
-                <ul th:each="key: ${keys}">
-                    <li>
-                        <span th:text="${key.getId()}"></span>
-                        <span th:text="${key.getCreatedDate()}"></span>
-                        <a th:href="@{'/key/delete/'+${key.getId()}}">
-                            delete
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            home <span sec:authentication="principal.username"></span>
         </div>
     </div>
 </div>

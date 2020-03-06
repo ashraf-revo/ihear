@@ -2,8 +2,9 @@ from enum import Enum
 
 
 class Key:
-    def __init__(self, keyType, actions):
+    def __init__(self, keyType,keyEvent, actions):
         self.keyType = keyType
+        self.keyEvent = keyEvent
         self.actions = []
         for a in actions:
             self.actions.append(Action(**a))
@@ -46,3 +47,9 @@ class KeyType(Enum):
     A = "A"
     X = "X"
     B = "B"
+
+class KeyEvent(Enum):
+  KEYDOWN="KEYDOWN"
+  KEYUP="KEYUP"
+  KEYHOLED="KEYHOLED"
+

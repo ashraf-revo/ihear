@@ -3,6 +3,7 @@ import {BaseModel} from "../../models/base-model";
 import {KeyType} from "../../models/key-type.enum";
 import {Key} from "../../models/key";
 import {Entry} from "../../models/entry";
+import {KeyEvent} from "../../models/key-event";
 
 @Component({
   selector: 'js-add-key',
@@ -11,6 +12,7 @@ import {Entry} from "../../models/entry";
 })
 export class AddKeyComponent extends BaseModel<Key> implements OnInit {
   keyTypes: KeyType[] = Object.keys(KeyType).map(it => KeyType[it]);
+  keyEvents: KeyEvent[] = Object.keys(KeyEvent).map(it => KeyEvent[it]);
   key: Key;
   showSave: boolean = false;
 
@@ -19,7 +21,6 @@ export class AddKeyComponent extends BaseModel<Key> implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.keyTypes);
   }
 
   onEvent(event: string): void {
@@ -37,6 +38,8 @@ export class AddKeyComponent extends BaseModel<Key> implements OnInit {
       this.key = new Key();
       if (this.keyTypes.length > 0)
         this.key.keyType = this.keyTypes[0];
+      if (this.keyEvents.length > 0)
+        this.key.keyEvent = this.keyEvents[0];
       this.showSave = true;
     }
 

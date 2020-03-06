@@ -8,5 +8,13 @@
         </select>
       </div>
     </div>
+    <div class="form-group row">
+      <label for="keyEvent" class="col-sm-3 col-form-label">KeyEvent</label>
+      <div class="col-sm-9">
+        <select class="form-control" id="keyEvent" name="key.keyEvent" [(ngModel)]="key.keyEvent">
+          <option *ngFor="let kes of keyEvents" [value]="kes">{{kes}}</option>
+        </select>
+      </div>
+    </div>
   </div>
 </js-basic-ui-model>

@@ -9,7 +9,7 @@
         <div class="form-group row">
           <label for="Title" class="col-sm-1 col-form-label">Title</label>
           <div class="col-sm-5">
-            <input id="Title" class="form-control" name="schema.title" [disabled]="schema.id"
+            <input id="Title" class="form-control" name="schema.title"
                    [(ngModel)]='schema.title'>
           </div>
         </div>
@@ -20,39 +20,41 @@
                       [(ngModel)]='schema.meta'></textarea>
           </div>
         </div>
-        <ul class=" tree">
-          <li>
-            <button type="button" class="btn btn-light btn-sm" (click)="addKeyComponent.show('',null)">
-              <i class="fa fa-plus" aria-hidden="true"></i>
-            </button>
-            <button type="button" class="btn btn-light btn-sm" (click)="delete(schema.keys,-1)">
-              <i class="fa fa-minus" aria-hidden="true"></i>
-            </button>
-            Keys
-            <ul class="tree" *ngFor="let key of schema.keys ; let iKey = index">
-              <li>
-                <button type="button" class="btn btn-light btn-sm" (click)="addActionComponent.show(iKey+'',null)">
-                  <i class="fa fa-plus" aria-hidden="true"></i>
-                </button>
-                <button type="button" class="btn btn-light btn-sm" (click)="delete(schema.keys,iKey)">
-                  <i class="fa fa-minus" aria-hidden="true"></i>
-                </button>
-                <a (click)="addKeyComponent.show('',key)">{{key.keyType}}</a>
-                <ul *ngFor="let action of key.actions; let iAction = index">
-                  <li>
-                    <button type="button" class="btn btn-light btn-sm" (click)="delete(key.actions,iAction)">
-                      <i class="fa fa-minus" aria-hidden="true"></i>
-                    </button>
-                    <a
-                      (click)="addActionComponent.show('',action)">
-                      {{action | resourceName  }}
-                    </a>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-        </ul>
+        <perfect-scrollbar style="height: 250px" [config]="config">
+          <ul class=" tree">
+            <li>
+              <button type="button" class="btn btn-light btn-sm" (click)="addKeyComponent.show('',null)">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+              </button>
+              <button type="button" class="btn btn-light btn-sm" (click)="delete(schema.keys,-1)">
+                <i class="fa fa-minus" aria-hidden="true"></i>
+              </button>
+              Keys
+              <ul class="tree" *ngFor="let key of schema.keys ; let iKey = index">
+                <li>
+                  <button type="button" class="btn btn-light btn-sm" (click)="addActionComponent.show(iKey+'',null)">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                  </button>
+                  <button type="button" class="btn btn-light btn-sm" (click)="delete(schema.keys,iKey)">
+                    <i class="fa fa-minus" aria-hidden="true"></i>
+                  </button>
+                  <a (click)="addKeyComponent.show('',key)">{{key.keyType}} <span>{{key.keyEvent}}</span></a>
+                  <ul *ngFor="let action of key.actions; let iAction = index">
+                    <li>
+                      <button type="button" class="btn btn-light btn-sm" (click)="delete(key.actions,iAction)">
+                        <i class="fa fa-minus" aria-hidden="true"></i>
+                      </button>
+                      <a
+                        (click)="addActionComponent.show('',action)">
+                        {{action | resourceName  }}
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </perfect-scrollbar>
       </div>
     </div>
     <div class="col">

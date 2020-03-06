@@ -43,7 +43,7 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String signup(@ModelAttribute User user, @AuthenticationPrincipal User current) {
+    public String signup(@ModelAttribute User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.save(user);
         return "signup";

@@ -19,11 +19,16 @@ import {BaseHomeComponent} from './componants/base-home/base-home.component';
 import {WsService} from "./services/ws.service";
 import {JoystickComponent} from './componants/joystick/joystick.component';
 import {ResourceNamePipe} from './services/resource-name.pipe';
-import { DashboardComponent } from './componants/dashboard/dashboard.component';
-import { HeaderComponent } from './componants/header/header.component';
-import { NavComponent } from './componants/nav/nav.component';
-import { FooterComponent } from './componants/footer/footer.component';
-import { ConsoleComponent } from './componants/console/console.component';
+import {DashboardComponent} from './componants/dashboard/dashboard.component';
+import {HeaderComponent} from './componants/header/header.component';
+import {NavComponent} from './componants/nav/nav.component';
+import {FooterComponent} from './componants/footer/footer.component';
+import {ConsoleComponent} from './componants/console/console.component';
+import {PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarConfigInterface, PerfectScrollbarModule} from "ngx-perfect-scrollbar";
+
+const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
+  wheelPropagation: true
+};
 
 @NgModule({
   declarations: [
@@ -47,12 +52,16 @@ import { ConsoleComponent } from './componants/console/console.component';
     ConsoleComponent
   ],
   imports: [
+    PerfectScrollbarModule,
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule
   ],
-  providers: [PiService, WsService],
+  providers: [PiService, WsService, {
+    provide: PERFECT_SCROLLBAR_CONFIG,
+    useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule {

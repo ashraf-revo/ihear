@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {PerfectScrollbarConfigInterface} from "ngx-perfect-scrollbar";
 
 @Component({
   selector: 'js-base-home',
@@ -7,7 +8,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BaseHomeComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
   }

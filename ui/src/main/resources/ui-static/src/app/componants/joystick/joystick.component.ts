@@ -1,21 +1,22 @@
-import {Component, HostListener, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Device} from "../../models/device";
 import {Schema} from "../../models/schema";
 import {KeyType} from "../../models/key-type.enum";
-import {from, Observable} from "rxjs";
-import {filter, map, mergeMap} from "rxjs/operators";
+import {from, fromEvent, merge, Observable, Subscription} from "rxjs";
+import {distinctUntilChanged, filter, groupBy, map, mergeAll, mergeMap, pairwise} from "rxjs/operators";
 import {WsService} from "../../services/ws.service";
 import {ActivatedRoute} from "@angular/router";
 import {PiService} from "../../services/pi.service";
 import {ActionType} from "../../models/action-type.enum";
 import {ResourceType} from "../../models/resource-type.enum";
+import {KeyEvent} from "../../models/key-event";
 
 @Component({
   selector: 'js-joystick',
   templateUrl: './joystick.component.html',
   styleUrls: ['./joystick.component.css']
 })
-export class JoystickComponent implements OnInit {
+export class JoystickComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private device: Device;
   private schema: Schema;
@@ -24,7 +25,8 @@ export class JoystickComponent implements OnInit {
     sdpSemantics: 'unified-plan',
     iceServers: [{urls: ['stun:stun.l.google.com:19302']}]
   };
-
+  @ViewChild("console", {static: false})
+  console: any;
   private keyMaps: { [key: string]: KeyType } = {
     "ArrowUp": KeyType.UP,
     "ArrowDown": KeyType.DOWN,
@@ -35,7 +37,34 @@ export class JoystickComponent implements OnInit {
     "KeyB": KeyType.B,
     "KeyA": KeyType.A
   };
-
+  keyChanges = merge(fromEvent(document, 'keydown'), fromEvent(document, 'keyup'))
+    .pipe(map(it => (<KeyboardEvent>it)),
+      groupBy(it => it.which),
+      map(it => it.pipe(distinctUntilChanged((it1, it2) => {
+          return (it1.which + it1.type + it1.repeat) == (it2.which + it2.type + it2.repeat);
+        })
+        // , pairwise(), map((iit) => {
+        //   console.log(iit[0].type + "  " + iit[1].type);
+        //   return iit[0];
+        // })
+        )
+      )
+      , mergeAll(), mergeMap(it => {
+        let keyType = this.keyMaps[it.code];
+        let keyEvent;
+        if (it.repeat == true) {
+          keyEvent = KeyEvent.KEYHOLED;
+        } else if (it.type == 'keydown') {
+          keyEvent = KeyEvent.KEYDOWN;
+        } else if (it.type == 'keyup') {
+          keyEvent = KeyEvent.KEYUP;
+        }
+        return this.schema.keys.filter(it =>
+          it.keyType == keyType && it.keyType != undefined && keyType != undefined &&
+          it.keyEvent == keyEvent && it.keyEvent != undefined && keyEvent != undefined
+        )
+      }), mergeMap(it => this.notify(it)));
+  keyChangesSubscription: Subscription;
 
   constructor(private piService: PiService, private activatedRoute: ActivatedRoute, private wsService: WsService) {
   }
@@ -52,19 +81,11 @@ export class JoystickComponent implements OnInit {
         return it;
       }), mergeMap(it => this.piService.findSchema(it.schemaId))).subscribe(it => {
       this.schema = it;
-    })
-  }
+    });
 
 
-  @HostListener('window:keyup', ['$event'])
-  keyEvent(event: KeyboardEvent) {
-    let key = this.keyMaps[event.code];
-    if (key) {
-      this.schema.keys.filter(it => it.keyType == key).forEach(it => {
-        this.notify(it).subscribe();
-      })
-    }
   }
+
 
   private notify(payload: any): Observable<Object> {
     return this.piService.notify(this.device.id, {
@@ -139,5 +160,17 @@ export class JoystickComponent implements OnInit {
         this.pc.close();
       }
     })
+  }
+
+  ngAfterViewInit(): void {
+
+    // this.schema.keys.filter(it => it.keyType == keyType && it.keyEvent == keyEvent)
+    this.keyChangesSubscription = this.keyChanges
+      .subscribe(() => {
+      })
+  }
+
+  ngOnDestroy(): void {
+    if (this.keyChangesSubscription) this.keyChangesSubscription.unsubscribe();
   }
 }

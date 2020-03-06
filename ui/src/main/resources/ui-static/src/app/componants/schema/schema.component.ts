@@ -6,6 +6,7 @@ import {filter, map, mergeMap} from 'rxjs/operators';
 import {AddKeyComponent} from "../add-key/add-key.component";
 import {AddActionComponent} from "../add-action/add-action.component";
 import {Resource} from "../../models/resource";
+import {PerfectScrollbarConfigInterface} from "ngx-perfect-scrollbar";
 
 @Component({
   selector: 'js-schema',
@@ -17,6 +18,8 @@ export class SchemaComponent implements OnInit {
   schema: Schema = new Schema();
   addKeyComponent: AddKeyComponent;
   addActionComponent: AddActionComponent;
+  config: PerfectScrollbarConfigInterface = {
+  };
 
   constructor(private piService: PiService, private activatedRoute: ActivatedRoute,
               private viewContainerRef: ViewContainerRef, private componentFactoryResolver: ComponentFactoryResolver) {

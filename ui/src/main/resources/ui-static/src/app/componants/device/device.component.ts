@@ -8,6 +8,7 @@ import {DeviceType} from "../../models/device-type.enum";
 import {Util} from "../../services/util";
 import {Entry} from "../../models/entry";
 import {Schema} from "../../models/schema";
+import {PerfectScrollbarConfigInterface} from "ngx-perfect-scrollbar";
 
 @Component({
   selector: 'js-device',
@@ -21,6 +22,9 @@ export class DeviceComponent implements OnInit {
   id: string = null;
   searchSchemaComponent: SearchSchemaComponent;
   deviceTypes: string[] = Object.values(DeviceType);
+  config: PerfectScrollbarConfigInterface = {
+  };
+
 
   constructor(private piService: PiService, private viewContainerRef: ViewContainerRef, private componentFactoryResolver: ComponentFactoryResolver, private activatedRoute: ActivatedRoute) {
   }

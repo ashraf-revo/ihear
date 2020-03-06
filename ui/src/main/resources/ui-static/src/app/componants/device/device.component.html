@@ -30,41 +30,45 @@
           </div>
         </div>
         <div class="row p-3">
-          <button (click)="save()" [disabled]="!device.schemaId||!device.name||!device.deviceType" class="btn btn-primary">save</button>
+          <button (click)="save()" [disabled]="!device.schemaId||!device.name||!device.deviceType"
+                  class="btn btn-primary">save
+          </button>
         </div>
       </div>
     </div>
     <div class="col">
       <div class="row">
-        <table class="table table-hover">
-          <thead>
-          <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Device Type</th>
-            <th scope="col">Actions</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr *ngFor="let d of devices">
-            <td>
-              <a *ngIf="d.id" [routerLink]="['/home/device',d.id]">{{d.name}}</a>
-            </td>
-            <td>{{d.deviceType}}</td>
-            <td>
+        <perfect-scrollbar style="height: 400px" [config]="config">
+          <table class="table table-hover">
+            <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Device Type</th>
+              <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let d of devices">
+              <td>
+                <a *ngIf="d.id" [routerLink]="['/home/device',d.id]">{{d.name}}</a>
+              </td>
+              <td>{{d.deviceType}}</td>
+              <td>
               <span>
                 <a class="p-1" *ngIf="d.id" [routerLink]="['/home/device',d.id,'joystick']">
                 <i class="fas fa-gamepad"></i>
               </a>
               </span>
-              <span>
+                <span>
                 <a class="p-1" *ngIf="d.schemaId" [routerLink]="['/home/schema',d.schemaId]">
                 <i class="fas fa-code"></i>
               </a>
               </span>
-            </td>
-          </tr>
-          </tbody>
-        </table>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </perfect-scrollbar>
       </div>
     </div>
   </div>
