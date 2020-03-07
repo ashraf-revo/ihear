@@ -7,10 +7,13 @@ target/
 *.aac
 *.mp4
 *.text
+*.log
+*.log.*
 ui/src/main/resources/ui-static/node
 ui/src/main/resources/ui-static/node_modules
 ui/src/main/resources/static/
 ui/src/main/resources/ui-static/dist
+ui/src/main/resources/ui-static/dpackage-lock.json
 package-lock.json
 ### STS ###
 .apt_generated
