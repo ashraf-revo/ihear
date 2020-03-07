@@ -12,15 +12,13 @@ matrix:
         - python Test.py
     - language: java
       jdk:
-        - openjdk8
+        - openjdk12
       services:
         - docker
       before_install:
         - chmod +x mvnw
       install: true
-      script: ./mvnw clean cobertura:cobertura install -Pstatic -Ddocker.username=$DOCKER_USERNAME -Ddocker.password=$DOCKER_PASSWORD
-      after_success:
-        - bash <(curl -s https://codecov.io/bash)
+      script: ./mvnw clean install -Pstatic -Ddocker.username=$DOCKER_USERNAME -Ddocker.password=$DOCKER_PASSWORD
       cache:
         directories:
           - $HOME/.m2
