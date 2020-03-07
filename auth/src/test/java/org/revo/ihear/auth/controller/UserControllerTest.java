@@ -26,7 +26,7 @@ public class UserControllerTest {
     @Test
     public void redirectToSiginInNotSigin() throws Exception {
         mvc.perform(get("/"))
-                .andExpect(status().is(302));
+                .andExpect(status().isFound());
     }
 
     @Test
