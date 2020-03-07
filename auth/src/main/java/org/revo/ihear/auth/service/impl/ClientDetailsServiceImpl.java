@@ -6,7 +6,10 @@ import org.revo.ihear.entites.domain.ClientDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class ClientDetailsServiceImpl implements ClientDetailsService {
@@ -26,5 +29,10 @@ public class ClientDetailsServiceImpl implements ClientDetailsService {
     @Override
     public long count() {
         return clientDetailsRepository.count();
+    }
+
+    @Override
+    public List<ClientDetails> findAll() {
+        return StreamSupport.stream(clientDetailsRepository.findAll().spliterator(), false).collect(Collectors.toList());
     }
 }

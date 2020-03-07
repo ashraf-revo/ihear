@@ -12,9 +12,5 @@ public interface UserService {
 
     long count();
 
-    List<User> findByCreatedBy(String id);
-
-    void changeEnabled(String father, String child);
-
-    void delete(String father, String child);
+    List<User> findAll();
 }

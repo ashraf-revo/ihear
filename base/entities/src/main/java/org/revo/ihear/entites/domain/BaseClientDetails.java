@@ -1,6 +1,7 @@
 package org.revo.ihear.entites.domain;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.stream.Collectors;
 public class BaseClientDetails {
     @Id
     private String id;
+    @Indexed(unique = true)
     private String clientId;
     private Set<String> resourceIds;
     private String clientSecret;
