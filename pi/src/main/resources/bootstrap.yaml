@@ -7,6 +7,7 @@ spring:
         sources:
           - name: ${spring.application.name}
           - name: default
+      enabled: false
     stream:
       bindings:
         input:
@@ -65,10 +66,17 @@ management:
 server:
   port: 8082
 logging:
-  level:
-    org: debug
-    com: debug
-    reactor: debug
-    io: debug
+#  level:
+#    org: debug
+#    com: debug
+#    reactor: debug
+#    io: debug
   file:
     name: logs/${spring.application.name}.log
+
+---
+spring:
+  profiles: prod
+  cloud:
+    kubernetes:
+      enabled: true

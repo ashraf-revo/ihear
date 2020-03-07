@@ -42,14 +42,4 @@ public class ClientDetailsServiceTest {
         assertThat(revo.get(), hasProperty("clientId", is(expected)));
     }
 
-    @Test
-    public void whenSaveExistedUserExpectFail() {
-        long expectedCount = clientDetailsService.count();
-        String expected = "revo";
-        ClientDetails user = new ClientDetails();
-        user.setClientId(expected);
-        Assertions.assertThrows(DuplicateKeyException.class, () -> clientDetailsService.save(user));
-        assertThat(expectedCount, is(clientDetailsService.count()));
-    }
-
 }
