@@ -8,6 +8,7 @@ target/
 *.mp4
 *.text
 *.log
+logs/*
 *.log.*
 ui/src/main/resources/ui-static/node
 ui/src/main/resources/ui-static/node_modules
