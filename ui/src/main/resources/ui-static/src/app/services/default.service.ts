@@ -23,13 +23,17 @@ export class DefaultService {
     if (authService.getAuthUser().isAuth == null) {
       return true;
     } else if (authService.getAuthUser().isAuth === 'false' && this.protectedUrl.indexOf(this._lastRoute.url.split('/')[1]) !== -1) {
-      window.location.href = "/login?lastRoute="+this._lastRoute.url;
+      this.goLogin();
       return false;
     } else if (authService.getAuthUser().isAuth === 'true' && (this._lastRoute.url === '/' || this._lastRoute.url === '')) {
       router.navigate(['/' + this.homeUrl]);
       return false;
     }
     return true;
+  }
+
+  public goLogin() {
+    window.location.href = "/login?lastRoute=" + this._lastRoute.url;
   }
 
   get lastRoute(): NavigationEnd {

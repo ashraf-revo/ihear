@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.*;
@@ -40,18 +41,18 @@ public class DeviceServiceImpl implements DeviceService {
             } else
                 return Mono.just(device);
         })
-                .map(it -> deviceRepository.save(it))
+                .flatMap(it -> deviceRepository.save(it))
                 .map(it -> it.setClientSecret(clientSecret));
 
     }
 
     @Override
-    public Optional<Device> findOneById(String id) {
+    public Mono<Device> findOneById(String id) {
         return deviceRepository.findById(id);
     }
 
     @Override
-    public List<Device> findAll(String id) {
+    public Flux<Device> findAll(String id) {
         return deviceRepository.findAllByCreatedBy(id);
     }
 

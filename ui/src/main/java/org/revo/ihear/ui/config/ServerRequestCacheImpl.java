@@ -8,6 +8,7 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebSession;
 import reactor.core.publisher.Mono;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 public class ServerRequestCacheImpl extends WebSessionServerRequestCache {
@@ -29,7 +30,8 @@ public class ServerRequestCacheImpl extends WebSessionServerRequestCache {
                 .filter(m -> m.isMatch())
                 .flatMap(m -> exchange.getSession())
                 .map(WebSession::getAttributes)
-                .doOnNext(attrs -> attrs.put(this.sessionAttrName, exchange.getRequest().getQueryParams().get("lastRoute").get(0)))
+                .doOnNext(attrs -> attrs.put(this.sessionAttrName,
+                        exchange.getRequest().getQueryParams().getOrDefault("lastRoute", Arrays.asList("/")).get(0)))
                 .then();
     }
 

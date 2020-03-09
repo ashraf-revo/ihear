@@ -10,7 +10,7 @@ import {AddKeyComponent} from './componants/add-key/add-key.component';
 import {AddActionComponent} from './componants/add-action/add-action.component';
 import {BasicUiModelComponent} from './componants/basic-ui-model/basic-ui-model.component';
 import {HomeComponent} from './componants/home/home.component';
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {SearchSchemaComponent} from "./componants/search-schema/search-schema.component";
 import {BaseComponent} from './componants/base/base.component';
 import {SearchPipe} from './services/search.pipe';
@@ -25,7 +25,8 @@ import {NavComponent} from './componants/nav/nav.component';
 import {FooterComponent} from './componants/footer/footer.component';
 import {ConsoleComponent} from './componants/console/console.component';
 import {PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarConfigInterface, PerfectScrollbarModule} from "ngx-perfect-scrollbar";
-import { ErrorComponent } from './componants/error/error.component';
+import {ErrorComponent} from './componants/error/error.component';
+import {AuthInterceptor} from "./services/auth-interceptor.service";
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   wheelPropagation: true
@@ -63,7 +64,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   providers: [PiService, WsService, {
     provide: PERFECT_SCROLLBAR_CONFIG,
     useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
-  }],
+  }
+  , {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

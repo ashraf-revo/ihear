@@ -15,6 +15,8 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
 import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
@@ -32,8 +34,8 @@ public class MainController {
                         .filterWhen(it -> {
                             if (it.getId() != null)
                                 return authService.currentJwtUserId()
-                                        .map(user -> deviceService.findOneById(it.getId())
-                                                .map(device -> device.getCreatedBy().equals(user)).orElse(false))
+                                        .flatMap(user -> deviceService.findOneById(it.getId())
+                                                .map(device -> device.getCreatedBy().equals(user)).defaultIfEmpty(false))
                                         .filter(user -> user).defaultIfEmpty(false);
                             else
                                 return Mono.just(true);
@@ -43,11 +45,9 @@ public class MainController {
                 .andRoute(GET("/device/{id}"), serverRequest ->
                         ok().body(authService.currentJwtUserId()
                                 .flatMap(it -> deviceService.findOneById(serverRequest.pathVariable("id"))
-                                        .filter(its -> it.equals(its.getCreatedBy()))
-                                        .map(Mono::just).orElseGet(Mono::empty)), Device.class))
-                .andRoute(GET("/device"), serverRequest ->
-                        ok().body(authService.currentJwtUserId()
-                                .flatMapMany(it -> Flux.fromIterable(deviceService.findAll(it))), Device.class))
+                                        .filter(its -> it.equals(its.getCreatedBy()))), Device.class))
+                .andRoute(GET("/device"), serverRequest -> ok().body(authService.currentJwtUserId()
+                        .flatMapMany(it -> deviceService.findAll(it)), Device.class))
                 .andRoute(POST("/schema"), serverRequest ->
                         ok().body(serverRequest.bodyToMono(Schema.class)
                                 .zipWith(authService.currentJwtUserId(), (schema, createdBy) -> {
@@ -71,10 +71,8 @@ public class MainController {
                 .andRoute(POST("/notify/{deviceId}"), serverRequest ->
                         ok().body(
                                 authService.currentJwtUserId()
-                                        .filter(it ->
-                                                deviceService.findOneById(serverRequest.pathVariable("deviceId")).
-                                                        map(its ->
-                                                                it.contains(its.getCreatedBy())).orElse(false))
+                                        .filterWhen(it -> deviceService.findOneById(serverRequest.pathVariable("deviceId")).
+                                                map(its -> it.contains(its.getCreatedBy())).defaultIfEmpty(false))
                                         .flatMap(userId -> serverRequest.bodyToMono(WSMessage.class)
                                                 .map(it -> {
                                                     it.setFrom(userId).setTo("/echo/" + it.getTo());

@@ -1,6 +1,8 @@
 spring:
   application:
     name: ui
+  session:
+    store-type: mongodb
   cloud:
     kubernetes:
       config:
@@ -78,11 +80,11 @@ management:
 server:
   port: 8080
 logging:
-#  level:
-#    org: debug
-#    com: debug
-#    reactor: debug
-#    io: debug
+  level:
+    org: debug
+    com: debug
+    reactor: debug
+    io: debug
   file:
     name: logs/${spring.application.name}.log
 

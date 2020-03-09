@@ -1,6 +1,8 @@
 spring:
   application:
     name: auth
+  session:
+    store-type: mongodb
   cloud:
     kubernetes:
       config:
@@ -15,6 +17,9 @@ server:
   port: 9999
   servlet:
     context-path: /auth
+    session:
+      cookie:
+        name: ${spring.application.name}-cookie
 org:
   revo:
     base:
@@ -73,11 +78,11 @@ management:
     health:
       show-details: always
 logging:
-#  level:
-#    org: debug
-#    com: debug
-#    reactor: debug
-#    io: debug
+  level:
+    org: debug
+    com: debug
+    reactor: debug
+    io: debug
   file:
     name: logs/${spring.application.name}.log
 
