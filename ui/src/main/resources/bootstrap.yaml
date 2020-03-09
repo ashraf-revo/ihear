@@ -32,6 +32,9 @@ spring:
       default-filters:
         - PreserveHostHeader
         - AddAuthorizationHeaderRequest
+  data:
+    mongodb:
+      database: ihear
   security:
     oauth2:
       client:
