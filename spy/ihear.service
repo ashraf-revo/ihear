@@ -1,0 +1,14 @@
+[Unit]
+Description=Ihear
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 -u Main.py
+WorkingDirectory=/home/pi/ihear
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
