@@ -39,6 +39,10 @@
             <artifactId>spring-cloud-kubernetes-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
@@ -92,7 +96,7 @@
             <plugin>
                 <groupId>io.fabric8</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
-                <version>0.30.0</version>
+                <version>0.33.0</version>
                 <configuration>
                     <skip>${spring.skip}</skip>
                     <images>

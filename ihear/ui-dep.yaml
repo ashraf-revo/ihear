@@ -18,4 +18,3 @@ spec:
           image: ashraf1abdelrasool/ui:0.0.1-SNAPSHOT
           ports:
             - containerPort: 8080
-          imagePullPolicy: Always

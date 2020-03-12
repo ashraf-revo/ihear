@@ -46,9 +46,7 @@ spring:
         provider:
           auth:
             authorization-uri: http://${org.revo.base.env.url:localhost:8080}/auth/oauth/authorize
-            #            authorization-uri: http://${org.revo.base.env.url:10.0.2.2:8080}/auth/oauth/authorize
-            #            token-uri: http://${org.revo.base.env.url:localhost:8080}/auth/oauth/token
-            token-uri: http://${org.revo.base.env.url:localhost:9999}/auth/oauth/token
+            token-uri: http://${org.revo.base.env.url:localhost:8080}/auth/oauth/token
             user-info-uri: http://${org.revo.base.env.url:localhost:8080}/auth/user
             user-name-attribute: sub
             jwk-set-uri: http://${org.revo.base.env.url:localhost:8080}/auth/.well-known/jwks.json
@@ -76,7 +74,7 @@ logging:
 
 ---
 spring:
-  profiles: prod
+  profiles: kubernetes
   cloud:
     kubernetes:
       enabled: true

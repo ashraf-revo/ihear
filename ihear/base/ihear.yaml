@@ -45,13 +45,8 @@ data:
       revo:
         base:
           env:
-            url: 35.223.9.17
+            url: 192.168.99.101:30272
     spring:
-      profiles:
-        active: kubernetes
-    ---
-    spring:
-      profiles: kubernetes
       rabbitmq:
         host: rabbitmq.default.svc.cluster.local
       data:
@@ -69,14 +64,14 @@ data:
         gateway:
           routes:
             - id: auth
-              uri: "http://ingress-nginx.ingress-nginx.svc.cluster.local/auth"
+              uri: "lb:http://auth/auth"
               filters:
                 - AddAuthorizationHeaderRequest
                 - PreserveHostHeader
               predicates:
                 - Path=/auth/**
             - id: echo
-              uri: "ws://ingress-nginx.ingress-nginx.svc.cluster.local/echo"
+              uri: "lb:ws://pi/echo"
               filters:
                 - RemoveSessionHeaderRequest
               predicates:
@@ -89,4 +84,4 @@ data:
               - RemoveSessionHeaderResponse
               - PreserveHostHeader
               include-expression: (!serviceId.equals("ui")&&!serviceId.equals("kubernetes")&&!serviceId.equals("auth"))
-              url-expression: "'http://ingress-nginx.ingress-nginx.svc.cluster.local/'+serviceId"
+              url-expression: "'lb:http://'+serviceId"

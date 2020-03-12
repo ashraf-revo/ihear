@@ -13,7 +13,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-        return http
+        return http.anonymous().and()
                 .authorizeExchange()
                 .matchers(EndpointRequest.toAnyEndpoint()).permitAll()
                 .pathMatchers("/echo").authenticated()
