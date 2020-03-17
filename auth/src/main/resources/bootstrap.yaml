@@ -20,6 +20,10 @@ server:
     session:
       cookie:
         name: ${spring.application.name}-cookie
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
 org:
   revo:
     base:
@@ -78,17 +82,10 @@ management:
     health:
       show-details: always
 logging:
-  level:
-    org: debug
-    com: debug
-    reactor: debug
-    io: debug
+  #  level:
+  #    org: debug
+  #    com: debug
+  #    reactor: debug
+  #    io: debug
   file:
     name: logs/${spring.application.name}.log
-
----
-spring:
-  profiles: kubernetes
-  cloud:
-    kubernetes:
-      enabled: true

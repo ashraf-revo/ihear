@@ -3,29 +3,27 @@ package org.revo.ihear.pi.service.impl;
 import org.revo.ihear.entites.domain.BaseClientDetails;
 import org.revo.ihear.pi.domain.Device;
 import org.revo.ihear.pi.repository.DeviceRepository;
+import org.revo.ihear.pi.service.AuthClientService;
 import org.revo.ihear.pi.service.DeviceService;
 import org.revo.ihear.service.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.UUID;
 
 @Service
 public class DeviceServiceImpl implements DeviceService {
     @Autowired
     private DeviceRepository deviceRepository;
     @Autowired
-    @Qualifier("microWebClient")
-    private WebClient microWebClient;
-    @Autowired
     private AuthService authService;
     @Autowired
-    private Environment environment;
+    private AuthClientService authClientService;
 
     private static String random() {
         return (UUID.randomUUID().toString().hashCode() & 0xfffffff) + "";
@@ -56,14 +54,6 @@ public class DeviceServiceImpl implements DeviceService {
         return deviceRepository.findAllByCreatedBy(id);
     }
 
-    private Mono<BaseClientDetails> createClient(BaseClientDetails baseClientDetails) {
-        String auth = "http://localhost:9999/auth";
-        if (Arrays.asList(environment.getActiveProfiles()).contains("kubernetes")) {
-            auth = "http://ingress-nginx.ingress-nginx.svc.cluster.local/auth";
-        }
-        return microWebClient.post().uri(auth + "/client").body(Mono.just(baseClientDetails)
-                , BaseClientDetails.class).exchange().flatMap(it -> it.bodyToMono(BaseClientDetails.class));
-    }
 
     private Mono<BaseClientDetails> createRandomClient(String clienId, String password, String createdFor) {
         BaseClientDetails baseClientDetails = new BaseClientDetails();
@@ -75,6 +65,6 @@ public class DeviceServiceImpl implements DeviceService {
         baseClientDetails.setAccessTokenValiditySeconds(43200);
         baseClientDetails.setRefreshTokenValiditySeconds(43200);
         baseClientDetails.setAuthorizedGrantTypes(new HashSet<>(Collections.singletonList("client_credentials")));
-        return this.createClient(baseClientDetails);
+        return authClientService.createClient(baseClientDetails);
     }
 }

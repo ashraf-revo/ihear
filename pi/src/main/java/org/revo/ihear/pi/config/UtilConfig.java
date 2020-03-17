@@ -13,13 +13,16 @@ public class UtilConfig {
 
     @Bean
     @LoadBalanced
-    public WebClient microWebClient(ReactiveClientRegistrationRepository clientRegistrationRepository
+    public WebClient.Builder builder(ReactiveClientRegistrationRepository clientRegistrationRepository
             , ServerOAuth2AuthorizedClientRepository serverOAuth2AuthorizedClientRepository) {
         ServerOAuth2AuthorizedClientExchangeFilterFunction oauth = new ServerOAuth2AuthorizedClientExchangeFilterFunction(
                 clientRegistrationRepository, serverOAuth2AuthorizedClientRepository/*new UnAuthenticatedServerOAuth2AuthorizedClientRepository()*/);
         oauth.setDefaultClientRegistrationId("micro");
-        return WebClient.builder().filter(oauth)
-                .build();
+        return WebClient.builder().filter(oauth);
+    }
+    @Bean
+    public WebClient microWebClient(WebClient.Builder builder){
+        return builder.build();
     }
 
 }

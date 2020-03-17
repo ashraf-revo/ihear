@@ -1,0 +1,29 @@
+---
+applications:
+  - name: ihearAuth
+    memory: 700M
+    instances: 1
+    buildpack: java_buildpack
+    path: ../../auth/target/auth-0.0.1-SNAPSHOT.jar
+    services:
+      - IhearEureka
+      - IhearMongodb
+  - name: ihearPi
+    memory: 700M
+    instances: 1
+    buildpack: java_buildpack
+    path: ../../pi/target/pi-0.0.1-SNAPSHOT.jar
+    services:
+      - IhearEureka
+      - IhearMongodb
+      - IhearRabbitmq
+  - name: ihearUi
+    memory: 600M
+    instances: 1
+    buildpack: java_buildpack
+    path: ../../ui/target/ui-0.0.1-SNAPSHOT.jar
+    services:
+      - IhearEureka
+      - IhearMongodb
+
+

@@ -45,7 +45,7 @@ data:
       revo:
         base:
           env:
-            url: 192.168.99.101:30272
+            url: 192.168.99.101:30798
     spring:
       rabbitmq:
         host: rabbitmq.default.svc.cluster.local
