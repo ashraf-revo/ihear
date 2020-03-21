@@ -30,7 +30,7 @@ matrix:
       before_install:
         - chmod +x mvnw
       install: true
-      script: ./mvnw clean install -Ppivotal
+      script: ./mvnw clean package -Ppivotal
       cache:
         directories:
           - $HOME/.m2
