@@ -85,7 +85,7 @@
                         <version>1.9.1</version>
                         <configuration>
                             <workingDirectory>src/main/resources/ui-static</workingDirectory>
-                            <npmVersion>6.13.4</npmVersion>
+                            <npmVersion>6.14.3</npmVersion>
                             <nodeVersion>v12.16.1</nodeVersion>
                         </configuration>
                         <executions>
