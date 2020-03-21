@@ -1,6 +1,8 @@
 spring:
   application:
     name: pi
+  main:
+    allow-bean-definition-overriding: true
   cloud:
     kubernetes:
       config:
@@ -70,3 +72,9 @@ logging:
 #    io: debug
   file:
     name: logs/${spring.application.name}.log
+---
+spring:
+  profiles: pivotal
+  data:
+    mongodb:
+      uri: ${vcap.services.SERVICES.credentials[MONGO_HOST]}

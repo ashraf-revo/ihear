@@ -3,7 +3,6 @@ package org.revo.ihear.pi;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.config.java.ServiceScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
@@ -13,7 +12,6 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @ComponentScan(basePackages = {"org.revo.ihear.entites.config", "org.revo.ihear.service.auth", "org.revo.ihear.pi"})
 @EnableMongoRepositories(basePackages = {"org.revo.ihear.pi"})
 @EnableMongoAuditing
-@ServiceScan
 public class PiApplication {
 
     public static void main(String[] args) {

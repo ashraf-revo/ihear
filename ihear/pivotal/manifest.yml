@@ -1,29 +1,30 @@
 ---
 applications:
   - name: ihearAuth
-    memory: 700M
+    memory: 1024M
     instances: 1
-    buildpack: java_buildpack
     path: ../../auth/target/auth-0.0.1-SNAPSHOT.jar
+    env:
+      SPRING_PROFILES_ACTIVE: pivotal
     services:
       - IhearEureka
-      - IhearMongodb
+      - SERVICES
   - name: ihearPi
-    memory: 700M
+    memory: 1024M
     instances: 1
-    buildpack: java_buildpack
     path: ../../pi/target/pi-0.0.1-SNAPSHOT.jar
+    env:
+      SPRING_PROFILES_ACTIVE: pivotal
     services:
       - IhearEureka
-      - IhearMongodb
       - IhearRabbitmq
+      - SERVICES
   - name: ihearUi
-    memory: 600M
+    memory: 1024M
     instances: 1
-    buildpack: java_buildpack
     path: ../../ui/target/ui-0.0.1-SNAPSHOT.jar
+    env:
+      SPRING_PROFILES_ACTIVE: pivotal
     services:
       - IhearEureka
-      - IhearMongodb
-
-
+      - SERVICES
