@@ -11,8 +11,6 @@
   },
   "private": true,
   "dependencies": {
-    "@babel/preset-env": "^7.8.7",
-    "@babel/compat-data": "^7.8.6",
     "@angular/animations": "~8.2.14",
     "@angular/common": "~8.2.14",
     "@angular/compiler": "~8.2.14",
@@ -32,7 +30,7 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.8.7",
-    "@babel/compat-data": "~7.8.0",
+    "@babel/compat-data": "^7.8.6",
     "@angular-devkit/build-angular": "~0.803.23",
     "@angular/cli": "~8.3.23",
     "@angular/compiler-cli": "~8.2.14",
