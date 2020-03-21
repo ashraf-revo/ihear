@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.8.7",
-    "@babel/compat-data": "^7.8.6",
+    "@babel/compat-data": "~7.8.0",
     "@angular-devkit/build-angular": "~0.803.23",
     "@angular/cli": "~8.3.23",
     "@angular/compiler-cli": "~8.2.14",
