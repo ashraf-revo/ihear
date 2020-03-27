@@ -18,7 +18,9 @@ matrix:
       before_install:
         - chmod +x mvnw
       install: true
-      script: ./mvnw clean install -Pstatic  -DskipTests=true -Ddocker.username=$DOCKER_USERNAME -Ddocker.password=$DOCKER_PASSWORD
+      script:
+        - ./mvnw clean install -Pkubernetes,static  -DskipTests=true -Ddocker.username=$DOCKER_USERNAME -Ddocker.password=$DOCKER_PASSWORD
+        - ./mvnw clean install -Ppivotal,static  -DskipTests=true
       cache:
         directories:
           - $HOME/.m2
