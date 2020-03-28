@@ -67,6 +67,10 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: http://${org.revo.base.env.url:localhost:8080}/auth/.well-known/jwks.json
+  resources:
+    cache:
+      cachecontrol:
+        max-age: 7d
 eureka:
   client:
     serviceUrl:
