@@ -129,6 +129,7 @@ export class JoystickComponent implements OnInit, AfterViewInit, OnDestroy {
   generateStreamMessage(): any {
     return {
       "keyType": "SPACE",
+      "keyEvent":KeyEvent.KEYHOLED,
       actions: [{
         "actionType": ActionType.STREAM,
         "resourceType": ResourceType.CAMERA,
@@ -140,6 +141,7 @@ export class JoystickComponent implements OnInit, AfterViewInit, OnDestroy {
   static generateTeardownMessage(): any {
     return {
       "keyType": "SPACE",
+      "keyEvent":KeyEvent.KEYHOLED,
       actions: [{
         "actionType": ActionType.TEARDOWN,
         "resourceType": ResourceType.CAMERA,
