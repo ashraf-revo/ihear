@@ -86,7 +86,6 @@
                 </dependency>
             </dependencies>
             <build>
-                <directory>target-kubernetes</directory>
                 <plugins>
                     <plugin>
                         <groupId>io.fabric8</groupId>
@@ -135,9 +134,6 @@
         </profile>
         <profile>
             <id>pivotal</id>
-            <build>
-                <directory>target-pivotal</directory>
-            </build>
             <dependencies>
                 <dependency>
                     <groupId>io.pivotal.spring.cloud</groupId>
