@@ -70,7 +70,7 @@ spring:
   resources:
     cache:
       cachecontrol:
-        max-age: 7d
+        max-age: 3600
 eureka:
   client:
     serviceUrl:
