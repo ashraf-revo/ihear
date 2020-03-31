@@ -45,43 +45,10 @@ data:
       revo:
         base:
           env:
-            url: 192.168.99.101:30798
+            url: afd2bf7bb736711eaae050acfe6af2f4-1344596038.us-east-2.elb.amazonaws.com
     spring:
       rabbitmq:
         host: rabbitmq.default.svc.cluster.local
       data:
         mongodb:
           host: mongodb.default.svc.cluster.local
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: ui
-data:
-  ui.yaml: |-
-    spring:
-      cloud:
-        gateway:
-          routes:
-            - id: auth
-              uri: "lb:http://auth/auth"
-              filters:
-                - AddAuthorizationHeaderRequest
-                - PreserveHostHeader
-              predicates:
-                - Path=/auth/**
-            - id: echo
-              uri: "lb:ws://pi/echo"
-              filters:
-                - RemoveSessionHeaderRequest
-              predicates:
-                - Path=/echo/**
-          discovery:
-            locator:
-              enabled: true
-              filters:
-              - AddAuthorizationHeaderRequest
-              - RemoveSessionHeaderResponse
-              - PreserveHostHeader
-              include-expression: (!serviceId.equals("ui")&&!serviceId.equals("kubernetes")&&!serviceId.equals("auth"))
-              url-expression: "'lb:http://'+serviceId"

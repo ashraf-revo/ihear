@@ -24,4 +24,3 @@ class Thread(PiResource):
     async def ___sleep(self, data):
         if self.___available:
             print("SLEEP ", data["Time"])
-            sleep(data["Time"])
