@@ -19,10 +19,10 @@ matrix:
         - chmod +x mvnw
       install: true
       script:
-        - ./mvnw clean install -Pstatic
-        - ./mvnw clean install -Peureak -DskipTests=true
-        - ./mvnw clean install -Ppivotal -DskipTests=true
-        - ./mvnw clean install -Pkubernetes -DskipTests=true -Ddocker.username=$DOCKER_USERNAME -Ddocker.password=$DOCKER_PASSWORD
+        - ./mvnw install -Pstatic -DskipTests=true
+        - ./mvnw install -Peureka -DskipTests=true
+        - ./mvnw install -Ppivotal -DskipTests=true
+        - ./mvnw install -Pkubernetes -DskipTests=true -Ddocker.username=$DOCKER_USERNAME -Ddocker.password=$DOCKER_PASSWORD
       cache:
         directories:
           - $HOME/.m2
