@@ -15,14 +15,14 @@ spring:
     gateway:
       routes:
         - id: auth
-          uri: "lb://auth/auth"
+          uri: "http://localhost:9999/auth"
           filters:
             - AddAuthorizationHeaderRequest
             - PreserveHostHeader
           predicates:
             - Path=/auth/**
         - id: pi
-          uri: "lb://pi"
+          uri: "http://localhost:8082"
           filters:
             - StripPrefix=1
             - AddAuthorizationHeaderRequest
@@ -31,7 +31,7 @@ spring:
           predicates:
             - Path=/pi/**
         - id: echo
-          uri: "lb:ws://pi/echo"
+          uri: "http://localhost:8082/echo"
           filters:
             - RemoveSessionHeaderRequest
             - PreserveHostHeader
@@ -97,3 +97,33 @@ spring:
   data:
     mongodb:
       uri: ${vcap.services.SERVICES.credentials[MONGO_HOST]}
+---
+spring:
+  profiles: cloud
+  cloud:
+    gateway:
+      routes:
+        - id: auth
+          uri: "lb://auth/auth"
+          filters:
+            - AddAuthorizationHeaderRequest
+            - PreserveHostHeader
+          predicates:
+            - Path=/auth/**
+        - id: pi
+          uri: "lb://pi"
+          filters:
+            - StripPrefix=1
+            - AddAuthorizationHeaderRequest
+            - RemoveSessionHeaderResponse
+            - PreserveHostHeader
+          predicates:
+            - Path=/pi/**
+        - id: echo
+          uri: "lb:ws://pi/echo"
+          filters:
+            - RemoveSessionHeaderRequest
+            - PreserveHostHeader
+            - AddAuthorizationHeaderRequest
+          predicates:
+            - Path=/echo/**

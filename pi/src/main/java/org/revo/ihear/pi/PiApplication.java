@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@ComponentScan(basePackages = {"org.revo.ihear.entites.config", "org.revo.ihear.service.auth", "org.revo.ihear.pi"})
+@ComponentScan(basePackages = {"org.revo.ihear.entites.config", "org.revo.ihear.service.auth", "org.revo.ihear.pi","org.revo.base.service"})
 @EnableMongoRepositories(basePackages = {"org.revo.ihear.pi"})
 @EnableMongoAuditing
 public class PiApplication {

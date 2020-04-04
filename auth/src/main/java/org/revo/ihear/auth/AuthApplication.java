@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@ComponentScan(basePackages = {"org.revo.ihear.entites.config", "org.revo.ihear.auth"})
+@ComponentScan(basePackages = {"org.revo.ihear.entites.config", "org.revo.ihear.auth","org.revo.base.service"})
 @EnableConfigurationProperties(Env.class)
 public class AuthApplication {
 
