@@ -133,6 +133,7 @@
                         <version>0.33.0</version>
                         <configuration>
                             <skip>${spring.skip}</skip>
+                            <outputDirectory>target-kubernetes</outputDirectory>
                             <images>
                                 <image>
                                     <name>${docker.name}/${project.artifactId}:${project.version}</name>

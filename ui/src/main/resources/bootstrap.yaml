@@ -2,7 +2,7 @@ spring:
   application:
     name: ui
   session:
-    store-type: mongodb
+    store-type: redis
   main:
     allow-bean-definition-overriding: true
   cloud:

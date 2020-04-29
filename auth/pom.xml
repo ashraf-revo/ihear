@@ -17,24 +17,14 @@
     </properties>
     <packaging>jar</packaging>
     <dependencies>
-<!--
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis-reactive</artifactId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.session</groupId>
-            <artifactId>spring-session-data-redis</artifactId>
-        </dependency>
--->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-mongodb</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.session</groupId>
-            <artifactId>spring-session-data-mongodb</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.session</groupId>-->
+<!--            <artifactId>spring-boot-starter-data-redis-reactive</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -66,8 +56,8 @@
             <version>8.1</version>
         </dependency>
         <dependency>
-            <groupId>org.revo.ihear</groupId>
-            <artifactId>base</artifactId>
+            <groupId>org.revo.ihear.base</groupId>
+            <artifactId>commons</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
