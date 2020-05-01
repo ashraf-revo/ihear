@@ -9,9 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableDiscoveryClient
 @ComponentScan(basePackages = {"org.revo.ihear.service.auth", "org.revo.ihear.ui"})
 public class UiApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(UiApplication.class, args);
     }
-
 }

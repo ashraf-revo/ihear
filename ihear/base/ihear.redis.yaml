@@ -1,0 +1,38 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redisdb
+spec:
+  selector:
+    matchLabels:
+      run: redisdb
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: redisdb
+    spec:
+      containers:
+        - name: redis
+          image: redis:5.0.1
+          ports:
+            - containerPort: 6379
+              name: client-access
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redisdb
+  labels:
+    run: redisdb
+spec:
+  ports:
+    - name: client-access
+      port: 6379
+      protocol: TCP
+      targetPort: 6379
+  type: NodePort
+  selector:
+    run: redisdb

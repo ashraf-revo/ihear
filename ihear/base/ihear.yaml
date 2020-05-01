@@ -45,10 +45,12 @@ data:
       revo:
         base:
           env:
-            url: afd2bf7bb736711eaae050acfe6af2f4-1344596038.us-east-2.elb.amazonaws.com
+            url: 172.17.0.2:31306
     spring:
       rabbitmq:
         host: rabbitmq.default.svc.cluster.local
+      redis:
+        host: redisdb.default.svc.cluster.local
       data:
         mongodb:
           host: mongodb.default.svc.cluster.local

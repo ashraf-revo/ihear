@@ -84,11 +84,11 @@ management:
     health:
       show-details: always
 logging:
-  #  level:
-  #    org: debug
-  #    com: debug
-  #    reactor: debug
-  #    io: debug
+#  level:
+#    org: debug
+#    com: debug
+#    reactor: debug
+#    io: debug
   file:
     name: logs/${spring.application.name}.log
 ---

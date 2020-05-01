@@ -1,0 +1,17 @@
+version: '2.0'
+services:
+  redis:
+    image: redis:5.0.1
+    ports:
+      - "6379:6379"
+  mongo:
+    image: mongo:4.0.4
+    ports:
+      - "27017:27017"
+  rabbitmq:
+    image: rabbitmq:3.6.11-management
+    ports:
+      - "4369:4369"
+      - "5671-5672:5671-5672"
+      - "15671-15672:15671-15672"
+      - "25672:25672"

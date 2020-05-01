@@ -93,6 +93,7 @@ Resources:
   Subnet01:
     Type: AWS::EC2::Subnet
     Properties:
+      MapPublicIpOnLaunch: true
       AvailabilityZone:
         Fn::Select:
           - '0'
@@ -109,6 +110,7 @@ Resources:
   Subnet02:
     Type: AWS::EC2::Subnet
     Properties:
+      MapPublicIpOnLaunch: true
       AvailabilityZone:
         Fn::Select:
           - '1'
@@ -124,8 +126,8 @@ Resources:
 
   Subnet03:
     Type: AWS::EC2::Subnet
-
     Properties:
+      MapPublicIpOnLaunch: true
       AvailabilityZone:
         Fn::Select:
           - '2'
@@ -205,7 +207,7 @@ Resources:
     Type: 'AWS::EKS::Cluster'
     Properties:
       Name: !Ref ClusterName
-      Version: '1.14'
+      Version: '1.15'
       RoleArn: !GetAtt [eksRole,Arn]
       ResourcesVpcConfig:
         SecurityGroupIds:
