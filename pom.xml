@@ -114,12 +114,6 @@
 
         <profile>
             <id>kubernetes</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <maven.test.skip>true</maven.test.skip>
-            </properties>
             <dependencies>
                 <dependency>
                     <groupId>org.springframework.cloud</groupId>
