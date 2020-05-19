@@ -1,0 +1,14 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+metadata:
+  name: ui
+build:
+  artifacts:
+  - image: ashraf1abdelrasool/ui
+    jib:
+      project: org.revo:ui
+deploy:
+  kubectl:
+    manifests:
+    - k8s/ui-dep.yaml
+    - k8s/ui-svc.yaml

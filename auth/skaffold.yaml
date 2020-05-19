@@ -1,0 +1,14 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+metadata:
+  name: auth
+build:
+  artifacts:
+  - image: ashraf1abdelrasool/auth
+    jib:
+      project: org.revo:auth
+deploy:
+  kubectl:
+    manifests:
+    - k8s/auth-dep.yaml
+    - k8s/auth-svc.yaml

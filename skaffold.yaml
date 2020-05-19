@@ -1,0 +1,11 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+metadata:
+  name: ihear
+deploy:
+  kubectl:
+    manifests:
+    - k8s/ihear.yaml
+    - k8s/ihear.mongodb.yaml
+    - k8s/ihear.rabbitmq.yaml
+    - k8s/ihear.redis.yaml

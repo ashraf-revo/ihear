@@ -114,6 +114,12 @@
 
         <profile>
             <id>kubernetes</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <maven.test.skip>true</maven.test.skip>
+            </properties>
             <dependencies>
                 <dependency>
                     <groupId>org.springframework.cloud</groupId>
@@ -127,6 +133,18 @@
             <build>
                 <directory>target-kubernetes</directory>
                 <plugins>
+                    <plugin>
+                        <groupId>com.google.cloud.tools</groupId>
+                        <artifactId>jib-maven-plugin</artifactId>
+                        <version>2.2.0</version>
+                        <configuration>
+                            <container>
+                                <environment>
+                                    <SPRING_CLOUD_KUBERNETES_ENABLED>true</SPRING_CLOUD_KUBERNETES_ENABLED>
+                                </environment>
+                            </container>
+                        </configuration>
+                    </plugin>
                     <plugin>
                         <groupId>io.fabric8</groupId>
                         <artifactId>docker-maven-plugin</artifactId>

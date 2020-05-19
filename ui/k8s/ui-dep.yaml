@@ -1,0 +1,23 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ui
+spec:
+  selector:
+    matchLabels:
+      run: ui
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: ui
+    spec:
+      containers:
+        - name: ui
+          image: ashraf1abdelrasool/ui:0.0.1-SNAPSHOT
+          ports:
+            - containerPort: 8080
+          env:
+            - name: "SPRING_PROFILES_INCLUDE"
+              value: "cloud"

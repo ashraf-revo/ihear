@@ -15,7 +15,7 @@
 - [spy](https://github.com/ashraf-revo/spy/README.md) 
     - python application run on raspberry pi listen to your actions 
 
-![Alt text](ihear/images/ihear.png?raw=true)
+![Alt text](scripts/images/ihear.png?raw=true)
 
 
 ### your steps to run it on GKE

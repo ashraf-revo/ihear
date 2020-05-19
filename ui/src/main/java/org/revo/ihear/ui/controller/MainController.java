@@ -1,8 +1,11 @@
 package org.revo.ihear.ui.controller;
 
 import org.revo.ihear.service.auth.AuthService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.cloud.gateway.config.GatewayProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -51,7 +54,7 @@ public class MainController {
                                     return ServerResponse.temporaryRedirect(URI.create(red)).build().flatMap(its ->
                                             serverRequestCache.saveRequest(serverRequest.exchange()).map(itw -> its)
                                                     .defaultIfEmpty(its));
-                                })
-                );
+                                }));
     }
 }
+

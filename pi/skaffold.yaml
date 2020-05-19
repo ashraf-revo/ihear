@@ -1,0 +1,14 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+metadata:
+  name: pi
+build:
+  artifacts:
+  - image: ashraf1abdelrasool/pi
+    jib:
+      project: org.revo:pi
+deploy:
+  kubectl:
+    manifests:
+    - k8s/pi-dep.yaml
+    - k8s/pi-svc.yaml
