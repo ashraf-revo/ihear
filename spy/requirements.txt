@@ -2,7 +2,7 @@ aioice==0.6.18
 aiortc==0.9.23
 attrs==19.3.0
 av==7.0.1
-certifi==2019.11.28
+certifi==2022.12.7
 cffi==1.14.0
 chardet==3.0.4
 crc32c==2.0
